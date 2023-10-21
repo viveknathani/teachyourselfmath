@@ -18,7 +18,9 @@ async function main() {
   app.use(cors());
   app.use('/api/v1', router);
   app.listen(config.PORT, () => {
-    console.log(`💨 server is running at: ${config.HOST}:${config.PORT}`);
+    console.log(
+      `💨 server is running at: ${config.HOST}:${config.PORT}, environment is ${config.ENVIRONMENT}`,
+    );
   });
 }
 

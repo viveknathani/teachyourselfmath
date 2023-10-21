@@ -6,10 +6,15 @@ enum HTTP_CODE {
   SERVER_ERROR = 500,
 }
 
+enum SERVER_ENVIRONMENT {
+  DEV = 'dev',
+  PROD = 'prod',
+}
+
 interface ApiResponse {
   status: 'success' | 'error';
   data?: any;
   message?: string;
 }
 
-export { ApiResponse, HTTP_CODE };
+export { ApiResponse, HTTP_CODE, SERVER_ENVIRONMENT };
