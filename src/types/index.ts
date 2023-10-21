@@ -1,4 +1,4 @@
-enum HTTP_CODES {
+enum HTTP_CODE {
   OK = 200,
   CREATED = 201,
   CLIENT_ERROR = 400,
@@ -12,4 +12,4 @@ interface ApiResponse {
   message?: string;
 }
 
-export { ApiResponse, HTTP_CODES };
+export { ApiResponse, HTTP_CODE };

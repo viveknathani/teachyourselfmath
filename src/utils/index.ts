@@ -1,8 +1,8 @@
-import { ApiResponse, HTTP_CODES } from '../types';
+import { ApiResponse, HTTP_CODE } from '../types';
 import express from 'express';
 
 const sendStandardResponse = (
-  statusCode: HTTP_CODES,
+  statusCode: HTTP_CODE,
   response: ApiResponse,
   res: express.Response,
 ) => {
