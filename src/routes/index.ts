@@ -1,20 +1,8 @@
 import express from 'express';
-import { HTTP_CODE } from '../types';
-import { sendStandardResponse } from '../utils';
+import { userRouter } from './user';
 
 const router: express.Router = express.Router();
 
-router.get('/test', async (req, res) => {
-  sendStandardResponse(
-    HTTP_CODE.OK,
-    {
-      status: 'success',
-      data: {
-        message: 'from server!',
-      },
-    },
-    res,
-  );
-});
+router.use('/users', userRouter);
 
 export { router };

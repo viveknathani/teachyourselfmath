@@ -8,4 +8,5 @@ export default {
   ENVIRONMENT: process.env.ENVIRONMENT || SERVER_ENVIRONMENT.DEV,
   HOST: process.env.HOST || 'localhost',
   PORT: process.env.PORT || '8080',
+  JWT_SECRET: process.env.JWT_SECRET || '',
 };

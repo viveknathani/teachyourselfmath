@@ -9,4 +9,40 @@ const sendStandardResponse = (
   res.status(statusCode).send(response);
 };
 
-export { sendStandardResponse };
+const snakeCaseToCamelCaseString = (input: string): string => {
+  return input
+    .split('_')
+    .map((word, index) => {
+      if (index !== 0) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      }
+      return word;
+    })
+    .join('');
+};
+
+const snakeCaseToCamelCaseObject = (input: any) => {
+  if (input === undefined || input === null) {
+    return input;
+  }
+  const out: any = {};
+  Object.keys(input).forEach((key) => {
+    out[snakeCaseToCamelCaseString(key)] = input[key];
+  });
+  return out;
+};
+
+const extractBearerToken = (authorizationHeader: string): string | null => {
+  if (!authorizationHeader) {
+    return null;
+  }
+
+  const parts = authorizationHeader.split(' ');
+  if (parts.length !== 2 || parts[0].toLowerCase() !== 'bearer') {
+    return null;
+  }
+
+  return parts[1];
+};
+
+export { sendStandardResponse, snakeCaseToCamelCaseObject, extractBearerToken };

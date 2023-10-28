@@ -1,3 +1,4 @@
+import { Redis } from 'ioredis';
 import { Pool } from 'pg';
 
 enum HTTP_CODE {
@@ -26,4 +27,46 @@ interface ExecuteQuery {
   transaction?: boolean;
 }
 
-export { ApiResponse, ExecuteQuery, HTTP_CODE, SERVER_ENVIRONMENT };
+interface AppState {
+  databasePool: Pool;
+  cache: Redis;
+}
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  username: string;
+  password: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface SignupRequest {
+  name: string;
+  email: string;
+  username: string;
+  password: string;
+}
+
+interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+interface LoginResponse {
+  user: User;
+  authToken: string;
+}
+
+export {
+  ApiResponse,
+  ExecuteQuery,
+  AppState,
+  User,
+  SignupRequest,
+  LoginRequest,
+  LoginResponse,
+  HTTP_CODE,
+  SERVER_ENVIRONMENT,
+};
