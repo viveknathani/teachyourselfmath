@@ -20,6 +20,7 @@ const insertUser = async (pool: Pool, user: Partial<User>): Promise<User> => {
     pool,
     text: queryInsertUser,
     values: [user.name, user.email, user.username, user.password],
+    transaction: true,
   });
   const rawUser = queryResponse.rows?.[0] || null;
   return snakeCaseToCamelCaseObject(rawUser);
