@@ -1,3 +1,5 @@
+import { Pool } from 'pg';
+
 enum HTTP_CODE {
   OK = 200,
   CREATED = 201,
@@ -17,4 +19,11 @@ interface ApiResponse {
   message?: string;
 }
 
-export { ApiResponse, HTTP_CODE, SERVER_ENVIRONMENT };
+interface ExecuteQuery {
+  pool: Pool;
+  text: string;
+  values?: any[];
+  transaction?: boolean;
+}
+
+export { ApiResponse, ExecuteQuery, HTTP_CODE, SERVER_ENVIRONMENT };
