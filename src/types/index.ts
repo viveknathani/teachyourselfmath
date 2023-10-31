@@ -14,6 +14,12 @@ enum SERVER_ENVIRONMENT {
   PROD = 'prod',
 }
 
+enum PROBLEM_DIFFICULTY {
+  EASY = 'EASY',
+  MEDIUM = 'MEDIUM',
+  HARD = 'HARD',
+}
+
 interface ApiResponse {
   status: 'success' | 'error';
   data?: any;
@@ -42,6 +48,23 @@ interface User {
   updatedAt: Date;
 }
 
+interface Tag {
+  id: number;
+  name: string;
+}
+
+interface Problem {
+  id: number;
+  source: string;
+  description: PROBLEM_DIFFICULTY;
+  difficulty: number;
+  title: string;
+  tags?: Tag[];
+  tagsToAttachWhileInserting?: string[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 interface SignupRequest {
   name: string;
   email: string;
@@ -64,6 +87,8 @@ export {
   ExecuteQuery,
   AppState,
   User,
+  Tag,
+  Problem,
   SignupRequest,
   LoginRequest,
   LoginResponse,
