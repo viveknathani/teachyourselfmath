@@ -65,6 +65,16 @@ interface Problem {
   updatedAt: Date;
 }
 
+interface Comment {
+  id: number;
+  content: string;
+  userId: number;
+  problemId: number;
+  parentId: number | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 interface SignupRequest {
   name: string;
   email: string;
@@ -82,6 +92,11 @@ interface LoginResponse {
   authToken: string;
 }
 
+interface GetCommentsRequest {
+  problemId: number;
+  parentId: number | null;
+}
+
 export {
   ApiResponse,
   ExecuteQuery,
@@ -89,9 +104,11 @@ export {
   User,
   Tag,
   Problem,
+  Comment,
   SignupRequest,
   LoginRequest,
   LoginResponse,
+  GetCommentsRequest,
   HTTP_CODE,
   SERVER_ENVIRONMENT,
 };

@@ -36,3 +36,4 @@ const executeQuery = async (request: ExecuteQuery) => {
 export { executeQuery, getDatabaseConnectionPool };
 export * from './user';
 export * from './problem';
+export * from './comment';
