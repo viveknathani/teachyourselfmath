@@ -37,3 +37,4 @@ export { executeQuery, getDatabaseConnectionPool };
 export * from './user';
 export * from './problem';
 export * from './comment';
+export * from './vote';

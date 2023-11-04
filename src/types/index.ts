@@ -20,6 +20,16 @@ enum PROBLEM_DIFFICULTY {
   HARD = 'HARD',
 }
 
+enum VOTE_TYPE {
+  UPVOTE = 'UPVOTE',
+  DOWNVOTE = 'DOWNVOTE',
+}
+
+enum VOTE_TOPIC {
+  PROBLEM = 'PROBLEM',
+  COMMENT = 'COMMENT',
+}
+
 interface ApiResponse {
   status: 'success' | 'error';
   data?: any;
@@ -75,6 +85,14 @@ interface Comment {
   updatedAt: Date;
 }
 
+interface Vote {
+  id: number;
+  userId: number;
+  voteType: VOTE_TYPE;
+  topicId: number;
+  topic: VOTE_TOPIC;
+}
+
 interface SignupRequest {
   name: string;
   email: string;
@@ -105,10 +123,13 @@ export {
   Tag,
   Problem,
   Comment,
+  Vote,
   SignupRequest,
   LoginRequest,
   LoginResponse,
   GetCommentsRequest,
   HTTP_CODE,
   SERVER_ENVIRONMENT,
+  VOTE_TYPE,
+  VOTE_TOPIC,
 };
