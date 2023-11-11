@@ -1,3 +1,4 @@
+import { UploadedFile } from 'express-fileupload';
 import { Redis } from 'ioredis';
 import { Pool } from 'pg';
 
@@ -28,6 +29,14 @@ enum VOTE_TYPE {
 enum VOTE_TOPIC {
   PROBLEM = 'PROBLEM',
   COMMENT = 'COMMENT',
+}
+
+enum QUEUE_NAME {
+  SPLIT_FILE = 'SPLIT_FILE',
+  PREDICT_SEGMENT = 'PREDICT_SEGMENT',
+  SPLIT_PREDICTION = 'SPLIT_PREDICTION',
+  REMOVE_JUNK = 'REMOVE_JUNK',
+  ADD_TO_DATABASE = 'ADD_TO_DATABASE',
 }
 
 interface ApiResponse {
@@ -115,6 +124,26 @@ interface GetCommentsRequest {
   parentId: number | null;
 }
 
+interface SplitFileJobData {
+  file: UploadedFile;
+}
+
+interface PredictSegmentJobData {
+  file: UploadedFile;
+}
+
+interface SplitPredictionJobData {
+  prediction: any;
+}
+
+interface RemoveJunkJobData {
+  splittedPrediciton: any;
+}
+
+interface AddToDatabaseJobData {
+  sanitisedPrediction: any;
+}
+
 export {
   ApiResponse,
   ExecuteQuery,
@@ -128,8 +157,14 @@ export {
   LoginRequest,
   LoginResponse,
   GetCommentsRequest,
+  SplitFileJobData,
+  PredictSegmentJobData,
+  SplitPredictionJobData,
+  RemoveJunkJobData,
+  AddToDatabaseJobData,
   HTTP_CODE,
   SERVER_ENVIRONMENT,
   VOTE_TYPE,
   VOTE_TOPIC,
+  QUEUE_NAME,
 };

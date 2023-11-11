@@ -4,6 +4,8 @@ import express from 'express';
 import cors from 'cors';
 import config from './config';
 import { router } from './routes';
+import { createDashboardAndGetRouter } from './queues/dashboard';
+import fileUpload from 'express-fileupload';
 
 async function main() {
   const requestLogger = expressWinston.logger({
@@ -15,6 +17,13 @@ async function main() {
   const app = express();
   app.use(express.json());
   app.use(requestLogger);
+  app.use('/admin/queues', createDashboardAndGetRouter());
+  app.use(
+    fileUpload({
+      useTempFiles: true,
+      tempFileDir: './files/',
+    }),
+  );
   app.use(cors());
   app.use('/api/v1', router);
   app.listen(config.PORT, () => {
