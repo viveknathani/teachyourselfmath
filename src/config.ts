@@ -10,4 +10,5 @@ export default {
   PORT: process.env.PORT || '8080',
   JWT_SECRET: process.env.JWT_SECRET || '',
   TYM_API_KEY: process.env.TYM_API_KEY || '',
+  MODEL_URL: process.env.MODEL_URL || '',
 };

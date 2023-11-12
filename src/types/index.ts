@@ -136,7 +136,8 @@ interface PredictSegmentJobData {
 }
 
 interface SplitPredictionJobData {
-  prediction: any;
+  source: string;
+  text: string;
 }
 
 interface RemoveJunkJobData {
