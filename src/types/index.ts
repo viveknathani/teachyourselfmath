@@ -141,7 +141,8 @@ interface SplitPredictionJobData {
 }
 
 interface RemoveJunkJobData {
-  splittedPrediciton: any;
+  source: string;
+  prediction: string;
 }
 
 interface AddToDatabaseJobData {

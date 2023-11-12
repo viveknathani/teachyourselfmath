@@ -8,10 +8,16 @@ const queueName = QUEUE_NAME.SPLIT_PREDICTION;
 const queue = createQueue(queueName);
 
 const worker = createWorker(queueName, async (job: Job) => {
-  console.log(`doing some cool job for splitting the prediction ${job.id}`);
-  await addToRemoveJunkQueue({
-    splittedPrediciton: {},
-  });
+  const data = job.data as SplitPredictionJobData;
+  const parts = data.text.split('\n');
+  await Promise.all(
+    parts.map((part) => {
+      addToRemoveJunkQueue({
+        prediction: part,
+        source: data.source,
+      });
+    }),
+  );
 });
 
 const addToSplitPredictionQueue = (
