@@ -129,7 +129,10 @@ interface SplitFileJobData {
 }
 
 interface PredictSegmentJobData {
+  source: string;
   file: UploadedFile;
+  start: number;
+  end: number;
 }
 
 interface SplitPredictionJobData {

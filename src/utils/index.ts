@@ -45,4 +45,26 @@ const extractBearerToken = (authorizationHeader: string): string | null => {
   return parts[1];
 };
 
-export { sendStandardResponse, snakeCaseToCamelCaseObject, extractBearerToken };
+const getSplits = (
+  numberOfUnits: number,
+  batchSize: number,
+): {
+  start: number;
+  end: number;
+}[] => {
+  const result: { start: number; end: number }[] = [];
+  for (let i = 1; i <= numberOfUnits; i += batchSize) {
+    result.push({
+      start: i,
+      end: Math.min(i + batchSize - 1, numberOfUnits),
+    });
+  }
+  return result;
+};
+
+export {
+  sendStandardResponse,
+  snakeCaseToCamelCaseObject,
+  extractBearerToken,
+  getSplits,
+};

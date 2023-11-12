@@ -2,17 +2,31 @@ import { Job, JobsOptions } from 'bullmq';
 import { QUEUE_NAME, SplitFileJobData } from '../../types';
 import { createQueue, createWorker } from '../factory';
 import { addToPredictSegmentQueue } from './predictSegment';
+import { getSplits } from '../../utils';
+import { PDFDocument } from 'pdf-lib';
+import { readFile } from 'fs/promises';
 
 const queueName = QUEUE_NAME.SPLIT_FILE;
 
 const queue = createQueue(queueName);
 
 const worker = createWorker(queueName, async (job: Job) => {
-  const data = job.data as SplitFileJobData;
-  console.log(`doing some cool job for splitting the file ${job.id}`);
-  await addToPredictSegmentQueue({
-    file: data.file,
-  });
+  const SPLIT_SIZE = 2;
+  const { file } = job.data as SplitFileJobData;
+  const buffer = await readFile(file.tempFilePath);
+  const parsed = await PDFDocument.load(buffer);
+  const numberOfPages = parsed.getPageCount();
+  const splits = getSplits(numberOfPages, SPLIT_SIZE);
+  await Promise.all(
+    splits.map((split) =>
+      addToPredictSegmentQueue({
+        file,
+        source: file.name,
+        start: split.start,
+        end: split.end,
+      }),
+    ),
+  );
 });
 
 const addToSplitFileQueue = (
