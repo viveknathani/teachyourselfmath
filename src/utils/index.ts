@@ -62,9 +62,29 @@ const getSplits = (
   return result;
 };
 
+const isNothing = (input: string): boolean => {
+  if (input === null || input === undefined || input === '') {
+    return true;
+  }
+  let isAllBlank = true;
+  for (const char of input) {
+    if (char !== ' ') {
+      isAllBlank = false;
+      break;
+    }
+  }
+  return isAllBlank;
+};
+
+const hasAtleastOneNumber = (input: string) => {
+  return !/\d/.test(input);
+};
+
 export {
   sendStandardResponse,
   snakeCaseToCamelCaseObject,
   extractBearerToken,
+  isNothing,
+  hasAtleastOneNumber,
   getSplits,
 };
