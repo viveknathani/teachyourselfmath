@@ -12,7 +12,7 @@ const queue = createQueue(queueName);
 
 const worker = createWorker(queueName, async (job: Job) => {
   const data = job.data as PredictSegmentJobData;
-  const text = await runModel(data.file.tempFilePath, data.start, data.end);
+  const text = await runModel(data.file.path, data.start, data.end);
   await addToSplitPredictionQueue({
     text,
     source: data.source,

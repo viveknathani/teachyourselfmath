@@ -1,4 +1,3 @@
-import { UploadedFile } from 'express-fileupload';
 import { addToSplitFileQueue } from '../queues/workers/splitFile';
 import { QUEUE_NAME } from '../types';
 
@@ -13,7 +12,7 @@ export class FileProcessorService {
     return FileProcessorService.instance;
   }
 
-  public async processFile(file: UploadedFile) {
+  public async processFile(file: Express.Multer.File) {
     const job = await addToSplitFileQueue({
       file,
     });

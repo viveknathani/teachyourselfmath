@@ -1,4 +1,3 @@
-import { UploadedFile } from 'express-fileupload';
 import { Redis } from 'ioredis';
 import { Pool } from 'pg';
 
@@ -125,12 +124,12 @@ interface GetCommentsRequest {
 }
 
 interface SplitFileJobData {
-  file: UploadedFile;
+  file: Express.Multer.File;
 }
 
 interface PredictSegmentJobData {
   source: string;
-  file: UploadedFile;
+  file: Express.Multer.File;
   start: number;
   end: number;
 }
