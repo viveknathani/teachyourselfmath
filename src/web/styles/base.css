@@ -19,3 +19,11 @@ body {
     font-size: 11px;
     opacity: 50%;
 }
+
+a {
+    color: black;
+}
+
+a:visited {
+    color: black;
+}

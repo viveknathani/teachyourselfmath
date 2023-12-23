@@ -20,16 +20,7 @@ h2,h4 {
     padding-bottom: 3px;
 }
 
-#bottomDiv p {
-    display: inline-block;
-    margin: 0;
-}
-
-#bottomDiv {
-    margin-top: -10px;
-}
-
 #content {
-    display: flex;
-    justify-content: center;
+    max-width: 65%;
+    margin: auto;
 }
