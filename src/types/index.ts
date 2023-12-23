@@ -74,8 +74,8 @@ interface Tag {
 interface Problem {
   id: number;
   source: string;
-  description: PROBLEM_DIFFICULTY;
-  difficulty: number;
+  description: string;
+  difficulty: PROBLEM_DIFFICULTY;
   title: string;
   tags?: Tag[];
   tagsToAttachWhileInserting?: string[];
@@ -125,6 +125,7 @@ interface GetCommentsRequest {
 
 interface SplitFileJobData {
   file: Express.Multer.File;
+  tags: string;
 }
 
 interface PredictSegmentJobData {
@@ -132,20 +133,25 @@ interface PredictSegmentJobData {
   file: Express.Multer.File;
   start: number;
   end: number;
+  tags: string;
 }
 
 interface SplitPredictionJobData {
   source: string;
   text: string;
+  tags: string;
 }
 
 interface RemoveJunkJobData {
   source: string;
   prediction: string;
+  tags: string;
 }
 
 interface AddToDatabaseJobData {
-  sanitisedPrediction: any;
+  sanitisedPrediction: string;
+  source: string;
+  tags: string[];
 }
 
 export {
@@ -171,4 +177,5 @@ export {
   VOTE_TYPE,
   VOTE_TOPIC,
   QUEUE_NAME,
+  PROBLEM_DIFFICULTY,
 };

@@ -77,7 +77,7 @@ const isNothing = (input: string): boolean => {
 };
 
 const hasAtleastOneNumber = (input: string) => {
-  return !/\d/.test(input);
+  return /\d/.test(input);
 };
 
 export {

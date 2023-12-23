@@ -12,9 +12,10 @@ export class FileProcessorService {
     return FileProcessorService.instance;
   }
 
-  public async processFile(file: Express.Multer.File) {
+  public async processFile(file: Express.Multer.File, tags: string) {
     const job = await addToSplitFileQueue({
       file,
+      tags,
     });
     return {
       jobId: job.id,

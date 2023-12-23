@@ -26,7 +26,10 @@ fileProcessorRouter.post(
       if (req.file === undefined) {
         throw new Error('something is broken!');
       }
-      const response = await fileProcessorService.processFile(req.file);
+      const response = await fileProcessorService.processFile(
+        req.file,
+        req.body.tags,
+      );
       sendStandardResponse(
         HTTP_CODE.CREATED,
         {

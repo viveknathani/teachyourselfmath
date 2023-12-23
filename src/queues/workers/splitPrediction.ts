@@ -15,6 +15,7 @@ const worker = createWorker(queueName, async (job: Job) => {
       addToRemoveJunkQueue({
         prediction: part,
         source: data.source,
+        tags: data.tags,
       });
     }),
   );

@@ -1,5 +1,11 @@
 import { Job, JobsOptions } from 'bullmq';
-import { AddToDatabaseJobData, QUEUE_NAME } from '../../types';
+import { ProblemService } from '../../services/ProblemService';
+import { state } from '../../state';
+import {
+  AddToDatabaseJobData,
+  PROBLEM_DIFFICULTY,
+  QUEUE_NAME,
+} from '../../types';
 import { createQueue, createWorker } from '../factory';
 
 const queueName = QUEUE_NAME.ADD_TO_DATABASE;
@@ -7,7 +13,15 @@ const queueName = QUEUE_NAME.ADD_TO_DATABASE;
 const queue = createQueue(queueName);
 
 const worker = createWorker(queueName, async (job: Job) => {
-  console.log(`doing some cool job for adding to database ${job.id}`);
+  const problemService = ProblemService.getInstance(state);
+  const data = job.data as AddToDatabaseJobData;
+  await problemService.insertProblem({
+    description: data.sanitisedPrediction,
+    title: data.sanitisedPrediction.slice(0, 20),
+    source: data.source,
+    tagsToAttachWhileInserting: data.tags,
+    difficulty: PROBLEM_DIFFICULTY.EASY,
+  });
 });
 
 const addToDatabaseQueue = (

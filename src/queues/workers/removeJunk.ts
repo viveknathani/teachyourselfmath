@@ -19,7 +19,9 @@ const worker = createWorker(queueName, async (job: Job) => {
     checkForAtleastOneNumber
   ) {
     await addToDatabaseQueue({
-      sanitisedPrediction: {},
+      sanitisedPrediction: data.prediction,
+      source: data.source,
+      tags: data.tags.split(','),
     });
   }
   return {
@@ -48,7 +50,7 @@ const hasTheRightSetOfWords = (input: string) => {
     'prove that',
   ];
   for (const phrase of phrases) {
-    if (input.includes(phrase)) {
+    if (input.toLowerCase().includes(phrase)) {
       return true;
     }
   }

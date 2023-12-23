@@ -12,7 +12,7 @@ const queue = createQueue(queueName);
 
 const worker = createWorker(queueName, async (job: Job) => {
   const SPLIT_SIZE = 2;
-  const { file } = job.data as SplitFileJobData;
+  const { file, tags } = job.data as SplitFileJobData;
   const buffer = await readFile(file.path);
   const parsed = await PDFDocument.load(buffer);
   const numberOfPages = parsed.getPageCount();
@@ -24,6 +24,7 @@ const worker = createWorker(queueName, async (job: Job) => {
         source: file.originalname,
         start: split.start,
         end: split.end,
+        tags,
       }),
     ),
   );

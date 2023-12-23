@@ -16,6 +16,7 @@ const worker = createWorker(queueName, async (job: Job) => {
   await addToSplitPredictionQueue({
     text,
     source: data.source,
+    tags: data.tags,
   });
 });
 
