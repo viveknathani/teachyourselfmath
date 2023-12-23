@@ -4,10 +4,16 @@ import { HTTP_CODE } from '../types';
 import { sendStandardResponse } from '../utils';
 import { checkFailsForApiKey } from './apiKey';
 import multer from 'multer';
+import config from '../config';
 
 const fileProcessorRouter: express.Router = express.Router();
 const fileProcessorService = FileProcessorService.getInstance();
-const upload = multer({ dest: 'files/' });
+const upload = multer({
+  dest: 'files/',
+  limits: {
+    fileSize: config.MAX_FILE_SIZE_IN_BYTES,
+  },
+});
 
 fileProcessorRouter.post(
   '/send-file',

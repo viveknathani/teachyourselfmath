@@ -11,4 +11,5 @@ export default {
   JWT_SECRET: process.env.JWT_SECRET || '',
   TYM_API_KEY: process.env.TYM_API_KEY || '',
   MODEL_URL: process.env.MODEL_URL || '',
+  MAX_FILE_SIZE_IN_BYTES: 30_000_000,
 };
