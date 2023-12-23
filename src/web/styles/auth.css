@@ -1,0 +1,10 @@
+body {
+    width: 70%;
+    margin: auto;
+}
+
+button {
+    border: 1px solid #8F9779;
+    cursor: pointer;
+    background-color: #8F9779;
+}
