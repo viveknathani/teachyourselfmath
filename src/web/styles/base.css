@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Courier+Prime&family=Inter:wght@300;400;500&display=swap');
+body {
+    background-color: antiquewhite;
+    margin: 0;
+    padding: 0;
+}
+
+.font-heading {
+    font-family: 'Inter', sans-serif;
+}
+
+.font-primary {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+}
+
+.font-accent {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    opacity: 50%;
+}
