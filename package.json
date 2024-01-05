@@ -8,9 +8,10 @@
   "scripts": {
     "lint": "npx eslint --fix src/",
     "format": "npx prettier --write src/",
-    "build": "yarn lint && yarn format && yarn tsc",
+    "build": "yarn lint && yarn format && yarn tsc && yarn copy-files",
     "start": "yarn build && node build/index.js",
     "migrate": "node-pg-migrate -m src/database/migrations",
+    "copy-files": "npx copyfiles -u 1 \"src/web/**/*\" build/",
     "migrate:up": "yarn migrate up",
     "migrate:down": "yarn migrate down",
     "migrate:create": "yarn migrate create"
@@ -24,6 +25,7 @@
     "@types/pg": "^8.10.7",
     "@typescript-eslint/eslint-plugin": "^6.8.0",
     "@typescript-eslint/parser": "^6.8.0",
+    "copyfiles": "^2.4.1",
     "eslint": "^8.52.0",
     "typescript": "^5.2.2"
   },
