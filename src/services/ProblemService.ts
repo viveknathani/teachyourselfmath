@@ -1,6 +1,12 @@
-import { AppState, Problem } from '../types';
+import {
+  AppState,
+  GetProblemsRequest,
+  GetProblemsResponse,
+  Problem,
+} from '../types';
 import * as database from '../database';
 import { TagService } from './TagService';
+import { getPaginationConfig } from '../utils';
 
 export class ProblemService {
   private static instance: ProblemService;
@@ -41,5 +47,25 @@ export class ProblemService {
         await this.insertProblem(problem);
       }),
     );
+  }
+
+  public async getProblems(
+    request: GetProblemsRequest,
+  ): Promise<GetProblemsResponse> {
+    const { limit, offset } = getPaginationConfig({
+      page: request.page || 1,
+      limit: 5,
+    });
+    const count = await database.getProblemCount(this.state.databasePool);
+    const problems = await database.getProblems(
+      this.state.databasePool,
+      limit,
+      offset,
+    );
+    return {
+      totalCount: count,
+      problems: problems,
+      page: request.page || 1,
+    };
   }
 }

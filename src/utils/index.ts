@@ -80,6 +80,15 @@ const hasAtleastOneNumber = (input: string) => {
   return /\d/.test(input);
 };
 
+const getPaginationConfig = (input: { page: number; limit?: number }) => {
+  const limit = input.limit || 10;
+  const offset = (input.page - 1) * limit;
+  return {
+    limit,
+    offset,
+  };
+};
+
 export {
   sendStandardResponse,
   snakeCaseToCamelCaseObject,
@@ -87,4 +96,5 @@ export {
   isNothing,
   hasAtleastOneNumber,
   getSplits,
+  getPaginationConfig,
 };

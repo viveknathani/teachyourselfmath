@@ -18,6 +18,32 @@ const queryInsertProblemTag = `
 
 const querySelectTag = 'select * from tags';
 
+const querySelectProblems = `
+  select 
+  problems.id as "id", 
+  source,
+  description, 
+  difficulty,
+  title,
+  string_agg(distinct tags.name, ',') tags_list,
+  count(distinct comments.id) total_comments,
+  problems.created_at,
+  problems.updated_at 
+  from
+  problems 
+  join problems_tags
+  on problems_tags.problem_id = problems.id
+  join tags
+  on problems_tags.tag_id = tags.id
+  left join comments
+  on comments.problem_id = problems.id
+  group by problems.id
+  order by problems.created_at desc
+  limit $1 offset $2;
+`;
+
+const querySelectProblemCount = ' select count(1) from problems;';
+
 const insertProblem = async (
   pool: Pool,
   problem: Partial<Problem>,
@@ -60,4 +86,40 @@ const getTags = async (pool: Pool): Promise<Tag[]> => {
   return rawTags;
 };
 
-export { insertProblem, insertProblemTag, getTags };
+const getProblems = async (
+  pool: Pool,
+  limit: number,
+  offset: number,
+): Promise<Problem[]> => {
+  const queryResponse = await executeQuery({
+    pool,
+    text: querySelectProblems,
+    values: [limit, offset],
+  });
+  const rawProblems = queryResponse.rows || null;
+  return rawProblems.map((problem) => {
+    const obj = snakeCaseToCamelCaseObject(problem);
+    return {
+      ...obj,
+      tags: problem.tags_list.split(','),
+      totalComments: Number(obj.totalComments),
+    };
+  });
+};
+
+const getProblemCount = async (pool: Pool) => {
+  const queryResponse = await executeQuery({
+    pool,
+    text: querySelectProblemCount,
+    values: [],
+  });
+  const raw = queryResponse.rows || null;
+  return raw?.[0]?.count;
+};
+export {
+  insertProblem,
+  insertProblemTag,
+  getTags,
+  getProblems,
+  getProblemCount,
+};

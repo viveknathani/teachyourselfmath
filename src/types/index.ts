@@ -77,7 +77,8 @@ interface Problem {
   description: string;
   difficulty: PROBLEM_DIFFICULTY;
   title: string;
-  tags?: Tag[];
+  tags?: string[];
+  totalComments?: number;
   tagsToAttachWhileInserting?: string[];
   createdAt: Date;
   updatedAt: Date;
@@ -121,6 +122,16 @@ interface LoginResponse {
 interface GetCommentsRequest {
   problemId: number;
   parentId: number | null;
+}
+
+interface GetProblemsRequest {
+  page?: number;
+}
+
+interface GetProblemsResponse {
+  totalCount: number;
+  page: number;
+  problems: Problem[];
 }
 
 interface SplitFileJobData {
@@ -167,6 +178,8 @@ export {
   LoginRequest,
   LoginResponse,
   GetCommentsRequest,
+  GetProblemsRequest,
+  GetProblemsResponse,
   SplitFileJobData,
   PredictSegmentJobData,
   SplitPredictionJobData,
