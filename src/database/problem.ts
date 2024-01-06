@@ -114,7 +114,7 @@ const getProblemCount = async (pool: Pool) => {
     values: [],
   });
   const raw = queryResponse.rows || null;
-  return raw?.[0]?.count;
+  return Number(raw?.[0]?.count);
 };
 export {
   insertProblem,

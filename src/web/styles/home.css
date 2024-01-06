@@ -33,3 +33,9 @@ h2,h4 {
     display: flex;
     justify-content: center;
 }
+
+#pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

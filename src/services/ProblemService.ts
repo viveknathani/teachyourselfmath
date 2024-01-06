@@ -52,9 +52,10 @@ export class ProblemService {
   public async getProblems(
     request: GetProblemsRequest,
   ): Promise<GetProblemsResponse> {
+    const PAGE_SIZE = 20;
     const { limit, offset } = getPaginationConfig({
       page: request.page || 1,
-      limit: 5,
+      limit: PAGE_SIZE,
     });
     const count = await database.getProblemCount(this.state.databasePool);
     const problems = await database.getProblems(
@@ -62,10 +63,13 @@ export class ProblemService {
       limit,
       offset,
     );
+    const currentPage = Number(request.page || 1);
     return {
       totalCount: count,
+      totalPages: Math.ceil(count / PAGE_SIZE),
+      pageSize: PAGE_SIZE,
+      currentPage,
       problems: problems,
-      page: request.page || 1,
     };
   }
 }

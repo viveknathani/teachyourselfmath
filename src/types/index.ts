@@ -130,7 +130,9 @@ interface GetProblemsRequest {
 
 interface GetProblemsResponse {
   totalCount: number;
-  page: number;
+  currentPage: number;
+  pageSize: number;
+  totalPages: number;
   problems: Problem[];
 }
 
