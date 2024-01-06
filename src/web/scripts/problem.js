@@ -64,6 +64,7 @@ function displayProblem(problem) {
     const timeAgo = getTimeAgo(problem.createdAt);
     document.getElementById('problem-title').innerText = problem.title;
     document.getElementById('problem-meta').innerText = `${timeAgo} | ${commentText} | ${tags}`;
+    document.getElementById('problem-meta').className = 'font-accent';
     document.getElementById('problem-description').innerText = problem.description;
     window.MathJax.typeset();
 }
@@ -80,6 +81,7 @@ function displayComments(comments) {
         const timeAgo = getTimeAgo(comment.createdAt);
         const author = comment.author;
         commentMeta.innerText = `${timeAgo} | ${author}`;
+        commentMeta.className = 'font-accent';
         commentDiv.appendChild(commentMeta);
 
         const commentContent = document.createElement('p');
@@ -184,7 +186,7 @@ function displayReplies(commentId, replies) {
         commentDiv.id = `reply-${reply.id}`;
 
         const replyMeta = document.createElement('p');
-        replyMeta.className = 'reply-meta';
+        replyMeta.classList.add('font-accent', 'reply-meta');
         const timeAgo = getTimeAgo(reply.createdAt);
         const author = reply.author;
         replyMeta.innerText = `${timeAgo} | ${author}`;

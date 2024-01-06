@@ -50,7 +50,7 @@ function displayProblems(problems, paginationConfig) {
             : (problem.totalComments === 1 ? `1 comment` : `discuss`)}`;
         const tags = problem.tags.join(',');
         const timeAgo = getTimeAgo(problem.createdAt);
-        p1.innerText = problem.description;
+        p1.innerText = problem.title;
         p2.innerText = `${timeAgo} | ${commentText} | ${tags}`;
         topDiv.appendChild(p1);
         bottomDiv.appendChild(p2);
