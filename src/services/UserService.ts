@@ -39,7 +39,7 @@ export class UserService {
       request.username,
     );
     if (existingUser !== null) {
-      throw new errors.ErrEmailExists();
+      throw new errors.ErrEmailOrUsernameExists();
     }
     const hashedPassword = await bcrypt.hash(request.password, 10);
     const insertedUser = await insertUser(this.state.databasePool, {

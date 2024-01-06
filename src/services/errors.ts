@@ -17,10 +17,10 @@ export class ErrInvalidPasswordFormat extends ClientError {
   }
 }
 
-export class ErrEmailExists extends ClientError {
+export class ErrEmailOrUsernameExists extends ClientError {
   constructor() {
-    super('This email already exists.');
-    Object.setPrototypeOf(this, ErrEmailExists.prototype);
+    super('This email/username already exists.');
+    Object.setPrototypeOf(this, ErrEmailOrUsernameExists.prototype);
   }
 }
 
