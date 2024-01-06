@@ -23,7 +23,8 @@ const querySelectCommentsByProblem = `
     where replies.parent_id = parent_comments.id
   ) replies
   join users on parent_comments.user_id = users.id
-  where problem_id = $1 and parent_id is null;
+  where problem_id = $1 and parent_id is null
+  order by parent_comments.created_at desc;
 `;
 
 const querySelectCommentsByProblemAndParent = `
@@ -31,7 +32,8 @@ const querySelectCommentsByProblemAndParent = `
     users.username as author 
     from comments
     join users on comments.user_id = users.id
-    where problem_id = $1 and parent_id = $2;
+    where problem_id = $1 and parent_id = $2
+    order by comments.created_at desc;
 `;
 
 const insertComment = async (pool: Pool, comment: Partial<Comment>) => {
