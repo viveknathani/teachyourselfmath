@@ -72,4 +72,8 @@ export class ProblemService {
       problems: problems,
     };
   }
+
+  public async getProblem(problemId: number) {
+    return database.getProblem(this.state.databasePool, problemId);
+  }
 }

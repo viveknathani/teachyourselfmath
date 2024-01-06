@@ -42,7 +42,30 @@ const querySelectProblems = `
   limit $1 offset $2;
 `;
 
-const querySelectProblemCount = ' select count(1) from problems;';
+const querySelectProblem = `
+  select 
+  problems.id as "id", 
+  source,
+  description, 
+  difficulty,
+  title,
+  string_agg(distinct tags.name, ',') tags_list,
+  count(distinct comments.id) total_comments,
+  problems.created_at,
+  problems.updated_at 
+  from
+  problems 
+  join problems_tags
+  on problems_tags.problem_id = problems.id
+  join tags
+  on problems_tags.tag_id = tags.id
+  left join comments
+  on comments.problem_id = problems.id
+  where problems.id = $1
+  group by problems.id;
+`;
+
+const querySelectProblemCount = 'select count(1) from problems;';
 
 const insertProblem = async (
   pool: Pool,
@@ -107,6 +130,21 @@ const getProblems = async (
   });
 };
 
+const getProblem = async (pool: Pool, problemId: number): Promise<Problem> => {
+  const queryResponse = await executeQuery({
+    pool,
+    text: querySelectProblem,
+    values: [problemId],
+  });
+  const rawProblems = queryResponse.rows || null;
+  const obj = snakeCaseToCamelCaseObject(rawProblems[0]);
+  return {
+    ...obj,
+    tags: rawProblems[0].tags_list.split(','),
+    totalComments: Number(obj.totalComments),
+  };
+};
+
 const getProblemCount = async (pool: Pool) => {
   const queryResponse = await executeQuery({
     pool,
@@ -120,6 +158,7 @@ export {
   insertProblem,
   insertProblemTag,
   getTags,
+  getProblem,
   getProblems,
   getProblemCount,
 };

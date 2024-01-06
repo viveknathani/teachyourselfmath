@@ -55,4 +55,28 @@ problemRouter.get('/', async (req, res) => {
   }
 });
 
+problemRouter.get('/:problemId', async (req, res) => {
+  try {
+    const response = await problemService.getProblem(
+      req.params.problemId as any,
+    );
+    sendStandardResponse(
+      HTTP_CODE.CREATED,
+      {
+        status: 'success',
+        data: response,
+      },
+      res,
+    );
+  } catch (err) {
+    sendStandardResponse(
+      HTTP_CODE.SERVER_ERROR,
+      {
+        status: 'error',
+      },
+      res,
+    );
+  }
+});
+
 export { problemRouter };

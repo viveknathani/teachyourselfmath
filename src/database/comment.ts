@@ -11,12 +11,26 @@ const queryInsertComment = `
 `;
 
 const querySelectCommentsByProblem = `
-    select * from comments
-    where problem_id = $1 and parent_id is null;
+  select 
+  parent_comments.*,
+  users.username as author,
+  replies.count as reply_count
+  from comments 
+  parent_comments
+  cross join lateral (
+    select count(*) count
+    from comments replies
+    where replies.parent_id = parent_comments.id
+  ) replies
+  join users on parent_comments.user_id = users.id
+  where problem_id = $1 and parent_id is null;
 `;
 
 const querySelectCommentsByProblemAndParent = `
-    select * from comments
+    select comments.*,
+    users.username as author 
+    from comments
+    join users on comments.user_id = users.id
     where problem_id = $1 and parent_id = $2;
 `;
 
@@ -42,7 +56,13 @@ const getCommentsByProblem = async (pool: Pool, problemId: number) => {
     values: [problemId],
   });
   const rawComments = queryResponse.rows;
-  return rawComments.map((comment: any) => snakeCaseToCamelCaseObject(comment));
+  return rawComments.map((comment: any) => {
+    const obj = snakeCaseToCamelCaseObject(comment);
+    return {
+      ...obj,
+      replyCount: Number(obj.replyCount),
+    };
+  });
 };
 
 const getCommentsByProblemAndParent = async (

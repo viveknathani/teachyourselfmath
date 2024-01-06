@@ -22,5 +22,6 @@ function directoryHandler(webPagePath: string): ExpressFunction {
 pageRouter.get('/', directoryHandler('../web/pages/home.html'));
 pageRouter.get('/about', directoryHandler('../web/pages/about.html'));
 pageRouter.get('/auth', directoryHandler('../web/pages/auth.html'));
+pageRouter.get('/problem', directoryHandler('../web/pages/problem.html'));
 
 export { pageRouter };

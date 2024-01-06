@@ -89,6 +89,7 @@ interface Comment {
   content: string;
   userId: number;
   problemId: number;
+  replyCount: number;
   parentId: number | null;
   createdAt: Date;
   updatedAt: Date;
