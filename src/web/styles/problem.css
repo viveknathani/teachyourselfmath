@@ -39,3 +39,29 @@ h2,h4 {
 #add-comment-button {
     display: block;
 }
+
+.reply-buttons {
+    display: block;
+}
+
+.comment-action-buttons {
+    background: none;
+    border: none;
+    text-decoration: underline;
+    color: black;
+    margin-left: 0.5%;
+    cursor: pointer;
+    margin-bottom: -12px;
+}
+
+textarea {
+    display: block;
+}
+
+.comment-meta, .reply-meta {
+    margin-bottom: -12px;
+}
+
+.reply {
+    margin-left: 4%;
+}

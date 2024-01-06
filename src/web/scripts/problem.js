@@ -77,11 +77,10 @@ function displayComments(comments) {
         commentDiv.id = `comment-${comment.id}`;
 
         const commentMeta = document.createElement('p');
-        commentMeta.className = 'comment-meta';
         const timeAgo = getTimeAgo(comment.createdAt);
         const author = comment.author;
         commentMeta.innerText = `${timeAgo} | ${author}`;
-        commentMeta.className = 'font-accent';
+        commentMeta.classList.add('font-accent', 'comment-meta');
         commentDiv.appendChild(commentMeta);
 
         const commentContent = document.createElement('p');
@@ -90,6 +89,7 @@ function displayComments(comments) {
 
         const replyButton = document.createElement('button');
         replyButton.innerText = 'reply';
+        replyButton.classList.add('comment-action-buttons')
         replyButton.onclick = () => {
             showReplyArea(comment.id);
         };
@@ -98,8 +98,9 @@ function displayComments(comments) {
         if (comment.replyCount > 0) {
             const showRepliesButton = document.createElement('button');
             showRepliesButton.innerText = 'show replies';
+            showRepliesButton.classList.add('comment-action-buttons');
             showRepliesButton.onclick = () => {
-                fetchReplies(comment.id);
+                fetchReplies(comment.id, showRepliesButton);
             }
             commentDiv.appendChild(showRepliesButton);
         }
@@ -134,14 +135,17 @@ function addComment() {
 function showReplyArea(commentId) {
     const commentDiv = document.getElementById(`comment-${commentId}`);
     const textarea = document.createElement('textarea');
+    textarea.cols = 50;
+    textarea.rows = 10;
     const replyButton = document.createElement('button');
     replyButton.innerText = 'add reply';
+    replyButton.classList.add('reply-buttons');
     replyButton.onclick = () => {
         addReply(commentId);
     }
     textarea.id = `reply-for-${commentId}`;
-    commentDiv.prepend(replyButton);
-    commentDiv.prepend(textarea);
+    commentDiv.appendChild(textarea);
+    commentDiv.appendChild(replyButton);
 }
 
 function addReply(commentId) {
@@ -167,13 +171,14 @@ function addReply(commentId) {
     });
 }
 
-function fetchReplies(commentId) {
+function fetchReplies(commentId, element) {
     fetch(`/api/v1/comments/problem/${problemId}/parent/${commentId}`, {
         method: 'GET',
     }).then(res => res.json())
     .then(res => {
         if (res.data) {
             displayReplies(commentId, res.data);
+            element.innerText = '';
         }
     });
 }
@@ -182,8 +187,8 @@ function displayReplies(commentId, replies) {
     const commentDiv = document.getElementById(`comment-${commentId}`);
     for (const reply of replies) {
         const replyDiv = document.createElement('div');
-        commentDiv.className = 'reply';
-        commentDiv.id = `reply-${reply.id}`;
+        replyDiv.className = 'reply';
+        replyDiv.id = `reply-${reply.id}`;
 
         const replyMeta = document.createElement('p');
         replyMeta.classList.add('font-accent', 'reply-meta');
