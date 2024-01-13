@@ -6,7 +6,7 @@ import {
 } from '../types';
 import * as database from '../database';
 import { TagService } from './TagService';
-import { getPaginationConfig } from '../utils';
+import { getPaginationConfig, TIME_IN_SECONDS } from '../utils';
 
 export class ProblemService {
   private static instance: ProblemService;
@@ -57,7 +57,11 @@ export class ProblemService {
     let result: any = JSON.parse(cachedData || '{}');
     if (!cachedData) {
       result = await this.getProblemsFromDb(request);
-      await this.state.cache.set(cacheKey, JSON.stringify(result));
+      await this.state.cache.setex(
+        cacheKey,
+        TIME_IN_SECONDS.ONE_HOUR,
+        JSON.stringify(result),
+      );
     }
     return result;
   }

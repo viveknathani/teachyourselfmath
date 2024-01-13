@@ -89,6 +89,10 @@ const getPaginationConfig = (input: { page: number; limit?: number }) => {
   };
 };
 
+const TIME_IN_SECONDS = {
+  ONE_HOUR: 60 * 60,
+};
+
 export {
   sendStandardResponse,
   snakeCaseToCamelCaseObject,
@@ -97,4 +101,5 @@ export {
   hasAtleastOneNumber,
   getSplits,
   getPaginationConfig,
+  TIME_IN_SECONDS,
 };
