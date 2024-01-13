@@ -5,6 +5,7 @@ import { userRouter } from './user';
 import { voteRouter } from './vote';
 import { fileProcessorRouter } from './file-processor';
 import { pageRouter } from './page';
+import { utilityRouter } from './utility';
 
 const router: express.Router = express.Router();
 
@@ -13,5 +14,6 @@ router.use('/problems/', problemRouter);
 router.use('/comments/', commentRouter);
 router.use('/votes/', voteRouter);
 router.use('/file-processor', fileProcessorRouter);
+router.use('/utility', utilityRouter);
 
 export { router, pageRouter };
