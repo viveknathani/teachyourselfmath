@@ -52,6 +52,19 @@ export class ProblemService {
   public async getProblems(
     request: GetProblemsRequest,
   ): Promise<GetProblemsResponse> {
+    const cacheKey = `PROBLEMS:$${JSON.stringify(request)}`;
+    const cachedData = await this.state.cache.get(cacheKey);
+    let result: any = JSON.parse(cachedData || '{}');
+    if (!cachedData) {
+      result = await this.getProblemsFromDb(request);
+      await this.state.cache.set(cacheKey, JSON.stringify(result));
+    }
+    return result;
+  }
+
+  public async getProblemsFromDb(
+    request: GetProblemsRequest,
+  ): Promise<GetProblemsResponse> {
     const PAGE_SIZE = 20;
     const { limit, offset } = getPaginationConfig({
       page: request.page || 1,
