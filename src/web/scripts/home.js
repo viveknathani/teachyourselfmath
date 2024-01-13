@@ -59,10 +59,11 @@ function displayProblems(problems, paginationConfig) {
         list.appendChild(li);
     });
     const pagination = document.getElementById('pagination');
+    const searchParams = new URLSearchParams(window.location.search);
 
     if (paginationConfig.hasPreviousPage) {
         const prevLink = document.createElement('a');
-        prevLink.href = `/?page=${paginationConfig.currentPage - 1}`;
+        prevLink.href = `/?page=${paginationConfig.currentPage - 1}&tags=${searchParams.get('tags') || ''}`;
         prevLink.innerText = 'prev';
         pagination.appendChild(prevLink);
     }
@@ -73,7 +74,7 @@ function displayProblems(problems, paginationConfig) {
     }
     if (paginationConfig.hasNextPage) {
         const nextLink = document.createElement('a');
-        nextLink.href = `/?page=${paginationConfig.currentPage + 1}`;
+        nextLink.href = `/?page=${paginationConfig.currentPage + 1}&tags=${searchParams.get('tags') || ''}`;
         nextLink.innerText = 'next';
         pagination.appendChild(nextLink);
     }
