@@ -51,7 +51,7 @@ function displayProblems(problems, paginationConfig) {
         const tags = problem.tags.join(',');
         const timeAgo = getTimeAgo(problem.createdAt);
         p1.innerText = problem.title;
-        p2.innerHTML = `${timeAgo} | <a href='/problem?id=${problem.id}'>${commentText}</a> | ${tags}`;
+        p2.innerHTML = `${timeAgo} | <a href='/problem?id=${problem.id}'>${commentText}</a> |  <a href='/?tags=${encodeURI(tags)}'>${tags}</a>`;
         topDiv.appendChild(p1);
         bottomDiv.appendChild(p2);
         li.appendChild(topDiv);
@@ -83,7 +83,7 @@ function displayProblems(problems, paginationConfig) {
 
 function fetchProblems() {
     const searchParams = new URLSearchParams(window.location.search);
-    fetch(`/api/v1/problems?page=${searchParams.get('page') || 1}`, {
+    fetch(`/api/v1/problems?page=${searchParams.get('page') || 1}&tags=${searchParams.get('tags') || ''}`, {
         method: 'GET',
     }).then(res => res.json())
     .then(res => {

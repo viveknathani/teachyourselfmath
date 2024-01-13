@@ -18,29 +18,32 @@ const queryInsertProblemTag = `
 
 const querySelectTag = 'select * from tags';
 
-const querySelectProblems = `
-  select 
-  problems.id as "id", 
-  source,
-  description, 
-  difficulty,
-  title,
-  string_agg(distinct tags.name, ',') tags_list,
-  count(distinct comments.id) total_comments,
-  problems.created_at,
-  problems.updated_at 
-  from
-  problems 
-  join problems_tags
-  on problems_tags.problem_id = problems.id
-  join tags
-  on problems_tags.tag_id = tags.id
-  left join comments
-  on comments.problem_id = problems.id
-  group by problems.id
-  order by problems.created_at desc
-  limit $1 offset $2;
-`;
+const querySelectProblems = (tagsToFetchFrom: string[]) => {
+  return `
+    select 
+    problems.id as "id", 
+    source,
+    description, 
+    difficulty,
+    title,
+    string_agg(distinct tags.name, ',') tags_list,
+    count(distinct comments.id) total_comments,
+    problems.created_at,
+    problems.updated_at 
+    from
+    problems 
+    join problems_tags
+    on problems_tags.problem_id = problems.id
+    join tags
+    on problems_tags.tag_id = tags.id
+    left join comments
+    on comments.problem_id = problems.id
+    ${tagsToFetchFrom.length ? 'where tags.name = ANY($3)' : ''}
+    group by problems.id
+    order by problems.created_at desc
+    limit $1 offset $2;
+  `;
+};
 
 const querySelectProblem = `
   select 
@@ -65,7 +68,24 @@ const querySelectProblem = `
   group by problems.id;
 `;
 
-const querySelectProblemCount = 'select count(1) from problems;';
+const querySelectProblemCount = (tagsToFetchFrom: string[]) => {
+  return `
+    select count(1) as count from 
+    (
+      select problems.id from
+      problems 
+      join problems_tags
+      on problems_tags.problem_id = problems.id
+      join tags
+      on problems_tags.tag_id = tags.id
+      left join comments
+      on comments.problem_id = problems.id
+      ${tagsToFetchFrom.length ? 'where tags.name = ANY($1)' : ''}
+      group by problems.id
+      order by problems.created_at desc
+    ) sub_query;
+  `;
+};
 
 const insertProblem = async (
   pool: Pool,
@@ -113,11 +133,14 @@ const getProblems = async (
   pool: Pool,
   limit: number,
   offset: number,
+  tagsToFetchFrom: string[],
 ): Promise<Problem[]> => {
   const queryResponse = await executeQuery({
     pool,
-    text: querySelectProblems,
-    values: [limit, offset],
+    text: querySelectProblems(tagsToFetchFrom),
+    values: tagsToFetchFrom.length
+      ? [limit, offset, tagsToFetchFrom]
+      : [limit, offset],
   });
   const rawProblems = queryResponse.rows || null;
   return rawProblems.map((problem) => {
@@ -145,11 +168,11 @@ const getProblem = async (pool: Pool, problemId: number): Promise<Problem> => {
   };
 };
 
-const getProblemCount = async (pool: Pool) => {
+const getProblemCount = async (pool: Pool, tagsToFetchFrom: string[]) => {
   const queryResponse = await executeQuery({
     pool,
-    text: querySelectProblemCount,
-    values: [],
+    text: querySelectProblemCount(tagsToFetchFrom),
+    values: tagsToFetchFrom.length ? [tagsToFetchFrom] : [],
   });
   const raw = queryResponse.rows || null;
   return Number(raw?.[0]?.count);

@@ -46,6 +46,7 @@ problemRouter.get('/', async (req, res) => {
       res,
     );
   } catch (err) {
+    console.log(err);
     sendStandardResponse(
       HTTP_CODE.SERVER_ERROR,
       {

@@ -127,6 +127,7 @@ interface GetCommentsRequest {
 
 interface GetProblemsRequest {
   page?: number;
+  tags?: string;
 }
 
 interface GetProblemsResponse {

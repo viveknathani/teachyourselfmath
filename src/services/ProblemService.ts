@@ -57,11 +57,19 @@ export class ProblemService {
       page: request.page || 1,
       limit: PAGE_SIZE,
     });
-    const count = await database.getProblemCount(this.state.databasePool);
+    const tagsToFetchFrom =
+      (request.tags !== '' &&
+        request.tags?.split(',').map((tag) => decodeURI(tag))) ||
+      [];
+    const count = await database.getProblemCount(
+      this.state.databasePool,
+      tagsToFetchFrom,
+    );
     const problems = await database.getProblems(
       this.state.databasePool,
       limit,
       offset,
+      tagsToFetchFrom,
     );
     const currentPage = Number(request.page || 1);
     return {
