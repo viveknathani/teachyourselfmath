@@ -27,6 +27,7 @@ problemRouter.post('/', async (req, res) => {
       HTTP_CODE.SERVER_ERROR,
       {
         status: 'error',
+        message: JSON.stringify(err),
       },
       res,
     );
