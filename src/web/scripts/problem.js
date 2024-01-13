@@ -126,6 +126,8 @@ function addComment() {
         if (res.status === 'success') {
             document.getElementById('add-comment-message').innerText = 'added comment!';
             window.location.reload();
+        } else if (res.message && res.message === 'Unauthorized!') {
+            document.getElementById('add-comment-message').innerText = 'you need to login first.';
         } else {
             document.getElementById('add-comment-message').innerText = 'something went wrong!';
         }
