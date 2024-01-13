@@ -1,11 +1,13 @@
 window.MathJax = {
+    loader: {load: ['[tex]/ams']},
     tex: {
-        packages: ['base'],        // extensions to use
-        inlineMath: [              // start/end delimiter pairs for in-line math
+        packages: ['base', 'ams'],        // extensions to use
+        inlineMath: [
+          ['$', '$'],           // start/end delimiter pairs for in-line math
+          ['$$', '$$'],           // start/end delimiter pairs for in-line math
           ['\\(', '\\)']
         ],
         displayMath: [             // start/end delimiter pairs for display math
-          ['$$', '$$'],
           ['\\[', '\\]']
         ],
         processEscapes: true,      // use \$ to produce a literal dollar sign
