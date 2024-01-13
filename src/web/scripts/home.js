@@ -51,7 +51,7 @@ function displayProblems(problems, paginationConfig) {
         const tags = problem.tags.join(',');
         const timeAgo = getTimeAgo(problem.createdAt);
         p1.innerText = problem.title;
-        p2.innerText = `${timeAgo} | ${commentText} | ${tags}`;
+        p2.innerHTML = `${timeAgo} | <a href='/problem?id=${problem.id}'>${commentText}</a> | ${tags}`;
         topDiv.appendChild(p1);
         bottomDiv.appendChild(p2);
         li.appendChild(topDiv);
