@@ -1,8 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Courier+Prime&family=Inter:wght@300;400;500&display=swap');
+html {
+    position: relative;
+    min-height: 100%;
+}
+
 body {
     background-color: antiquewhite;
     margin: 0;
     padding: 0;
+    margin: 0 0 100px;
 }
 
 .font-heading {
@@ -26,4 +32,23 @@ a {
 
 a:visited {
     color: black;
+}
+
+#footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Inter', sans-serif;
+    text-align: center;
+    background-color: black;
+    color: white;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 100px;
+    width: 100%;
+}
+
+#footer a, #footer a:visited, #footer a:hover {
+    color: white;
 }
