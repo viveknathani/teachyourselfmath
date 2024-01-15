@@ -53,6 +53,7 @@ function login() {
       localStorage.setItem('authToken', data.data.authToken);
       document.getElementById('login-message').innerText = 'great, you are logged in!';
       document.getElementById('login-message').style.color = 'green';
+      window.location.href = '/';
     }
   }).catch(err => {
     console.log('oops, something went wrong!', err);
