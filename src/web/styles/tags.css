@@ -20,7 +20,10 @@ h3,h5 {
     padding-bottom: 3px;
 }
 
-#content {
-    max-width: 65%;
-    margin: auto;
+#content h4 {
+    margin-left: 1%;
+}
+
+#content ol {
+    margin-top: -2%;
 }
