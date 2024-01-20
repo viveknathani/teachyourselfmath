@@ -18,8 +18,21 @@ async function main() {
     expressFormat: true,
   });
   const app = express();
-  if (config.ENVIRONMENT === SERVER_ENVIRONMENT.PROD) {
-    app.use(helmet());
+  if (config.ENVIRONMENT === SERVER_ENVIRONMENT.DEV) {
+    app.use(
+      helmet({
+        contentSecurityPolicy: {
+          directives: {
+            'script-src': [
+              "'self'",
+              'cdn.jsdelivr.net',
+              'www.googletagmanager.com',
+            ],
+            'style-src': ["'self'", 'fonts.googleapis.com'],
+          },
+        },
+      }),
+    );
     app.set('trust proxy', true);
   }
   const rateLimiter = await getRateLimiter();
