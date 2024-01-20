@@ -5,7 +5,9 @@ import cors from 'cors';
 import config from './config';
 import { router, pageRouter } from './routes';
 import * as path from 'path';
+import helmet from 'helmet';
 import { createDashboardAndGetRouter } from './queues/dashboard';
+import { SERVER_ENVIRONMENT } from './types';
 
 async function main() {
   const requestLogger = expressWinston.logger({
@@ -22,6 +24,9 @@ async function main() {
   app.use('/', pageRouter);
   app.use('/web', express.static(path.join(__dirname, './web')));
   app.use('/api/v1', router);
+  if (config.ENVIRONMENT === SERVER_ENVIRONMENT.PROD) {
+    app.use(helmet());
+  }
   app.listen(config.PORT, () => {
     console.log(
       `💨 server is running at: ${config.HOST}:${config.PORT}, environment is ${config.ENVIRONMENT}`,
