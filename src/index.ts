@@ -20,7 +20,7 @@ async function main() {
   const app = express();
   if (config.ENVIRONMENT === SERVER_ENVIRONMENT.PROD) {
     app.use(helmet());
-    app.set('trust proxy', 1);
+    app.set('trust proxy', true);
   }
   const rateLimiter = await getRateLimiter();
   app.use(rateLimiter);
