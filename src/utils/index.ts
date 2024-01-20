@@ -1,5 +1,9 @@
 import { ApiResponse, HTTP_CODE } from '../types';
 import express from 'express';
+import { rateLimit } from 'express-rate-limit';
+import RedisClient from 'ioredis';
+import config from '../config';
+import { RedisStore } from 'rate-limit-redis';
 
 const sendStandardResponse = (
   statusCode: HTTP_CODE,
@@ -93,6 +97,20 @@ const TIME_IN_SECONDS = {
   ONE_HOUR: 60 * 60,
 };
 
+const getRateLimiter = async () => {
+  const redisClient = new RedisClient(config.REDIS_URL);
+  return rateLimit({
+    windowMs: 60 * 1000,
+    max: 700,
+    standardHeaders: 'draft-7',
+    legacyHeaders: false,
+    store: new RedisStore({
+      // @ts-expect-error promise<unknown> and args type
+      sendCommand: (...args: string[]) => redisClient.call(...args),
+    }),
+  });
+};
+
 export {
   sendStandardResponse,
   snakeCaseToCamelCaseObject,
@@ -102,4 +120,5 @@ export {
   getSplits,
   getPaginationConfig,
   TIME_IN_SECONDS,
+  getRateLimiter,
 };
