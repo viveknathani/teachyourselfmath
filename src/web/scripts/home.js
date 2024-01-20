@@ -103,6 +103,10 @@ function fetchProblems() {
     });
 }
 
+if (localStorage.getItem('authToken')) {
+    document.getElementById('login-link').style.display = 'none';
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     fetchProblems();
 });
