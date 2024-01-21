@@ -8,7 +8,7 @@ If a document containing math problem exists, we'd like to extract every problem
 
 Meta came up with a [model](https://facebookresearch.github.io/nougat/) to parse academic PDF documents and find the LaTeX math in it.
 
-Currently, I run this model's server locally on my computer with every PDF I can get my hands on. The main server has a queue based system that interacts with the model's server and process all the problems. Here is a visual illustration of how it works:
+Currently, I run this model's server locally on my computer with every PDF I can get my hands on. The main server has a queue-based system that interacts with the model's server and processes all the problems. Here is a visual illustration of how it works:
 
 <img title="flow" alt="flow of all the steps" src="./FLOW.png">
 
