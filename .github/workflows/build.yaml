@@ -18,7 +18,5 @@ jobs:
           node-version: 20.8.1
           cache: 'yarn'
 
-      - uses: Adzz/jest_test_action@v1.0.0
-        with:
-          package-manager: yarn
-          command: build
+      - name: build
+        run: yarn build
