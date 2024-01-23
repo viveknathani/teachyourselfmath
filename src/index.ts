@@ -8,7 +8,6 @@ import * as path from 'path';
 import helmet from 'helmet';
 import { createDashboardAndGetRouter } from './queues/dashboard';
 import { SERVER_ENVIRONMENT } from './types';
-import { getRateLimiter } from './utils';
 
 async function main() {
   const requestLogger = expressWinston.logger({
@@ -35,8 +34,6 @@ async function main() {
     );
     app.set('trust proxy', true);
   }
-  const rateLimiter = await getRateLimiter();
-  app.use(rateLimiter);
   app.use(express.json());
   app.use(requestLogger);
   app.use('/admin/queues', createDashboardAndGetRouter());
