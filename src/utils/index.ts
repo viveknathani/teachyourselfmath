@@ -113,10 +113,14 @@ const getRateLimiter = async () => {
 
 const sanitisePrediction = (input: string): string => {
   let result = input;
-  const ASTERISK_BASED_PREFIX = '* ';
+  const ASTERISK_BASED_PREFIX = '*';
   if (input.startsWith(ASTERISK_BASED_PREFIX)) {
     result = input.slice(ASTERISK_BASED_PREFIX.length);
   }
+  result = result
+    .replace(/\*\*\d+[.)]\*\*/, '') // eg:- input is "**123.** problem", output is " problem"
+    .replace(/^\d+[.)]/, '') // eg:- input is "123. problem", output is " problem"
+    .trim(); // and now, output is just, "problem"
   return result;
 };
 
