@@ -40,7 +40,7 @@ const querySelectProblems = (tagsToFetchFrom: string[]) => {
     left join comments
     on comments.problem_id = problems.id
     ${tagsToFetchFrom.length ? 'where tags.name = ANY($3)' : ''}
-    where problems.status = '${PROBLEM_STATUS.APPROVED}'
+    ${tagsToFetchFrom.length ? 'and' : 'where'} problems.status = '${PROBLEM_STATUS.APPROVED}'
     group by problems.id
     order by problems.created_at desc
     limit $1 offset $2;
@@ -83,7 +83,7 @@ const querySelectProblemCount = (tagsToFetchFrom: string[]) => {
       left join comments
       on comments.problem_id = problems.id
       ${tagsToFetchFrom.length ? 'where tags.name = ANY($1)' : ''}
-      where problems.status = '${PROBLEM_STATUS.APPROVED}'
+      ${tagsToFetchFrom.length ? 'and' : 'where'} problems.status = '${PROBLEM_STATUS.APPROVED}'
       group by problems.id
       order by problems.created_at desc
     ) sub_query;
