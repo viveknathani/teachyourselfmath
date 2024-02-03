@@ -111,6 +111,15 @@ const getRateLimiter = async () => {
   });
 };
 
+const sanitisePrediction = (input: string): string => {
+  let result = input;
+  const ASTERISK_BASED_PREFIX = '* ';
+  if (input.startsWith(ASTERISK_BASED_PREFIX)) {
+    result = input.slice(ASTERISK_BASED_PREFIX.length);
+  }
+  return result;
+};
+
 export {
   sendStandardResponse,
   snakeCaseToCamelCaseObject,
@@ -121,4 +130,5 @@ export {
   getPaginationConfig,
   TIME_IN_SECONDS,
   getRateLimiter,
+  sanitisePrediction,
 };
