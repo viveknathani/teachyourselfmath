@@ -4,6 +4,7 @@ import { state } from '../../state';
 import {
   AddToDatabaseJobData,
   PROBLEM_DIFFICULTY,
+  PROBLEM_STATUS,
   QUEUE_NAME,
 } from '../../types';
 import { createQueue, createWorker } from '../factory';
@@ -21,6 +22,7 @@ const worker = createWorker(queueName, async (job: Job) => {
     source: data.source,
     tagsToAttachWhileInserting: data.tags,
     difficulty: PROBLEM_DIFFICULTY.EASY,
+    status: PROBLEM_STATUS.DRAFT,
   });
 });
 

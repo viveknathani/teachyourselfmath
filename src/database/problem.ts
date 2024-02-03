@@ -1,12 +1,12 @@
 import { Pool } from 'pg';
 import { executeQuery } from '.';
-import { Problem, Tag } from '../types';
+import { Problem, PROBLEM_STATUS, Tag } from '../types';
 import { snakeCaseToCamelCaseObject } from '../utils';
 
 const queryInsertProblem = `
     insert into problems
-    (source, description, difficulty, title, created_at, updated_at)
-    values ($1, $2, $3, $4, now(), now())
+    (source, description, difficulty, title, status, created_at, updated_at)
+    values ($1, $2, $3, $4, $5, now(), now())
     returning *;
 `;
 
@@ -25,6 +25,7 @@ const querySelectProblems = (tagsToFetchFrom: string[]) => {
     source,
     description, 
     difficulty,
+    status,
     title,
     string_agg(distinct tags.name, ',') tags_list,
     count(distinct comments.id) total_comments,
@@ -39,6 +40,7 @@ const querySelectProblems = (tagsToFetchFrom: string[]) => {
     left join comments
     on comments.problem_id = problems.id
     ${tagsToFetchFrom.length ? 'where tags.name = ANY($3)' : ''}
+    where problems.status = '${PROBLEM_STATUS.APPROVED}'
     group by problems.id
     order by problems.created_at desc
     limit $1 offset $2;
@@ -81,6 +83,7 @@ const querySelectProblemCount = (tagsToFetchFrom: string[]) => {
       left join comments
       on comments.problem_id = problems.id
       ${tagsToFetchFrom.length ? 'where tags.name = ANY($1)' : ''}
+      where problems.status = '${PROBLEM_STATUS.APPROVED}'
       group by problems.id
       order by problems.created_at desc
     ) sub_query;
@@ -99,6 +102,7 @@ const insertProblem = async (
       problem.description,
       problem.difficulty,
       problem.title,
+      problem.status,
     ],
     transaction: true,
   });

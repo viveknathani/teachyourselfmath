@@ -20,6 +20,11 @@ enum PROBLEM_DIFFICULTY {
   HARD = 'HARD',
 }
 
+enum PROBLEM_STATUS {
+  DRAFT = 'DRAFT',
+  APPROVED = 'APPROVED',
+}
+
 enum VOTE_TYPE {
   UPVOTE = 'UPVOTE',
   DOWNVOTE = 'DOWNVOTE',
@@ -76,6 +81,7 @@ interface Problem {
   source: string;
   description: string;
   difficulty: PROBLEM_DIFFICULTY;
+  status: PROBLEM_STATUS;
   title: string;
   tags?: string[];
   totalComments?: number;
@@ -195,4 +201,5 @@ export {
   VOTE_TOPIC,
   QUEUE_NAME,
   PROBLEM_DIFFICULTY,
+  PROBLEM_STATUS,
 };
