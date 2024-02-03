@@ -24,7 +24,7 @@ const worker = createWorker(queueName, async (job: Job) => {
   ) {
     await addToDatabaseQueue({
       sanitisedPrediction: sanitisePrediction(data.prediction),
-      source: data.source,
+      source: data.source.replace('.pdf', ''),
       tags: data.tags.split(','),
     });
   }
@@ -52,6 +52,8 @@ const hasTheRightSetOfWords = (input: string) => {
     'calculate',
     'show that',
     'prove that',
+    'what is the probability',
+    'find the probability',
   ];
   for (const phrase of phrases) {
     if (input.toLowerCase().includes(phrase)) {
