@@ -45,12 +45,15 @@ function displayProblems(problems, paginationConfig) {
         bottomDiv.className = "font-accent";
         const p1 = document.createElement('p');
         const p2 = document.createElement('p');
+        const a = document.createElement('a');
+        a.innerText = problem.title;
+        a.href = `/problem?id=${problem.id}`;
         const commentText = `${
             problem.totalComments > 1 ? `${problem.totalComments} comments`
             : (problem.totalComments === 1 ? `1 comment` : `discuss`)}`;
         const tags = problem.tags.join(',');
         const timeAgo = getTimeAgo(problem.createdAt);
-        p1.innerText = problem.title;
+        p1.appendChild(a);
         p2.innerHTML = `${timeAgo} | <a href='/problem?id=${problem.id}'>${commentText}</a> |  <a href='/?tags=${encodeURI(tags)}'>${tags}</a>`;
         topDiv.appendChild(p1);
         bottomDiv.appendChild(p2);
