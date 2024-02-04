@@ -58,8 +58,10 @@ function fetchComments() {
 
 function displayProblem(problem) {
     const commentText = `${
-        problem.totalComments > 1 ? `${problem.totalComments} comments`
-        : (problem.totalComments === 1 ? `1 comment` : `discuss`)}`;
+        problem.totalComments !== 1
+            ? `${problem.totalComments} comments`
+            : '1 comment'
+        }`;
     const tags = problem.tags.join(',');
     const timeAgo = getTimeAgo(problem.createdAt);
     document.getElementById('problem-title').innerText = `Problem #${problem.id}`;
@@ -207,8 +209,20 @@ function displayReplies(commentId, replies) {
     }
 }
 
+function askForLoginOrSetAddCommentListener() {
+    const button = document.getElementById('add-comment-button');
+    if (localStorage.getItem('authToken')) {
+        button.addEventListener('click', addComment);
+    } else {
+        button.addEventListener('click', () => {
+            location.href = '/auth';
+        });
+        button.innerText = 'login to comment';
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('add-comment-button').addEventListener('click', addComment);
+    askForLoginOrSetAddCommentListener();
     fetchProblem();
     fetchComments();
 });
