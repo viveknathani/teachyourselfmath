@@ -65,7 +65,7 @@ function displayProblem(problem) {
     const tags = problem.tags.join(',');
     const timeAgo = getTimeAgo(problem.createdAt);
     document.getElementById('problem-title').innerText = `Problem #${problem.id}`;
-    document.getElementById('problem-meta').innerText = `${timeAgo} | ${commentText} | ${tags}`;
+    document.getElementById('problem-meta').innerText = `${timeAgo} | ${commentText} | ${tags} | ${problem.difficulty.toLowerCase()}`;
     document.getElementById('problem-meta').className = 'font-accent';
     document.getElementById('problem-description').innerText = problem.description;
     window.MathJax.typeset();
