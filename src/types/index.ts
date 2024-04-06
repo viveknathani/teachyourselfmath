@@ -135,6 +135,7 @@ interface GetProblemsRequest {
   page?: number;
   tags?: string;
   difficulty?: string;
+  bookmarked?: boolean;
 }
 
 interface GetProblemsResponse {

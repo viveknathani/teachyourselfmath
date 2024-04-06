@@ -30,6 +30,19 @@ const injectUserInfoMiddleWare = async (
   }
 };
 
+const injectOptionalUserInfoMiddleWare = async (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction,
+) => {
+  const authToken = extractBearerToken(req.headers.authorization as string);
+  const user = await userService.verifyAndDecodeToken(authToken);
+  if (user !== null) {
+    req.body.user = user;
+  }
+  next();
+};
+
 userRouter.post('/signup', async (req, res) => {
   try {
     const insertedUser = await userService.signup(req.body);
@@ -98,4 +111,8 @@ userRouter.post('/login', async (req, res) => {
   }
 });
 
-export { userRouter, injectUserInfoMiddleWare };
+export {
+  userRouter,
+  injectUserInfoMiddleWare,
+  injectOptionalUserInfoMiddleWare,
+};

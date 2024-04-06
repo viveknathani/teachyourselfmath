@@ -21,6 +21,7 @@ const querySelectTag = 'select * from tags';
 const querySelectProblems = (
   tagsToFetchFrom: string[],
   difficultyLevelsToConsider: PROBLEM_DIFFICULTY[],
+  userId: number | null,
 ) => {
   return `
     select 
@@ -53,6 +54,7 @@ const querySelectProblems = (
       `
         : ''
     }
+    ${userId ? `and problems.id in (select problem_id from user_bookmarks where user_id = ${userId})` : ''}
     group by problems.id
     order by problems.created_at desc
     limit $1 offset $2;
@@ -82,9 +84,21 @@ const querySelectProblem = `
   group by problems.id;
 `;
 
+const queryInsertUserBookmark = `
+  insert into user_bookmarks
+  (user_id, problem_id, created_at)
+  values ($1, $2, now());
+`;
+
+const queryDeletetUserBookmark = `
+  delete from user_bookmarks
+  where user_id = $1 and problem_id = $2;
+`;
+
 const querySelectProblemCount = (
   tagsToFetchFrom: string[],
   difficultyLevelsToConsider: PROBLEM_DIFFICULTY[],
+  userId: number | null,
 ) => {
   return `
     select count(1) as count from 
@@ -108,6 +122,7 @@ const querySelectProblemCount = (
         `
           : ''
       }
+      ${userId ? `and problems.id in (select problem_id from user_bookmarks where user_id = ${userId})` : ''}
       group by problems.id
       order by problems.created_at desc
     ) sub_query;
@@ -163,10 +178,15 @@ const getProblems = async (
   offset: number,
   tagsToFetchFrom: string[],
   difficultyLevelsToConsider: PROBLEM_DIFFICULTY[],
+  userId: number | null,
 ): Promise<Problem[]> => {
   const queryResponse = await executeQuery({
     pool,
-    text: querySelectProblems(tagsToFetchFrom, difficultyLevelsToConsider),
+    text: querySelectProblems(
+      tagsToFetchFrom,
+      difficultyLevelsToConsider,
+      userId,
+    ),
     values: tagsToFetchFrom.length
       ? [limit, offset, tagsToFetchFrom]
       : [limit, offset],
@@ -201,20 +221,54 @@ const getProblemCount = async (
   pool: Pool,
   tagsToFetchFrom: string[],
   difficultyLevelsToConsider: PROBLEM_DIFFICULTY[],
+  userId: number | null,
 ) => {
   const queryResponse = await executeQuery({
     pool,
-    text: querySelectProblemCount(tagsToFetchFrom, difficultyLevelsToConsider),
+    text: querySelectProblemCount(
+      tagsToFetchFrom,
+      difficultyLevelsToConsider,
+      userId,
+    ),
     values: tagsToFetchFrom.length ? [tagsToFetchFrom] : [],
   });
   const raw = queryResponse.rows || null;
   return Number(raw?.[0]?.count);
 };
+
+const insertUserBookmark = async (
+  pool: Pool,
+  userId: number,
+  problemId: number,
+) => {
+  await executeQuery({
+    pool,
+    text: queryInsertUserBookmark,
+    values: [userId, problemId],
+    transaction: true,
+  });
+};
+
+const deleteUserBookmark = async (
+  pool: Pool,
+  userId: number,
+  problemId: number,
+) => {
+  await executeQuery({
+    pool,
+    text: queryDeletetUserBookmark,
+    values: [userId, problemId],
+    transaction: true,
+  });
+};
+
 export {
   insertProblem,
   insertProblemTag,
+  insertUserBookmark,
   getTags,
   getProblem,
   getProblems,
   getProblemCount,
+  deleteUserBookmark,
 };

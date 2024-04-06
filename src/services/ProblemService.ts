@@ -5,6 +5,7 @@ import {
   PROBLEM_DIFFICULTY,
   Problem,
 } from '../types';
+import * as errors from './errors';
 import * as database from '../database';
 import { TagService } from './TagService';
 import { getPaginationConfig, TIME_IN_SECONDS } from '../utils';
@@ -51,13 +52,17 @@ export class ProblemService {
   }
 
   public async getProblems(
+    userId: number | null,
     request: GetProblemsRequest,
   ): Promise<GetProblemsResponse> {
-    const cacheKey = `PROBLEMS:$${JSON.stringify(request)}`;
+    const cacheKey =
+      userId && request.bookmarked
+        ? `PROBLEMS:${userId}:${JSON.stringify(request)}`
+        : `PROBLEMS:${JSON.stringify(request)}`;
     const cachedData = await this.state.cache.get(cacheKey);
     let result: any = JSON.parse(cachedData || '{}');
     if (!cachedData) {
-      result = await this.getProblemsFromDb(request);
+      result = await this.getProblemsFromDb(userId, request);
       await this.state.cache.setex(
         cacheKey,
         TIME_IN_SECONDS.ONE_HOUR,
@@ -68,8 +73,12 @@ export class ProblemService {
   }
 
   public async getProblemsFromDb(
+    userId: number | null,
     request: GetProblemsRequest,
   ): Promise<GetProblemsResponse> {
+    if (request.bookmarked && userId === null) {
+      throw new errors.ErrUserNotFound();
+    }
     const PAGE_SIZE = 20;
     const { limit, offset } = getPaginationConfig({
       page: request.page || 1,
@@ -94,6 +103,7 @@ export class ProblemService {
       this.state.databasePool,
       tagsToFetchFrom,
       difficultyLevelsToConsider,
+      userId && request.bookmarked ? userId : null,
     );
     const problems = await database.getProblems(
       this.state.databasePool,
@@ -101,6 +111,7 @@ export class ProblemService {
       offset,
       tagsToFetchFrom,
       difficultyLevelsToConsider,
+      userId && request.bookmarked ? userId : null,
     );
     const currentPage = Number(request.page || 1);
     return {
@@ -114,5 +125,21 @@ export class ProblemService {
 
   public async getProblem(problemId: number) {
     return database.getProblem(this.state.databasePool, problemId);
+  }
+
+  public async bookmarkProblem(userId: number, problemId: number) {
+    return database.insertUserBookmark(
+      this.state.databasePool,
+      userId,
+      problemId,
+    );
+  }
+
+  public async unbookmarkProblem(userId: number, problemId: number) {
+    return database.deleteUserBookmark(
+      this.state.databasePool,
+      userId,
+      problemId,
+    );
   }
 }
