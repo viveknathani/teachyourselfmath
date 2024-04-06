@@ -185,4 +185,41 @@ problemRouter.delete('/:problemId/bookmark', async (req, res) => {
   }
 });
 
+problemRouter.get('/:problemId/is-bookmarked', async (req, res) => {
+  try {
+    if (!req.body.user?.id) {
+      sendStandardResponse(
+        HTTP_CODE.UNAUTHORIZED,
+        {
+          status: 'error',
+          message: 'you need to login',
+        },
+        res,
+      );
+      return;
+    }
+    const response = await problemService.isProblemBookmarkedByUser(
+      req.body.user?.id,
+      req.params.problemId as any,
+    );
+    sendStandardResponse(
+      HTTP_CODE.CREATED,
+      {
+        status: 'success',
+        data: response,
+      },
+      res,
+    );
+  } catch (err) {
+    console.log(err);
+    sendStandardResponse(
+      HTTP_CODE.SERVER_ERROR,
+      {
+        status: 'error',
+      },
+      res,
+    );
+  }
+});
+
 export { problemRouter };

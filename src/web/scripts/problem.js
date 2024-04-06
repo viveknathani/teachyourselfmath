@@ -221,8 +221,62 @@ function askForLoginOrSetAddCommentListener() {
     }
 }
 
+function toggleBookmark() {
+    const authToken = localStorage.getItem('authToken');
+    if (!authToken) {
+        return;
+    }
+    const bookmarkButton = document.getElementById('problem-bookmark');
+    const isBookmarked = bookmarkButton.innerText === 'Bookmarked';
+    fetch(`/api/v1/problems/${problemId}/bookmark`, {
+        method: isBookmarked ? 'DELETE' : 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${authToken}`
+        },
+    }).then(res => res.json())
+    .then(res => {
+        if (res.status === 'success') {
+            fetchAndDisplayBookmarkStatus();
+        } else {
+            console.error('Failed to toggle bookmark:', res.message);
+        }
+    }).catch(err => {
+        console.error('Error toggling bookmark:', err);
+    });
+}
+
+
+function fetchAndDisplayBookmarkStatus() {
+    const authToken = localStorage.getItem('authToken');
+    if (!authToken) {
+        return;
+    }
+    fetch(`/api/v1/problems/${problemId}/is-bookmarked`, {
+        method: 'GET',
+        headers: {
+            'authorization': `Bearer ${localStorage.getItem('authToken')}`
+        },
+    }).then(res => res.json())
+    .then(res => {
+        const bookmarkButton = document.getElementById('problem-bookmark');
+        bookmarkButton.style.display = 'block';
+        if (res.data.isBookmarked) {
+            bookmarkButton.innerText = 'Bookmarked';
+            bookmarkButton.classList.add('bookmarked');
+        } else {
+            bookmarkButton.innerText = 'Bookmark';
+            bookmarkButton.classList.remove('bookmarked');
+        }
+        bookmarkButton.onclick = toggleBookmark;
+    }).catch(err => {
+        console.error('Failed to fetch bookmark status:', err);
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     askForLoginOrSetAddCommentListener();
     fetchProblem();
     fetchComments();
+    fetchAndDisplayBookmarkStatus();
 });

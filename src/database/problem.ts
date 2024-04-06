@@ -95,6 +95,12 @@ const queryDeletetUserBookmark = `
   where user_id = $1 and problem_id = $2;
 `;
 
+const queryCheckUserBookmark = `
+  select exists
+  (select 1 from user_bookmarks
+  where user_id = $1 AND problem_id = $2)
+`;
+
 const querySelectProblemCount = (
   tagsToFetchFrom: string[],
   difficultyLevelsToConsider: PROBLEM_DIFFICULTY[],
@@ -262,6 +268,19 @@ const deleteUserBookmark = async (
   });
 };
 
+const checkUserBookmark = async (
+  pool: Pool,
+  userId: number,
+  problemId: number,
+): Promise<boolean> => {
+  const queryResponse = await executeQuery({
+    pool,
+    text: queryCheckUserBookmark,
+    values: [userId, problemId],
+  });
+  return queryResponse.rows[0].exists;
+};
+
 export {
   insertProblem,
   insertProblemTag,
@@ -271,4 +290,5 @@ export {
   getProblems,
   getProblemCount,
   deleteUserBookmark,
+  checkUserBookmark,
 };

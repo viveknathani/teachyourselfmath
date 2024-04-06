@@ -142,4 +142,20 @@ export class ProblemService {
       problemId,
     );
   }
+
+  public async isProblemBookmarkedByUser(
+    userId: number,
+    problemId: number,
+  ): Promise<{
+    isBookmarked: boolean;
+  }> {
+    const isBookmarked = await database.checkUserBookmark(
+      this.state.databasePool,
+      userId,
+      problemId,
+    );
+    return {
+      isBookmarked,
+    };
+  }
 }
