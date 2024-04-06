@@ -1,3 +1,6 @@
+let selectedDifficultyList = [];
+let selectedTagsList = [];
+
 function combinedNumericAndStringPart(interval, text) {
     if (interval === 1) {
         return `${interval} ${text.slice(0, -1)} ago`;
@@ -34,6 +37,7 @@ function getTimeAgo(date) {
 
 function displayProblems(problems, paginationConfig) {
     const list = document.getElementsByTagName('ol')[0];
+    list.innerHTML = '';
     list.start = paginationConfig.startingNumberForList;
     problems.forEach(problem => {
         const li = document.createElement('li');
@@ -63,10 +67,15 @@ function displayProblems(problems, paginationConfig) {
     });
     const pagination = document.getElementById('pagination');
     const searchParams = new URLSearchParams(window.location.search);
+    pagination.innerHTML = '';
+    const params = new URLSearchParams({
+        tags: searchParams.get('tags') || '',
+        difficulty: selectedDifficultyList.join(','),
+    });
 
     if (paginationConfig.hasPreviousPage) {
         const prevLink = document.createElement('a');
-        prevLink.href = `/?page=${paginationConfig.currentPage - 1}&tags=${searchParams.get('tags') || ''}`;
+        prevLink.href = `/?page=${paginationConfig.currentPage - 1}&${params.toString()}`;
         prevLink.innerText = 'prev';
         pagination.appendChild(prevLink);
     }
@@ -77,7 +86,7 @@ function displayProblems(problems, paginationConfig) {
     }
     if (paginationConfig.hasNextPage) {
         const nextLink = document.createElement('a');
-        nextLink.href = `/?page=${paginationConfig.currentPage + 1}&tags=${searchParams.get('tags') || ''}`;
+        nextLink.href = `/?page=${paginationConfig.currentPage + 1}&${params.toString()}`;
         nextLink.innerText = 'next';
         pagination.appendChild(nextLink);
     }
@@ -87,7 +96,21 @@ function displayProblems(problems, paginationConfig) {
 
 function fetchProblems() {
     const searchParams = new URLSearchParams(window.location.search);
-    fetch(`/api/v1/problems?page=${searchParams.get('page') || 1}&tags=${searchParams.get('tags') || ''}`, {
+    const params = new URLSearchParams({
+        page: searchParams.get('page') || 1,
+        tags: selectedTagsList.length ? selectedTagsList.join(',') : searchParams.get('tags') || '',
+        difficulty: selectedDifficultyList.join(','),
+    });
+    searchParams.set('page', params.page);
+    searchParams.set('tags', params.tags);
+    searchParams.set('difficulty', params.difficulty);
+    const url = new URL(window.location);
+    const paramsObject = Object.fromEntries(params);
+    url.searchParams.set('page', paramsObject.page);
+    url.searchParams.set('tags', paramsObject.tags);
+    url.searchParams.set('difficulty', paramsObject.difficulty);
+    window.history.pushState(null, '', url.toString());
+    fetch(`/api/v1/problems?${params.toString()}`, {
         method: 'GET',
     }).then(res => res.json())
     .then(res => {
@@ -110,6 +133,84 @@ if (localStorage.getItem('authToken')) {
     document.getElementById('login-link').style.display = 'none';
 }
 
+function renderSelectedDifficultyList() {
+   const difficultyListDiv = document.getElementById('difficulty-list');
+   difficultyListDiv.innerHTML = '';
+   for (difficulty of selectedDifficultyList) {
+        const button = document.createElement('button');
+        button.innerText = difficulty;
+        button.onclick = () => {
+            selectedDifficultyList = selectedDifficultyList.filter(item => item !== difficulty);
+            renderSelectedDifficultyList();
+            fetchProblems();
+        }
+        difficultyListDiv.appendChild(button);
+   }
+}
+
+function renderSelectedTagsList() {
+   const tagsListDiv = document.getElementById('tags-list');
+   tagsListDiv.innerHTML = '';
+   for (const tag of selectedTagsList) {
+        const button = document.createElement('button');
+        button.innerText = tag;
+        button.onclick = () => {
+            selectedTagsList = selectedTagsList.filter(item => item !== tag);
+            renderSelectedTagsList();
+            fetchProblems();
+        }
+        tagsListDiv.appendChild(button);
+   }
+}
+
+function listenToFilterChanges() {
+    const difficultySelect = document.getElementById('difficulty-filter');
+    difficultySelect.addEventListener('change', function() {
+        const selectedDifficulty = this.value;
+        if (selectedDifficulty === 'ANY') {
+            selectedDifficultyList = [];
+        } else {
+            selectedDifficultyList.push(selectedDifficulty);
+            selectedDifficultyList = Array.from(new Set(selectedDifficultyList));
+        }
+        renderSelectedDifficultyList();
+        fetchProblems();
+    });
+    const tagsSelect = document.getElementById('tags-filter');
+    tagsSelect.addEventListener('change', function() {
+        const selectedTag = this.value;
+        if (selectedTag === 'ANY') {
+            selectedTagsList = [];
+        } else {
+            selectedTagsList.push(selectedTag);
+            selectedTagsList = Array.from(new Set(selectedTagsList));
+        }
+        renderSelectedTagsList();
+        fetchProblems();
+    });
+}
+
+function fetchTags() {
+    fetch('/api/v1/tags')
+    .then(res => res.json())
+    .then(res => {
+        if (res.status === 'success') {
+            const allTags = Object.keys(res.data);
+            allTags.unshift('ANY');
+            const tagsDropdown = document.getElementById('tags-filter');
+            allTags.forEach(tag => {
+                const option = document.createElement('option');
+                option.value = tag;
+                option.innerText = tag;
+                tagsDropdown.appendChild(option);
+            });
+            tagsDropdown.style.display = 'block';
+        }
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     fetchProblems();
+    fetchTags();
+    listenToFilterChanges();
 });

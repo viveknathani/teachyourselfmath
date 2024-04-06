@@ -34,6 +34,22 @@
             <h5 id="login-link"><a href="./auth">login</a></h5>
         </div>
     </div>
+    <div id="filters">
+        <div id="difficulty">
+            <select name="difficulty" id="difficulty-filter">
+                <option value="ANY">ANY</option>
+                <option value="EASY">EASY</option>
+                <option value="MEDIUM">MEDIUM</option>
+                <option value="HARD">HARD</option>
+            </select>
+            <div id="difficulty-list"></div>
+        </div>
+        <div id="tags">
+            <select name="tags" id="tags-filter" style="display: none;">
+            </select>
+            <div id="tags-list"></div>
+        </div>
+    </div>
     <ol></ol>
     <div id="pagination" class="font-primary">
     </div>
