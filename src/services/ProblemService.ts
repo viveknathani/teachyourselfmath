@@ -2,6 +2,7 @@ import {
   AppState,
   GetProblemsRequest,
   GetProblemsResponse,
+  PROBLEM_DIFFICULTY,
   Problem,
 } from '../types';
 import * as database from '../database';
@@ -78,15 +79,28 @@ export class ProblemService {
       (request.tags !== '' &&
         request.tags?.split(',').map((tag) => decodeURI(tag))) ||
       [];
+    const difficultyLevelsToConsider = Array.from(
+      new Set(
+        (request.difficulty !== '' &&
+          request.difficulty
+            ?.split(',')
+            .map(
+              (difficulty) => decodeURI(difficulty) as PROBLEM_DIFFICULTY,
+            )) ||
+          [],
+      ),
+    );
     const count = await database.getProblemCount(
       this.state.databasePool,
       tagsToFetchFrom,
+      difficultyLevelsToConsider,
     );
     const problems = await database.getProblems(
       this.state.databasePool,
       limit,
       offset,
       tagsToFetchFrom,
+      difficultyLevelsToConsider,
     );
     const currentPage = Number(request.page || 1);
     return {

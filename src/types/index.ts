@@ -134,6 +134,7 @@ interface GetCommentsRequest {
 interface GetProblemsRequest {
   page?: number;
   tags?: string;
+  difficulty?: string;
 }
 
 interface GetProblemsResponse {
