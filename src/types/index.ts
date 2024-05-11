@@ -154,6 +154,11 @@ interface UpdateProfileResponse {
   user: User;
 }
 
+interface UpdatePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+}
+
 interface SplitFileJobData {
   file: Express.Multer.File;
   tags: string;
@@ -202,6 +207,7 @@ export {
   GetProblemsResponse,
   UpdateProfileRequest,
   UpdateProfileResponse,
+  UpdatePasswordRequest,
   SplitFileJobData,
   PredictSegmentJobData,
   SplitPredictionJobData,

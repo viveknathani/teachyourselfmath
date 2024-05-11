@@ -3,6 +3,7 @@ import {
   LoginRequest,
   LoginResponse,
   SignupRequest,
+  UpdatePasswordRequest,
   UpdateProfileRequest,
   UpdateProfileResponse,
   User,
@@ -43,7 +44,10 @@ export class UserService {
     if (existingUser !== null) {
       throw new errors.ErrEmailOrUsernameExists();
     }
-    const hashedPassword = await bcrypt.hash(request.password, 10);
+    const hashedPassword = await bcrypt.hash(
+      request.password,
+      config.BCRYPT_NUMBER_OF_ROUNDS,
+    );
     const insertedUser = await insertUser(this.state.databasePool, {
       ...request,
       password: hashedPassword,
@@ -112,6 +116,26 @@ export class UserService {
     return {
       user,
     };
+  }
+
+  public async updatePassword(userId: number, request: UpdatePasswordRequest) {
+    const user = await database.getUserById(this.state.databasePool, userId);
+    const doOldPasswordsMatch = await bcrypt.compare(
+      request.currentPassword,
+      user.password.toString(),
+    );
+    if (!doOldPasswordsMatch) {
+      throw new errors.ClientError('incorrect password!');
+    }
+    const hashedPassword = await bcrypt.hash(
+      request.newPassword,
+      config.BCRYPT_NUMBER_OF_ROUNDS,
+    );
+    await database.updatePassword(
+      this.state.databasePool,
+      hashedPassword,
+      userId,
+    );
   }
 
   private createAuthToken(user: User): string {

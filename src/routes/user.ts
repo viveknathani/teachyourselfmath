@@ -179,6 +179,40 @@ userRouter.put('/profile', injectUserInfoMiddleWare, async (req, res) => {
   }
 });
 
+userRouter.put('/password', injectUserInfoMiddleWare, async (req, res) => {
+  try {
+    const user = await userService.updatePassword(req.body.user.id, req.body);
+    sendStandardResponse(
+      HTTP_CODE.OK,
+      {
+        status: 'success',
+        data: user,
+      },
+      res,
+    );
+  } catch (err) {
+    if (err instanceof ClientError) {
+      sendStandardResponse(
+        HTTP_CODE.CLIENT_ERROR,
+        {
+          status: 'error',
+          message: err?.message,
+        },
+        res,
+      );
+    } else {
+      console.log(err);
+      sendStandardResponse(
+        HTTP_CODE.SERVER_ERROR,
+        {
+          status: 'error',
+        },
+        res,
+      );
+    }
+  }
+});
+
 export {
   userRouter,
   injectUserInfoMiddleWare,

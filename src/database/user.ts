@@ -23,6 +23,10 @@ const queryGetUserById = `
     select * from users where id = $1;
 `;
 
+const queryUpdatePassword = `
+    update users set password = $1 where id = $2;
+`;
+
 const insertUser = async (pool: Pool, user: Partial<User>): Promise<User> => {
   const queryResponse = await executeQuery({
     pool,
@@ -73,4 +77,21 @@ const updateProfile = async (
   return snakeCaseToCamelCaseObject(rawUser);
 };
 
-export { insertUser, getUserByEmailOrUsername, getUserById, updateProfile };
+const updatePassword = async (pool: Pool, password: string, userId: number) => {
+  const queryResponse = await executeQuery({
+    pool,
+    text: queryUpdatePassword,
+    transaction: true,
+    values: [password, userId],
+  });
+  const rawUser = queryResponse.rows?.[0] || null;
+  return snakeCaseToCamelCaseObject(rawUser);
+};
+
+export {
+  insertUser,
+  getUserByEmailOrUsername,
+  getUserById,
+  updateProfile,
+  updatePassword,
+};
