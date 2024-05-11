@@ -1,5 +1,9 @@
 const searchParams = new URLSearchParams(window.location.search);
 const problemId = searchParams.get('id');
+const simplemde = new SimpleMDE({
+    element: document.getElementById('user-comment'),
+    spellChecker: false,
+});
 
 function combinedNumericAndStringPart(interval, text) {
     if (interval === 1) {
@@ -86,7 +90,7 @@ function displayComments(comments) {
         commentDiv.appendChild(commentMeta);
 
         const commentContent = document.createElement('p');
-        commentContent.innerText = comment.content;
+        commentContent.innerHTML = marked.parse(comment.content);
         commentDiv.appendChild(commentContent);
 
         const replyButton = document.createElement('button');
@@ -112,7 +116,7 @@ function displayComments(comments) {
 }
 
 function addComment() {
-    const content = document.getElementById('user-comment').value;
+    const content = simplemde.value();
     fetch('/api/v1/comments', {
         method: 'POST',
         headers: {

@@ -58,6 +58,10 @@ textarea {
     display: block;
 }
 
+.editor-toolbar, .editor-statusbar, .CodeMirror {
+    width: 60%;
+}
+
 .comment-meta, .reply-meta {
     margin-bottom: -12px;
 }
