@@ -96,11 +96,15 @@ function displayProblems(problems, paginationConfig) {
 
 function fetchProblems() {
     const searchParams = new URLSearchParams(window.location.search);
+    const bookmarked = document.getElementById('bookmark-checkbox').checked;
     const params = new URLSearchParams({
         page: searchParams.get('page') || 1,
         tags: selectedTagsList.length ? selectedTagsList.join(',') : searchParams.get('tags') || '',
         difficulty: selectedDifficultyList.join(','),
     });
+    if (bookmarked) {
+        params.set('bookmarked', "true");
+    }
     searchParams.set('page', params.page);
     searchParams.set('tags', params.tags);
     searchParams.set('difficulty', params.difficulty);
@@ -112,6 +116,10 @@ function fetchProblems() {
     window.history.pushState(null, '', url.toString());
     fetch(`/api/v1/problems?${params.toString()}`, {
         method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+        },
     }).then(res => res.json())
     .then(res => {
         if (res.data) {
@@ -188,6 +196,9 @@ function listenToFilterChanges() {
         renderSelectedTagsList();
         fetchProblems();
     });
+    if (localStorage.getItem('authToken')) {
+        document.getElementById('bookmark-checkbox').addEventListener('click', fetchProblems);
+    }
 }
 
 function fetchTags() {
