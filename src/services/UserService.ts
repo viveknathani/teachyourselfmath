@@ -3,6 +3,8 @@ import {
   LoginRequest,
   LoginResponse,
   SignupRequest,
+  UpdateProfileRequest,
+  UpdateProfileResponse,
   User,
 } from '../types';
 import * as errors from './errors';
@@ -66,6 +68,7 @@ export class UserService {
       throw new errors.ErrInvalidEmailPassword();
     }
     user.password = '';
+    user.name = '';
     return {
       user,
       authToken: this.createAuthToken(user),
@@ -85,6 +88,30 @@ export class UserService {
       console.log(err);
       return null;
     }
+  }
+
+  public async getProfile(userId: number): Promise<User> {
+    const user = await database.getUserById(this.state.databasePool, userId);
+    user.password = '';
+    return user;
+  }
+
+  public async updateProfile(
+    userId: number,
+    request: UpdateProfileRequest,
+  ): Promise<UpdateProfileResponse> {
+    if (!request.name) {
+      throw new errors.ClientError('nothing to update right now!');
+    }
+    const user = await database.updateProfile(
+      this.state.databasePool,
+      request.name,
+      userId,
+    );
+    user.password = '';
+    return {
+      user,
+    };
   }
 
   private createAuthToken(user: User): string {

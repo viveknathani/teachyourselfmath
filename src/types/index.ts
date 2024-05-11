@@ -146,6 +146,14 @@ interface GetProblemsResponse {
   problems: Problem[];
 }
 
+interface UpdateProfileRequest {
+  name?: string;
+}
+
+interface UpdateProfileResponse {
+  user: User;
+}
+
 interface SplitFileJobData {
   file: Express.Multer.File;
   tags: string;
@@ -192,6 +200,8 @@ export {
   GetCommentsRequest,
   GetProblemsRequest,
   GetProblemsResponse,
+  UpdateProfileRequest,
+  UpdateProfileResponse,
   SplitFileJobData,
   PredictSegmentJobData,
   SplitPredictionJobData,
