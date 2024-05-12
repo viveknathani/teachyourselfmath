@@ -7,6 +7,7 @@ import {
   UpdateProfileRequest,
   UpdateProfileResponse,
   User,
+  UserPreference,
 } from '../types';
 import * as errors from './errors';
 import * as database from '../database';
@@ -116,6 +117,14 @@ export class UserService {
     return {
       user,
     };
+  }
+
+  public async updatePreferences(userId: number, preferences: UserPreference) {
+    await database.updatePreferences(
+      this.state.databasePool,
+      preferences,
+      userId,
+    );
   }
 
   public async updatePassword(userId: number, request: UpdatePasswordRequest) {

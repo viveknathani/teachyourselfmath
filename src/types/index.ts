@@ -61,12 +61,22 @@ interface AppState {
   cache: Redis;
 }
 
+interface UserPreference {
+  notifications: {
+    email: {
+      transactional: boolean;
+      promotional: boolean;
+    };
+  };
+}
+
 interface User {
   id: number;
   name: string;
   email: string;
   username: string;
   password: string;
+  preference: UserPreference | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -195,6 +205,7 @@ export {
   ExecuteQuery,
   AppState,
   User,
+  UserPreference,
   Tag,
   Problem,
   Comment,
