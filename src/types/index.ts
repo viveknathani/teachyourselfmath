@@ -48,6 +48,16 @@ enum NOTIFICATION_CHANNEL {
   EMAIL = 'EMAIL',
 }
 
+enum PASSWORD_RESET_STAGE {
+  SEND_REQUEST = 'SEND_REQUEST',
+  ENTER_CODE = 'ENTER_CODE',
+  UPDATE_PASSWORD = 'UPDATE_PASSWORD',
+}
+
+enum REDIS_KEY_PREFIX {
+  PASSWORD_RESET = 'PASSWORD_RESET',
+}
+
 interface ApiResponse {
   status: 'success' | 'error';
   data?: any;
@@ -153,6 +163,38 @@ interface GetProblemsRequest {
   bookmarked?: boolean;
 }
 
+interface PasswordResetSendRequestData {
+  email: string;
+}
+
+interface PasswordResetEnterCodeData {
+  email: string;
+  code: string;
+}
+
+interface PasswordResetUpdatePasswordData {
+  email: string;
+  newPassword: string;
+}
+
+interface PasswordResetStatus {
+  code: string;
+  verified: boolean;
+}
+
+interface PasswordResetRequest {
+  stage: PASSWORD_RESET_STAGE;
+  data:
+    | PasswordResetSendRequestData
+    | PasswordResetEnterCodeData
+    | PasswordResetUpdatePasswordData;
+}
+
+interface PassswordResetResponse {
+  stage: PASSWORD_RESET_STAGE;
+  message: string;
+}
+
 interface GetProblemsResponse {
   totalCount: number;
   currentPage: number;
@@ -236,12 +278,18 @@ export {
   UpdateProfileRequest,
   UpdateProfileResponse,
   UpdatePasswordRequest,
+  SendNotificationRequest,
+  PasswordResetRequest,
+  PasswordResetSendRequestData,
+  PasswordResetEnterCodeData,
+  PasswordResetUpdatePasswordData,
+  PasswordResetStatus,
+  PassswordResetResponse,
   SplitFileJobData,
   PredictSegmentJobData,
   SplitPredictionJobData,
   RemoveJunkJobData,
   AddToDatabaseJobData,
-  SendNotificationRequest,
   HTTP_CODE,
   SERVER_ENVIRONMENT,
   VOTE_TYPE,
@@ -250,4 +298,6 @@ export {
   PROBLEM_DIFFICULTY,
   PROBLEM_STATUS,
   NOTIFICATION_CHANNEL,
+  PASSWORD_RESET_STAGE,
+  REDIS_KEY_PREFIX,
 };

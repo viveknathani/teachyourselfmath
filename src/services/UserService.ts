@@ -2,6 +2,15 @@ import {
   AppState,
   LoginRequest,
   LoginResponse,
+  NOTIFICATION_CHANNEL,
+  PASSWORD_RESET_STAGE,
+  PassswordResetResponse,
+  PasswordResetEnterCodeData,
+  PasswordResetRequest,
+  PasswordResetSendRequestData,
+  PasswordResetStatus,
+  PasswordResetUpdatePasswordData,
+  REDIS_KEY_PREFIX,
   SignupRequest,
   UpdatePasswordRequest,
   UpdateProfileRequest,
@@ -15,6 +24,8 @@ import bcrypt from 'bcrypt';
 import { insertUser } from '../database';
 import jwt from 'jsonwebtoken';
 import config from '../config';
+import { TIME_IN_SECONDS, getRandomNumber } from '../utils';
+import { addToSendNotificationQueue } from '../queues/workers/sendNotification';
 
 export class UserService {
   private static instance: UserService;
@@ -148,6 +159,97 @@ export class UserService {
       hashedPassword,
       userId,
     );
+  }
+
+  public async resetPassword(
+    userId: number,
+    request: PasswordResetRequest,
+  ): Promise<PassswordResetResponse> {
+    switch (request.stage) {
+      case PASSWORD_RESET_STAGE.SEND_REQUEST: {
+        const otp = getRandomNumber(1000, 9999).toString();
+        const data = request.data as PasswordResetSendRequestData;
+        const value: PasswordResetStatus = {
+          code: otp,
+          verified: false,
+        };
+        await this.state.cache.set(
+          `${REDIS_KEY_PREFIX.PASSWORD_RESET}:${data.email}`,
+          JSON.stringify(value),
+          'EX',
+          TIME_IN_SECONDS.ONE_DAY,
+        );
+        await addToSendNotificationQueue({
+          channel: NOTIFICATION_CHANNEL.EMAIL,
+          user: {
+            type: 'email',
+            data: data.email,
+          },
+          payload: {
+            subject: 'Password reset at TYM',
+            body: `Your OTP is ${otp}`,
+          },
+        });
+        return {
+          stage: PASSWORD_RESET_STAGE.SEND_REQUEST,
+          message: 'email sent!',
+        };
+      }
+      case PASSWORD_RESET_STAGE.ENTER_CODE: {
+        const data = request.data as PasswordResetEnterCodeData;
+        const key = `${REDIS_KEY_PREFIX.PASSWORD_RESET}:${data.email}`;
+        const cachedStr = await this.state.cache.get(key);
+        if (cachedStr === null) {
+          throw new errors.ClientError('invalid email!');
+        }
+        const cached = JSON.parse(cachedStr) as PasswordResetStatus;
+        if (cached.code !== data.code) {
+          throw new errors.ClientError('invalid code!');
+        }
+        await this.state.cache.set(
+          key,
+          JSON.stringify({
+            ...cached,
+            verified: true,
+          }),
+        );
+        return {
+          stage: PASSWORD_RESET_STAGE.ENTER_CODE,
+          message: 'verification successful!',
+        };
+      }
+      case PASSWORD_RESET_STAGE.UPDATE_PASSWORD: {
+        const data = request.data as PasswordResetUpdatePasswordData;
+        const key = `${REDIS_KEY_PREFIX.PASSWORD_RESET}:${data.email}`;
+        const cachedStr = await this.state.cache.get(key);
+        if (cachedStr === null) {
+          throw new errors.ClientError('invalid email!');
+        }
+        const cached = JSON.parse(cachedStr) as PasswordResetStatus;
+        if (!cached.verified) {
+          throw new errors.ClientError('not verified yet!');
+        }
+        if (!this.isValidPassword(data.newPassword)) {
+          throw new errors.ErrInvalidPasswordFormat();
+        }
+        const hashedPassword = await bcrypt.hash(
+          data.newPassword,
+          config.BCRYPT_NUMBER_OF_ROUNDS,
+        );
+        await database.updatePassword(
+          this.state.databasePool,
+          hashedPassword,
+          userId,
+        );
+        return {
+          stage: PASSWORD_RESET_STAGE.UPDATE_PASSWORD,
+          message: 'password updated successfully!',
+        };
+      }
+      default: {
+        throw new Error('unhandled stage!');
+      }
+    }
   }
 
   private createAuthToken(user: User): string {

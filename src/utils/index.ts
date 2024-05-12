@@ -96,6 +96,7 @@ const getPaginationConfig = (input: { page: number; limit?: number }) => {
 
 const TIME_IN_SECONDS = {
   ONE_HOUR: 60 * 60,
+  ONE_DAY: 60 * 60 * 24,
 };
 
 const getRateLimiter = async () => {
@@ -149,6 +150,10 @@ const sendEmail = async (request: {
   );
 };
 
+const getRandomNumber = (min: number, max: number) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
 export {
   sendStandardResponse,
   snakeCaseToCamelCaseObject,
@@ -161,4 +166,5 @@ export {
   getRateLimiter,
   sanitisePrediction,
   sendEmail,
+  getRandomNumber,
 };
