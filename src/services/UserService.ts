@@ -136,6 +136,9 @@ export class UserService {
     if (!doOldPasswordsMatch) {
       throw new errors.ClientError('incorrect password!');
     }
+    if (!this.isValidPassword(request.newPassword)) {
+      throw new errors.ErrInvalidPasswordFormat();
+    }
     const hashedPassword = await bcrypt.hash(
       request.newPassword,
       config.BCRYPT_NUMBER_OF_ROUNDS,
