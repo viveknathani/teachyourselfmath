@@ -41,6 +41,11 @@ enum QUEUE_NAME {
   SPLIT_PREDICTION = 'SPLIT_PREDICTION',
   REMOVE_JUNK = 'REMOVE_JUNK',
   ADD_TO_DATABASE = 'ADD_TO_DATABASE',
+  SEND_NOTIFICATION = 'SEND_NOTIFICATION',
+}
+
+enum NOTIFICATION_CHANNEL {
+  EMAIL = 'EMAIL',
 }
 
 interface ApiResponse {
@@ -200,6 +205,18 @@ interface AddToDatabaseJobData {
   tags: string[];
 }
 
+interface SendNotificationRequest {
+  channel: NOTIFICATION_CHANNEL;
+  user: {
+    type: 'uuid' | 'email';
+    data: string;
+  };
+  payload: {
+    subject: string;
+    body: string;
+  };
+}
+
 export {
   ApiResponse,
   ExecuteQuery,
@@ -224,6 +241,7 @@ export {
   SplitPredictionJobData,
   RemoveJunkJobData,
   AddToDatabaseJobData,
+  SendNotificationRequest,
   HTTP_CODE,
   SERVER_ENVIRONMENT,
   VOTE_TYPE,
@@ -231,4 +249,5 @@ export {
   QUEUE_NAME,
   PROBLEM_DIFFICULTY,
   PROBLEM_STATUS,
+  NOTIFICATION_CHANNEL,
 };

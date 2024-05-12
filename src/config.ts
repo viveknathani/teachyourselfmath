@@ -13,4 +13,5 @@ export default {
   MODEL_URL: process.env.MODEL_URL || '',
   MAX_FILE_SIZE_IN_BYTES: 30_000_000,
   BCRYPT_NUMBER_OF_ROUNDS: 10,
+  POSTMARK_API_KEY: process.env.POSTMARK_API_KEY || '',
 };
