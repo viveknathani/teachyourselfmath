@@ -79,3 +79,11 @@ textarea {
     background-color: #8F9779;
     color: black;
 }
+
+.comment {
+    border: 1px solid gray;
+    border-radius: 10px;
+    padding: 1%;
+    margin-right: 2%;
+    margin-top: 1%;
+}
