@@ -1,6 +1,10 @@
 import { Job, JobsOptions } from 'bullmq';
 import { QUEUE_NAME, RemoveJunkJobData } from '../../types';
-import { hasAtleastOneNumber, isNothing } from '../../utils';
+import {
+  hasAtleastOneNumber,
+  isNothing,
+  sanitisePrediction,
+} from '../../utils';
 import { createQueue, createWorker } from '../factory';
 import { addToDatabaseQueue } from './addToDatabase';
 
@@ -19,8 +23,8 @@ const worker = createWorker(queueName, async (job: Job) => {
     checkForAtleastOneNumber
   ) {
     await addToDatabaseQueue({
-      sanitisedPrediction: data.prediction,
-      source: data.source,
+      sanitisedPrediction: sanitisePrediction(data.prediction),
+      source: data.source.replace('.pdf', ''),
       tags: data.tags.split(','),
     });
   }
@@ -48,6 +52,8 @@ const hasTheRightSetOfWords = (input: string) => {
     'calculate',
     'show that',
     'prove that',
+    'what is the probability',
+    'find the probability',
   ];
   for (const phrase of phrases) {
     if (input.toLowerCase().includes(phrase)) {

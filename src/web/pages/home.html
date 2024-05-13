@@ -20,6 +20,7 @@
     <script type="text/javascript" id="MathJax-script" defer
         src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
     </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <script defer src='/web/scripts/home.js'></script>
 </script>
 </head>
@@ -32,7 +33,30 @@
             <h5><a href="./about">about</a></h5>
             <h5><a href="./tags">categories</a></h5>
             <h5 id="login-link"><a href="./auth">login</a></h5>
+            <h5 id="profile-link"><a href="./profile">profile</a></h5>
         </div>
+    </div>
+    <div id="filters">
+        <div id="difficulty">
+            <select name="difficulty" id="difficulty-filter">
+                <option value="ANY">difficulty</option>
+                <option value="EASY">Easy</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="HARD">Hard</option>
+            </select>
+        </div>
+        <div id="tags">
+            <select name="tags" id="tags-filter" style="display: none;">
+            </select>
+        </div>
+        <div id="bookmarked">
+            <label>bookmarked? </label>
+            <input id="bookmark-checkbox" type="checkbox">
+        </div>
+    </div>
+    <div id="selected-filters">
+        <div id="difficulty-list"></div>
+        <div id="tags-list"></div>
     </div>
     <ol></ol>
     <div id="pagination" class="font-primary">

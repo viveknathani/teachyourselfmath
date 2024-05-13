@@ -1,5 +1,9 @@
 const searchParams = new URLSearchParams(window.location.search);
 const problemId = searchParams.get('id');
+const simplemde = new SimpleMDE({
+    element: document.getElementById('user-comment'),
+    spellChecker: false,
+});
 
 function combinedNumericAndStringPart(interval, text) {
     if (interval === 1) {
@@ -58,12 +62,14 @@ function fetchComments() {
 
 function displayProblem(problem) {
     const commentText = `${
-        problem.totalComments > 1 ? `${problem.totalComments} comments`
-        : (problem.totalComments === 1 ? `1 comment` : `discuss`)}`;
+        problem.totalComments !== 1
+            ? `${problem.totalComments} comments`
+            : '1 comment'
+        }`;
     const tags = problem.tags.join(',');
     const timeAgo = getTimeAgo(problem.createdAt);
     document.getElementById('problem-title').innerText = `Problem #${problem.id}`;
-    document.getElementById('problem-meta').innerText = `${timeAgo} | ${commentText} | ${tags}`;
+    document.getElementById('problem-meta').innerText = `${timeAgo} | ${commentText} | ${tags} | ${problem.difficulty.toLowerCase()}`;
     document.getElementById('problem-meta').className = 'font-accent';
     document.getElementById('problem-description').innerText = problem.description;
     window.MathJax.typeset();
@@ -84,7 +90,7 @@ function displayComments(comments) {
         commentDiv.appendChild(commentMeta);
 
         const commentContent = document.createElement('p');
-        commentContent.innerText = comment.content;
+        commentContent.innerHTML = marked.parse(comment.content);
         commentDiv.appendChild(commentContent);
 
         const replyButton = document.createElement('button');
@@ -110,7 +116,7 @@ function displayComments(comments) {
 }
 
 function addComment() {
-    const content = document.getElementById('user-comment').value;
+    const content = simplemde.value();
     fetch('/api/v1/comments', {
         method: 'POST',
         headers: {
@@ -207,8 +213,74 @@ function displayReplies(commentId, replies) {
     }
 }
 
+function askForLoginOrSetAddCommentListener() {
+    const button = document.getElementById('add-comment-button');
+    if (localStorage.getItem('authToken')) {
+        button.addEventListener('click', addComment);
+    } else {
+        button.addEventListener('click', () => {
+            location.href = '/auth';
+        });
+        button.innerText = 'login to comment';
+    }
+}
+
+function toggleBookmark() {
+    const authToken = localStorage.getItem('authToken');
+    if (!authToken) {
+        return;
+    }
+    const bookmarkButton = document.getElementById('problem-bookmark');
+    const isBookmarked = bookmarkButton.innerHTML.startsWith('bookmarked');
+    fetch(`/api/v1/problems/${problemId}/bookmark`, {
+        method: isBookmarked ? 'DELETE' : 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${authToken}`
+        },
+    }).then(res => res.json())
+    .then(res => {
+        if (res.status === 'success') {
+            fetchAndDisplayBookmarkStatus();
+        } else {
+            console.error('Failed to toggle bookmark:', res.message);
+        }
+    }).catch(err => {
+        console.error('Error toggling bookmark:', err);
+    });
+}
+
+
+function fetchAndDisplayBookmarkStatus() {
+    const authToken = localStorage.getItem('authToken');
+    if (!authToken) {
+        return;
+    }
+    fetch(`/api/v1/problems/${problemId}/is-bookmarked`, {
+        method: 'GET',
+        headers: {
+            'authorization': `Bearer ${localStorage.getItem('authToken')}`
+        },
+    }).then(res => res.json())
+    .then(res => {
+        const bookmarkButton = document.getElementById('problem-bookmark');
+        bookmarkButton.style.display = 'block';
+        if (res.data.isBookmarked) {
+            bookmarkButton.innerHTML = 'bookmarked';
+            bookmarkButton.classList.add('bookmarked');
+        } else {
+            bookmarkButton.innerHTML = 'bookmark';
+            bookmarkButton.classList.remove('bookmarked');
+        }
+        bookmarkButton.onclick = toggleBookmark;
+    }).catch(err => {
+        console.error('Failed to fetch bookmark status:', err);
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('add-comment-button').addEventListener('click', addComment);
+    askForLoginOrSetAddCommentListener();
     fetchProblem();
     fetchComments();
+    fetchAndDisplayBookmarkStatus();
 });

@@ -22,7 +22,9 @@ function directoryHandler(webPagePath: string): ExpressFunction {
 pageRouter.get('/', directoryHandler('../web/pages/home.html'));
 pageRouter.get('/about', directoryHandler('../web/pages/about.html'));
 pageRouter.get('/auth', directoryHandler('../web/pages/auth.html'));
+pageRouter.get('/auth/reset', directoryHandler('../web/pages/auth_reset.html'));
 pageRouter.get('/problem', directoryHandler('../web/pages/problem.html'));
 pageRouter.get('/tags', directoryHandler('../web/pages/tags.html'));
+pageRouter.get('/profile', directoryHandler('../web/pages/profile.html'));
 
 export { pageRouter };

@@ -6,6 +6,7 @@ import { queue as PredictSegmentQueue } from './workers/predictSegment';
 import { queue as SplitPredictionQueue } from './workers/splitPrediction';
 import { queue as RemoveJunkQueue } from './workers/removeJunk';
 import { queue as AddToDatabaseQueue } from './workers/addToDatabase';
+import { queue as SendNotificationQueue } from './workers/sendNotification';
 
 const queues = [
   new BullMQAdapter(SplitFileQueue),
@@ -13,6 +14,7 @@ const queues = [
   new BullMQAdapter(SplitPredictionQueue),
   new BullMQAdapter(RemoveJunkQueue),
   new BullMQAdapter(AddToDatabaseQueue),
+  new BullMQAdapter(SendNotificationQueue),
 ];
 
 const createDashboardAndGetRouter = () => {

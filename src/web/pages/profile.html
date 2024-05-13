@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5MQXGYVY2T"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-5MQXGYVY2T');
+    </script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>teachyourselfmath - profile</title>
+    <link rel='stylesheet' type='text/css' media='screen' href='/web/styles/base.css'>
+    <link rel='stylesheet' type='text/css' media='screen' href='/web/styles/profile.css'>
+    <script defer src='/web/scripts/load-math-jax.js'></script>
+    <script type="text/javascript" id="MathJax-script" defer
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+    </script>
+    <script defer src='/web/scripts/profile.js'></script>
+</head>
+<body>
+  <div id="header" class="font-heading">
+    <div id="left">
+        <h3>teachyourselfmath</h3>
+    </div>
+    <div id="right">
+        <h5><a href="./"><- home</a></h5>
+    </div>
+  </div>
+  <div>
+    <div id="update-name-form" class="form-container">
+      <h3>update name</h3>
+      <p id="current-name"></p>
+      <form id="update-name-form-element">
+          <input type="text" placeholder="new name" name="email" id="update-name-form-input-element">
+          <br>
+          <button type="button" id="update-name-button">submit</button>
+      </form>
+    </div>
+  </div>
+  <div>
+    <div id="update-password" class="form-container">
+      <h3>update password</h3>
+      <form id="update-password-form-element">
+          <input type="password" placeholder="current password" name="currentPassword">
+          <br>
+          <input type="password" placeholder="new password" name="newPassword">
+          <br>
+          <button type="button" id="update-password-button">submit</button>
+      </form>
+      <p id="update-password-message"></p>
+    </div>
+  </div>
+</body>
+</html>

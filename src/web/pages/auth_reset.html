@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5MQXGYVY2T"></script>
+  <script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-5MQXGYVY2T');
+  </script>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>teachyourselfmath - password reset</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <link rel='stylesheet' type='text/css' media='screen' href='/web/styles/base.css'>
+  <script defer src='/web/scripts/auth_reset.js'></script>
+</head>
+<body>
+  <div id="stage1">
+    <h2>Stage 1: Send Request for Password Reset</h2>
+    <button onclick="sendResetRequest()">Send Reset Request</button>
+  </div>
+
+  <div id="stage2" style="display:none;">
+    <h2>Stage 2: Enter Code Received in Email</h2>
+    <input type="text" id="code" placeholder="Enter the code">
+    <button onclick="enterCode()">Submit Code</button>
+  </div>
+
+  <div id="stage3" style="display:none;">
+    <h2>Stage 3: Add New Password</h2>
+    <input type="password" id="newPassword" placeholder="Enter new password">
+    <button onclick="updatePassword()">Update Password</button>
+  </div>
+</body>
+</html>
