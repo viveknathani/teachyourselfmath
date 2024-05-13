@@ -6,6 +6,16 @@ function getFormData(formId) {
   return result;
 }
 
+function formatDate(dateString) {
+  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const date = new Date(dateString);
+  const month = months[date.getMonth()];
+  const day = date.getDate();
+  const year = date.getFullYear();
+  
+  return `${month} ${day}, ${year}`;
+}
+
 function fetchProfile() {
   const authToken = localStorage.getItem('authToken');
   if (!authToken) {
@@ -21,8 +31,19 @@ function fetchProfile() {
   .then((res) => res.json())
   .then((res) => {
     if (res.data) {
-      const nameText = document.getElementById("current-name");
-      nameText.innerText = res.data.name;
+      const infoDiv = document.getElementById('info');
+      const { name, email, username, createdAt } = res.data;
+      const obj = {
+        name,
+        email,
+        username,
+        created: formatDate(createdAt),
+      };
+      Object.keys(obj).forEach(key => {
+        const p = document.createElement('p');
+        p.innerText = `${key}: ${obj[key]}`;
+        infoDiv.appendChild(p);
+      });
     }
   }).catch(() => {
     window.location.href= '/auth';
@@ -89,6 +110,5 @@ function updatePassword() {
 
 document.addEventListener('DOMContentLoaded', function() {
   fetchProfile();
-  document.getElementById('update-name-button').addEventListener('click', updateProfile);
   document.getElementById('update-password-button').addEventListener('click', updatePassword);
 });
