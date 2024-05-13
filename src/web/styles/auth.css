@@ -1,10 +1,174 @@
 body {
-    width: 70%;
+    width: 100%;
+    height: 100vh;
     margin: auto;
 }
 
-button {
-    border: 1px solid #8F9779;
-    cursor: pointer;
-    background-color: #8F9779;
+.page-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items:center;
+    justify-content: center;
 }
+
+.box-container {
+    display: flex;
+    align-items:center;
+    justify-content: center;
+    height: fit-content;
+    width: 100%;
+    position: relative;
+}
+
+#box {
+    overflow-x: hidden;
+    overflow-y: visible;
+    position: relative;
+    height: fit-content;
+}
+
+#login-form {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.auth-title {
+    text-align: center;
+    font-size: 28px;
+    color: #8F9779;
+    margin-bottom: 20px;
+    white-space: nowrap;
+}
+
+#login-title {
+    margin-bottom: 65px; 
+}
+
+#signup-title {
+    margin-bottom: 30px;
+}
+
+.auth-input {
+    display: inline-block;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    padding: 5px 10px;
+    font-size: 20px;
+    width: 230px;
+    border-bottom: 1px solid black;
+    margin-bottom: 20px;
+}
+
+.signup-input{
+    margin-bottom: 30px;
+}
+
+.login-input {
+    margin-bottom: 53.5px;
+}
+
+button {
+    border: 2px solid #8F9779;
+    cursor: pointer;
+    background-color: white;
+    border-radius: 5px;
+    text-align: center;
+    padding: 5px;
+    font-size: 20px;
+    font-weight: bold;;
+    width: 250px;
+    margin: 20px 0;
+}
+
+.signup-login-prompt {
+    text-align: center;
+    font-size: 15px;
+    white-space: nowrap;
+}
+
+.link {
+    color: #8F9779;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.link:hover {
+    cursor: pointer;
+}
+
+#signup-message {
+    width: 400px;
+    text-align: center;
+    position: absolute;
+    top: 100%;
+    z-index: 3 !important;
+}
+
+.slide-out {
+    animation-duration: 800ms;
+    animation-name: slideout;
+    animation-fill-mode: both;
+}
+
+.slide-in {
+    animation-duration: 800ms;
+    animation-name: slidein;
+    animation-fill-mode: both;
+}
+
+.slide-delay-200ms {
+    animation-delay: 200ms;
+}
+
+.slide-delay-400ms {
+    animation-delay: 400ms;
+}
+.slide-delay-600ms {
+    animation-delay: 600ms;
+}
+.slide-delay-800ms {
+    animation-delay: 800ms;
+}
+.slide-delay-1000ms {
+    animation-delay: 1000ms;
+}
+
+.slide-delay-1200ms {
+    animation-delay: 1200ms;
+}
+.slide-delay-1400ms {
+    animation-delay: 1400ms;
+}
+.slide-delay-1600ms {
+    animation-delay: 1600ms;
+}
+.slide-delay-1800ms {
+    animation-delay: 1800ms;
+}
+
+@keyframes slideout{
+    from {
+      margin-left: 0%;
+    }
+  
+    to {
+      margin-left: -240%;
+    }
+}
+
+@keyframes slidein{
+    from {
+      margin-left: 120%;
+    }
+  
+    to {
+      margin-left: 0%;
+    }
+}
+  
