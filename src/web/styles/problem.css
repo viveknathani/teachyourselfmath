@@ -73,20 +73,9 @@ textarea {
 #problem-bookmark {
     padding: 1%;
     cursor: pointer;
-    border-radius: 4px;
-    font-weight: bold;
+    border-radius: 10px;
     text-align: center;
     width: fit-content;
-}
-
-/* Unbookmarked state */
-#problem-bookmark:not(.bookmarked) {
-    background-color: #a2cff7;
-    color: #333;
-}
-
-/* Bookmarked state */
-#problem-bookmark.bookmarked {
     background-color: #8F9779;
-    color: white;
+    color: black;
 }
