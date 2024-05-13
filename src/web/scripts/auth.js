@@ -25,7 +25,8 @@ function signup() {
       document.getElementById('signup-message').innerText = data.message;
       document.getElementById('signup-message').style.color ='red';
     } else {
-      document.getElementById('signup-message').innerText = '';
+      document.getElementById('signup-message').innerText = 'account created, you can log in now!';
+      document.getElementById('signup-message').style.color = 'green';
       signUpToLoginTransition();
     }
   }).catch(err => {
