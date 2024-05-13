@@ -100,7 +100,7 @@ function fetchProblems() {
     const params = new URLSearchParams({
         page: searchParams.get('page') || 1,
         tags: selectedTagsList.length ? selectedTagsList.join(',') : searchParams.get('tags') || '',
-        difficulty: selectedDifficultyList.join(','),
+        difficulty: selectedDifficultyList.length ? selectedDifficultyList.join(',') : searchParams.get('difficulty') || '',
     });
     if (bookmarked) {
         params.set('bookmarked', "true");
@@ -141,12 +141,30 @@ if (localStorage.getItem('authToken')) {
     document.getElementById('login-link').style.display = 'none';
 }
 
+function fillSelectedFiltersFromUrl(listToCheckWith, searchQuery) {
+    if (listToCheckWith.length === 0) {
+        console.log(searchQuery);
+        listToCheckWith = searchQuery.split(',');
+    }
+    return listToCheckWith;
+}
+
+function toTitleCase(str) {
+    if (!str) return "";
+    return str
+      .replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
+        return word.toLowerCase();
+      })
+      .replace(/\s+/g, " ");
+  }
+
 function renderSelectedDifficultyList() {
    const difficultyListDiv = document.getElementById('difficulty-list');
    difficultyListDiv.innerHTML = '';
    for (difficulty of selectedDifficultyList) {
         const button = document.createElement('button');
-        button.innerText = difficulty;
+        button.className = 'closeButton';
+        button.innerHTML = `${toTitleCase(difficulty)}  <i class="fa fa-minus-circle" aria-hidden="true"></i>`;
         button.onclick = () => {
             selectedDifficultyList = selectedDifficultyList.filter(item => item !== difficulty);
             renderSelectedDifficultyList();
@@ -161,7 +179,8 @@ function renderSelectedTagsList() {
    tagsListDiv.innerHTML = '';
    for (const tag of selectedTagsList) {
         const button = document.createElement('button');
-        button.innerText = tag;
+        button.className = 'closeButton';
+        button.innerHTML = `${toTitleCase(tag)}  <i class="fa fa-minus-circle" aria-hidden="true"></i>`;
         button.onclick = () => {
             selectedTagsList = selectedTagsList.filter(item => item !== tag);
             renderSelectedTagsList();
@@ -181,6 +200,7 @@ function listenToFilterChanges() {
             selectedDifficultyList.push(selectedDifficulty);
             selectedDifficultyList = Array.from(new Set(selectedDifficultyList));
         }
+        difficultySelect.selectedIndex = 0;
         renderSelectedDifficultyList();
         fetchProblems();
     });
@@ -193,6 +213,7 @@ function listenToFilterChanges() {
             selectedTagsList.push(selectedTag);
             selectedTagsList = Array.from(new Set(selectedTagsList));
         }
+        tagsSelect.selectedIndex = 0;
         renderSelectedTagsList();
         fetchProblems();
     });
@@ -212,7 +233,11 @@ function fetchTags() {
             allTags.forEach(tag => {
                 const option = document.createElement('option');
                 option.value = tag;
-                option.innerText = tag;
+                if (tag === 'ANY') {
+                    option.innerText = 'category';
+                } else {
+                    option.innerText = tag;
+                }
                 tagsDropdown.appendChild(option);
             });
             tagsDropdown.style.display = 'block';
