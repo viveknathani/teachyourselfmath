@@ -139,6 +139,8 @@ function fetchProblems() {
 
 if (localStorage.getItem('authToken')) {
     document.getElementById('login-link').style.display = 'none';
+} else {
+    document.getElementById('profile-link').style.display = 'none';
 }
 
 function fillSelectedFiltersFromUrl(listToCheckWith, searchQuery) {
