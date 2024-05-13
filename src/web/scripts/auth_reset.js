@@ -1,37 +1,23 @@
 
-const token = localStorage.getItem('authToken');
 let the_email = "";
+
 async function sendResetRequest() {
-  const response = await fetch('/api/v1/users/profile', {
-    method: 'GET',
+  the_email = document.getElementById('password-reset-email').value;
+  const resetResponse = await fetch('/api/v1/users/password/reset', {
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    }
+    },
+    body: JSON.stringify({
+      stage: "SEND_REQUEST",
+      data: { email: the_email }
+    })
   });
-  const data = await response.json();
-  if (data.status === "success") {
-    const email = data.data.email;
-    the_email = email;
-    const resetResponse = await fetch('/api/v1/users/password/reset', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({
-        stage: "SEND_REQUEST",
-        data: { email }
-      })
-    });
-    const resetData = await resetResponse.json();
-    if (resetData.status === 'success') {
-      document.getElementById("stage1").style.display = "none";
-      document.getElementById("stage2").style.display = "block";
-      alert('sent!');
-    }
-  } else {
-    alert(data.message);
+  const resetData = await resetResponse.json();
+  if (resetData.status === 'success') {
+    document.getElementById("stage1").style.display = "none";
+    document.getElementById("stage2").style.display = "block";
+    alert('sent!');
   }
 }
 
@@ -42,7 +28,6 @@ async function enterCode() {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
     },
     body: JSON.stringify({
       stage: "ENTER_CODE",
@@ -66,7 +51,6 @@ async function updatePassword() {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
     },
     body: JSON.stringify({
       stage: "UPDATE_PASSWORD",

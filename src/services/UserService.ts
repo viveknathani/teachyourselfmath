@@ -162,7 +162,6 @@ export class UserService {
   }
 
   public async resetPassword(
-    userId: number,
     request: PasswordResetRequest,
   ): Promise<PassswordResetResponse> {
     switch (request.stage) {
@@ -229,6 +228,14 @@ export class UserService {
         if (!cached.verified) {
           throw new errors.ClientError('not verified yet!');
         }
+        const user = await database.getUserByEmailOrUsername(
+          this.state.databasePool,
+          data.email,
+          '',
+        );
+        if (!user) {
+          throw new errors.ClientError('user not found!');
+        }
         if (!this.isValidPassword(data.newPassword)) {
           throw new errors.ErrInvalidPasswordFormat();
         }
@@ -239,7 +246,7 @@ export class UserService {
         await database.updatePassword(
           this.state.databasePool,
           hashedPassword,
-          userId,
+          user.id,
         );
         return {
           stage: PASSWORD_RESET_STAGE.UPDATE_PASSWORD,

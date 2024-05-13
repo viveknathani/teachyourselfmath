@@ -1,0 +1,36 @@
+
+#header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #8F9779;
+  padding: 5px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+#right {
+  display: flex;
+  gap: 10px;
+}
+
+h3,h5 {
+  margin: 0;
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+#container {
+  margin-top: 2%;
+  margin-left: 2%;
+}
+
+button {
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+  background-color: #8F9779;
+  color: black;
+  padding: 5px;
+}

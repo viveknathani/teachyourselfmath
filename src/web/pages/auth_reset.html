@@ -15,24 +15,36 @@
   <title>teachyourselfmath - password reset</title>
   <meta name='viewport' content='width=device-width, initial-scale=1'>
   <link rel='stylesheet' type='text/css' media='screen' href='/web/styles/base.css'>
+  <link rel='stylesheet' type='text/css' media='screen' href='/web/styles/auth_reset.css'>
   <script defer src='/web/scripts/auth_reset.js'></script>
 </head>
 <body>
-  <div id="stage1">
-    <h2>Stage 1: Send Request for Password Reset</h2>
-    <button onclick="sendResetRequest()">Send Reset Request</button>
+  <div id="header" class="font-heading">
+    <div id="left">
+        <h3>teachyourselfmath</h3>
+    </div>
+    <div id="right">
+        <h5><a href="./"><- home</a></h5>
+    </div>
   </div>
-
-  <div id="stage2" style="display:none;">
-    <h2>Stage 2: Enter Code Received in Email</h2>
-    <input type="text" id="code" placeholder="Enter the code">
-    <button onclick="enterCode()">Submit Code</button>
-  </div>
-
-  <div id="stage3" style="display:none;">
-    <h2>Stage 3: Add New Password</h2>
-    <input type="password" id="newPassword" placeholder="Enter new password">
-    <button onclick="updatePassword()">Update Password</button>
+  <div id="container" class="font-primary">
+    <div id="stage1">
+      <h3>password reset: enter your email</h3>
+      <input id="password-reset-email" placeholder="email"></input>
+      <button onclick="sendResetRequest()">send OTP on my email</button>
+    </div>
+  
+    <div id="stage2" style="display:none;">
+      <h3>password reset: enter the code received in your email</h3>
+      <input type="text" id="code" placeholder="code">
+      <button onclick="enterCode()">submit</button>
+    </div>
+  
+    <div id="stage3" style="display:none;">
+      <h3>password reset: create a new password</h3>
+      <input type="password" id="newPassword" placeholder="password">
+      <button onclick="updatePassword()">save</button>
+    </div>
   </div>
 </body>
 </html>

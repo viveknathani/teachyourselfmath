@@ -144,7 +144,6 @@ function loginToSignupTransition(){
   document.getElementById('signup-prompt').classList.remove('slide-delay-1800ms');
   document.getElementById('signup-prompt').classList.remove('slide-in');
 
-
   document.getElementById('login-title').classList.add('slide-out');
   document.getElementById('login-email').classList.add('slide-delay-400ms');
   document.getElementById('login-email').classList.add('slide-out');
