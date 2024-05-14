@@ -4,6 +4,7 @@ import {
   GetProblemsResponse,
   PROBLEM_DIFFICULTY,
   Problem,
+  REDIS_KEY_PREFIX,
 } from '../types';
 import * as errors from './errors';
 import * as database from '../database';
@@ -69,6 +70,9 @@ export class ProblemService {
         JSON.stringify(result),
       );
     }
+    if (userId && request.bookmarked) {
+      await this.addToKeyOfKeys(this.getUserSpecificKey(userId), cacheKey);
+    }
     return result;
   }
 
@@ -128,6 +132,9 @@ export class ProblemService {
   }
 
   public async bookmarkProblem(userId: number, problemId: number) {
+    const key = this.getUserSpecificKey(userId);
+    await this.deleteKeysForKeyOfKeys(key);
+    await this.removeKeyOfKeys(key);
     return database.insertUserBookmark(
       this.state.databasePool,
       userId,
@@ -136,6 +143,9 @@ export class ProblemService {
   }
 
   public async unbookmarkProblem(userId: number, problemId: number) {
+    const key = this.getUserSpecificKey(userId);
+    await this.deleteKeysForKeyOfKeys(key);
+    await this.removeKeyOfKeys(key);
     return database.deleteUserBookmark(
       this.state.databasePool,
       userId,
@@ -157,5 +167,26 @@ export class ProblemService {
     return {
       isBookmarked,
     };
+  }
+
+  private async addToKeyOfKeys(keyOfKeys: string, key: string) {
+    await this.state.cache.sadd(keyOfKeys, key);
+  }
+
+  private async removeKeyOfKeys(keyOfKeys: string) {
+    await this.state.cache.del(keyOfKeys);
+  }
+
+  private async listKeysForKey(keyOfKeys: string): Promise<string[]> {
+    return this.state.cache.smembers(keyOfKeys);
+  }
+
+  private async deleteKeysForKeyOfKeys(keyOfKeys: string) {
+    const keys = await this.listKeysForKey(keyOfKeys);
+    await Promise.all(keys.map(async (key) => await this.state.cache.del(key)));
+  }
+
+  private getUserSpecificKey(userId: number) {
+    return `${REDIS_KEY_PREFIX.USER_SPECIFIC}:${userId}`;
   }
 }
