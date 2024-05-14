@@ -56,6 +56,7 @@ enum PASSWORD_RESET_STAGE {
 
 enum REDIS_KEY_PREFIX {
   PASSWORD_RESET = 'PASSWORD_RESET',
+  EMAIL_LIMIT = 'EMAIL_LIMIT',
 }
 
 interface ApiResponse {
