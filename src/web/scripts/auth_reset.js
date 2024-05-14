@@ -18,6 +18,8 @@ async function sendResetRequest() {
     document.getElementById("stage1").style.display = "none";
     document.getElementById("stage2").style.display = "block";
     alert('sent!');
+  } else {
+    alert(resetData.message);
   }
 }
 

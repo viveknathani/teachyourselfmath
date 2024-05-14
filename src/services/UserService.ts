@@ -164,6 +164,14 @@ export class UserService {
   public async resetPassword(
     request: PasswordResetRequest,
   ): Promise<PassswordResetResponse> {
+    const user = await database.getUserByEmailOrUsername(
+      this.state.databasePool,
+      request.data.email,
+      '',
+    );
+    if (!user) {
+      throw new errors.ClientError('user not found!');
+    }
     switch (request.stage) {
       case PASSWORD_RESET_STAGE.SEND_REQUEST: {
         const otp = getRandomNumber(1000, 9999).toString();
@@ -227,14 +235,6 @@ export class UserService {
         const cached = JSON.parse(cachedStr) as PasswordResetStatus;
         if (!cached.verified) {
           throw new errors.ClientError('not verified yet!');
-        }
-        const user = await database.getUserByEmailOrUsername(
-          this.state.databasePool,
-          data.email,
-          '',
-        );
-        if (!user) {
-          throw new errors.ClientError('user not found!');
         }
         if (!this.isValidPassword(data.newPassword)) {
           throw new errors.ErrInvalidPasswordFormat();
