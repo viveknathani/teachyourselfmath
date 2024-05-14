@@ -37,6 +37,7 @@ a:visited {
 
 #footer {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     font-family: 'Inter', sans-serif;
@@ -48,6 +49,10 @@ a:visited {
     bottom: 0;
     height: 100px;
     width: 100%;
+}
+
+#footer p {
+    line-height: 0;
 }
 
 #footer a, #footer a:visited, #footer a:hover {
