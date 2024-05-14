@@ -3,6 +3,8 @@ import { SERVER_ENVIRONMENT } from './types';
 dotenv.config();
 
 export default {
+  ADMIN_USERNAME: process.env.ADMIN_USERNAME || '',
+  ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || '',
   DATABASE_URL: process.env.DATABASE_URL || '',
   REDIS_URL: process.env.REDIS_URL || '',
   ENVIRONMENT: process.env.ENVIRONMENT || SERVER_ENVIRONMENT.DEV,

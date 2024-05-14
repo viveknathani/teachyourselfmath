@@ -7,6 +7,38 @@ import { queue as SplitPredictionQueue } from './workers/splitPrediction';
 import { queue as RemoveJunkQueue } from './workers/removeJunk';
 import { queue as AddToDatabaseQueue } from './workers/addToDatabase';
 import { queue as SendNotificationQueue } from './workers/sendNotification';
+import session from 'express-session';
+import { Express } from 'express';
+import passport from 'passport';
+import { Strategy as LocalStrategy } from 'passport-local';
+import { ensureLoggedIn } from 'connect-ensure-login';
+import config from '../config';
+
+const localStrategy = new LocalStrategy(
+  {
+    usernameField: 'username',
+    passwordField: 'password',
+  },
+  (username, password, cb) => {
+    if (
+      username === config.ADMIN_USERNAME &&
+      password === config.ADMIN_PASSWORD
+    ) {
+      return cb(null, { user: 'bull-board' });
+    }
+    return cb(null, false);
+  },
+);
+
+passport.serializeUser((user: any, cb) => {
+  cb(null, user);
+});
+
+passport.deserializeUser((user: any, cb) => {
+  cb(null, user);
+});
+
+passport.use(localStrategy);
 
 const queues = [
   new BullMQAdapter(SplitFileQueue),
@@ -17,14 +49,42 @@ const queues = [
   new BullMQAdapter(SendNotificationQueue),
 ];
 
-const createDashboardAndGetRouter = () => {
+const createBullDashboardAndAttachRouter = (app: Express) => {
   const adapter = new ExpressAdapter();
   adapter.setBasePath('/admin/queues');
   createBullBoard({
     queues,
     serverAdapter: adapter,
   });
-  return adapter.getRouter();
+  app.set('views', `${__dirname}/../web/views`);
+  app.set('view engine', 'ejs');
+  app.use(
+    '/admin/*',
+    session({
+      secret: 'keyboard cat',
+      cookie: {},
+      saveUninitialized: true,
+      resave: true,
+    }),
+  );
+  app.use('/admin/*', passport.initialize());
+  app.use('/admin/*', passport.session());
+  app.get('/admin/queues/login', (req, res) => {
+    res.render('login', { invalid: req.query.invalid === 'true' });
+  });
+  app.post(
+    '/admin/queues/login',
+    passport.authenticate('local', {
+      failureRedirect: '/admin/queues/login?invalid=true',
+      successRedirect: '/admin/queues',
+    }),
+  );
+
+  app.use(
+    '/admin/queues',
+    ensureLoggedIn({ redirectTo: '/admin/queues/login' }),
+    adapter.getRouter(),
+  );
 };
 
-export { createDashboardAndGetRouter };
+export { createBullDashboardAndAttachRouter };
