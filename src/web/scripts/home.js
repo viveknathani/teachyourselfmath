@@ -138,7 +138,12 @@ function fetchProblems() {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('authToken')}`
         },
-    }).then(res => res.json())
+    }).then(res => {
+        if (res.status === 401) {
+            window.location.href = '/auth';
+        }
+        return res.json();
+    })
     .then(res => {
         if (res.data) {
             const paginationConfig = {
