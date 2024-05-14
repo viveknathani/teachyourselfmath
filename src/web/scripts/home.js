@@ -93,14 +93,21 @@ function displayProblems(problems, paginationConfig) {
     window.MathJax.typeset();
 }
 
+function fillFilterListFromSearchParams() {
+    const searchParams = new URLSearchParams(window.location.search);
+    const difficultyParam = searchParams.get('difficulty');
+    const tagsParam = searchParams.get('tags');
+    selectedDifficultyList = (difficultyParam !== '' && difficultyParam?.split(',')) || [];
+    selectedTagsList = (tagsParam !== '' && tagsParam?.split(',')) || [];
+}
 
 function fetchProblems() {
     const searchParams = new URLSearchParams(window.location.search);
     const bookmarked = document.getElementById('bookmark-checkbox').checked;
     const params = new URLSearchParams({
         page: searchParams.get('page') || 1,
-        tags: selectedTagsList.length ? selectedTagsList.join(',') : searchParams.get('tags') || '',
-        difficulty: selectedDifficultyList.length ? selectedDifficultyList.join(',') : searchParams.get('difficulty') || '',
+        tags: selectedTagsList.join(','),
+        difficulty: selectedDifficultyList.join(','),
     });
     if (bookmarked) {
         params.set('bookmarked', "true");
@@ -145,7 +152,6 @@ if (localStorage.getItem('authToken')) {
 
 function fillSelectedFiltersFromUrl(listToCheckWith, searchQuery) {
     if (listToCheckWith.length === 0) {
-        console.log(searchQuery);
         listToCheckWith = searchQuery.split(',');
     }
     return listToCheckWith;
@@ -248,6 +254,9 @@ function fetchTags() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    fillFilterListFromSearchParams();
+    renderSelectedDifficultyList();
+    renderSelectedTagsList();
     fetchProblems();
     fetchTags();
     listenToFilterChanges();
