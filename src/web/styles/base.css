@@ -62,3 +62,7 @@ a:visited {
 button {
     cursor: pointer;
 }
+
+button, select {
+    color: black;
+}
