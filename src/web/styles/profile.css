@@ -28,12 +28,3 @@ h3,h5 {
 input, button {
   margin-top: 1%;
 }
-
-button {
-  border: none;
-  cursor: pointer;
-  border-radius: 10px;
-  background-color: #8F9779;
-  color: black;
-  padding: 5px;
-}

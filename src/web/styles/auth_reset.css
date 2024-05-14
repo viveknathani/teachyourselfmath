@@ -25,12 +25,3 @@ h3,h5 {
   margin-top: 2%;
   margin-left: 2%;
 }
-
-button {
-  border: none;
-  cursor: pointer;
-  border-radius: 10px;
-  background-color: #8F9779;
-  color: black;
-  padding: 5px;
-}

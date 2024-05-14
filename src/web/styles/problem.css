@@ -70,16 +70,6 @@ textarea {
     margin-left: 4%;
 }
 
-#problem-bookmark {
-    padding: 1%;
-    cursor: pointer;
-    border-radius: 10px;
-    text-align: center;
-    width: fit-content;
-    background-color: #8F9779;
-    color: black;
-}
-
 .comment {
     border: 1px solid gray;
     border-radius: 10px;
