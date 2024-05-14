@@ -193,8 +193,8 @@ export class UserService {
             data: data.email,
           },
           payload: {
-            subject: 'Password reset at TYM',
-            body: `Your OTP is ${otp}`,
+            subject: 'Password reset at teachyourselfmath',
+            body: `Your OTP for resetting the password is ${otp}.`,
           },
         });
         return {
