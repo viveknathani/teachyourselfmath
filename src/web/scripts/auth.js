@@ -69,6 +69,7 @@ function signUpToLoginTransition(){
   document.getElementById('login-button').style.marginLeft = '120%';
   document.querySelectorAll(".login-input").forEach((input) => input.style.marginLeft = "120%");
   document.getElementById('signup-prompt').style.marginLeft = '120%';
+  document.getElementById('reset-prompt').style.marginLeft = '120%';
   document.getElementById('login-form').style.display = 'inline-block';
 
   document.getElementById('signup-title').classList.remove('slide-delay-600ms');
@@ -109,6 +110,8 @@ function signUpToLoginTransition(){
   document.getElementById('login-button').classList.remove('slide-out');
   document.getElementById('signup-prompt').classList.remove('slide-delay-1200ms');
   document.getElementById('signup-prompt').classList.remove('slide-out');
+  document.getElementById('reset-prompt').classList.remove('slide-delay-1600ms');
+  document.getElementById('reset-prompt').classList.remove('slide-out');
 
   document.getElementById('login-title').classList.add('slide-delay-600ms');
   document.getElementById('login-title').classList.add('slide-in');
@@ -120,6 +123,8 @@ function signUpToLoginTransition(){
   document.getElementById('login-button').classList.add('slide-in');
   document.getElementById('signup-prompt').classList.add('slide-delay-1800ms');
   document.getElementById('signup-prompt').classList.add('slide-in');
+  document.getElementById('reset-prompt').classList.add('slide-delay-2200ms');
+  document.getElementById('reset-prompt').classList.add('slide-in');
   document.getElementById('login-form').style.zIndex = '2';
   document.getElementById('signup-form').style.zIndex = '1';
 }
@@ -143,6 +148,8 @@ function loginToSignupTransition(){
   document.getElementById('login-button').classList.remove('slide-in');
   document.getElementById('signup-prompt').classList.remove('slide-delay-1800ms');
   document.getElementById('signup-prompt').classList.remove('slide-in');
+  document.getElementById('reset-prompt').classList.remove('slide-delay-2200ms');
+  document.getElementById('reset-prompt').classList.remove('slide-in');
 
   document.getElementById('login-title').classList.add('slide-out');
   document.getElementById('login-email').classList.add('slide-delay-400ms');
@@ -153,6 +160,8 @@ function loginToSignupTransition(){
   document.getElementById('login-button').classList.add('slide-out');
   document.getElementById('signup-prompt').classList.add('slide-delay-1200ms');
   document.getElementById('signup-prompt').classList.add('slide-out');
+  document.getElementById('reset-prompt').classList.add('slide-delay-1600ms');
+  document.getElementById('reset-prompt').classList.add('slide-out');
 
   document.getElementById('signup-title').classList.remove('slide-out');
   document.getElementById('signup-name').classList.remove('slide-delay-200ms');
