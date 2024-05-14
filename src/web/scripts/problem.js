@@ -1,5 +1,9 @@
 const searchParams = new URLSearchParams(window.location.search);
 const problemId = searchParams.get('id');
+const simplemde = new SimpleMDE({
+    element: document.getElementById('user-comment'),
+    spellChecker: false,
+});
 
 function combinedNumericAndStringPart(interval, text) {
     if (interval === 1) {
@@ -86,7 +90,7 @@ function displayComments(comments) {
         commentDiv.appendChild(commentMeta);
 
         const commentContent = document.createElement('p');
-        commentContent.innerText = comment.content;
+        commentContent.innerHTML = marked.parse(comment.content);
         commentDiv.appendChild(commentContent);
 
         const replyButton = document.createElement('button');
@@ -112,7 +116,7 @@ function displayComments(comments) {
 }
 
 function addComment() {
-    const content = document.getElementById('user-comment').value;
+    const content = simplemde.value();
     fetch('/api/v1/comments', {
         method: 'POST',
         headers: {
@@ -221,8 +225,62 @@ function askForLoginOrSetAddCommentListener() {
     }
 }
 
+function toggleBookmark() {
+    const authToken = localStorage.getItem('authToken');
+    if (!authToken) {
+        return;
+    }
+    const bookmarkButton = document.getElementById('problem-bookmark');
+    const isBookmarked = bookmarkButton.innerHTML.startsWith('unbookmark');
+    fetch(`/api/v1/problems/${problemId}/bookmark`, {
+        method: isBookmarked ? 'DELETE' : 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${authToken}`
+        },
+    }).then(res => res.json())
+    .then(res => {
+        if (res.status === 'success') {
+            fetchAndDisplayBookmarkStatus();
+        } else {
+            console.error('Failed to toggle bookmark:', res.message);
+        }
+    }).catch(err => {
+        console.error('Error toggling bookmark:', err);
+    });
+}
+
+
+function fetchAndDisplayBookmarkStatus() {
+    const authToken = localStorage.getItem('authToken');
+    if (!authToken) {
+        return;
+    }
+    fetch(`/api/v1/problems/${problemId}/is-bookmarked`, {
+        method: 'GET',
+        headers: {
+            'authorization': `Bearer ${localStorage.getItem('authToken')}`
+        },
+    }).then(res => res.json())
+    .then(res => {
+        const bookmarkButton = document.getElementById('problem-bookmark');
+        bookmarkButton.style.display = 'block';
+        if (res.data.isBookmarked) {
+            bookmarkButton.innerHTML = 'unbookmark';
+            bookmarkButton.classList.add('bookmarked');
+        } else {
+            bookmarkButton.innerHTML = 'bookmark';
+            bookmarkButton.classList.remove('bookmarked');
+        }
+        bookmarkButton.onclick = toggleBookmark;
+    }).catch(err => {
+        console.error('Failed to fetch bookmark status:', err);
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     askForLoginOrSetAddCommentListener();
     fetchProblem();
     fetchComments();
+    fetchAndDisplayBookmarkStatus();
 });

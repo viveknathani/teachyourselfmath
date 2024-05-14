@@ -30,3 +30,14 @@ export class ErrInvalidEmailPassword extends ClientError {
     Object.setPrototypeOf(this, ErrInvalidEmailPassword.prototype);
   }
 }
+
+export class ErrUserNotFound extends ClientError {
+  constructor() {
+    super('User not found.');
+    Object.setPrototypeOf(this, ErrUserNotFound.prototype);
+  }
+}
+
+export enum ErrorCodesOfSQL {
+  UNIQUE_CONSTRAINT_VIOLATION = '23505',
+}

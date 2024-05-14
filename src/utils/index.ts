@@ -4,6 +4,7 @@ import { rateLimit } from 'express-rate-limit';
 import RedisClient from 'ioredis';
 import config from '../config';
 import { RedisStore } from 'rate-limit-redis';
+import axios from 'axios';
 
 const sendStandardResponse = (
   statusCode: HTTP_CODE,
@@ -95,6 +96,7 @@ const getPaginationConfig = (input: { page: number; limit?: number }) => {
 
 const TIME_IN_SECONDS = {
   ONE_HOUR: 60 * 60,
+  ONE_DAY: 60 * 60 * 24,
 };
 
 const getRateLimiter = async () => {
@@ -124,6 +126,34 @@ const sanitisePrediction = (input: string): string => {
   return result;
 };
 
+const sendEmail = async (request: {
+  from: string;
+  to: string;
+  subject: string;
+  html: string;
+}) => {
+  return axios.post(
+    'https://api.postmarkapp.com/email',
+    {
+      From: request.from,
+      To: request.to,
+      Subject: request.subject,
+      HtmlBody: request.html,
+    },
+    {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'X-Postmark-Server-Token': config.POSTMARK_API_KEY,
+      },
+    },
+  );
+};
+
+const getRandomNumber = (min: number, max: number) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
 export {
   sendStandardResponse,
   snakeCaseToCamelCaseObject,
@@ -135,4 +165,6 @@ export {
   TIME_IN_SECONDS,
   getRateLimiter,
   sanitisePrediction,
+  sendEmail,
+  getRandomNumber,
 };

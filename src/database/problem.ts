@@ -1,6 +1,6 @@
 import { Pool } from 'pg';
 import { executeQuery } from '.';
-import { Problem, PROBLEM_STATUS, Tag } from '../types';
+import { Problem, PROBLEM_DIFFICULTY, PROBLEM_STATUS, Tag } from '../types';
 import { snakeCaseToCamelCaseObject } from '../utils';
 
 const queryInsertProblem = `
@@ -18,7 +18,11 @@ const queryInsertProblemTag = `
 
 const querySelectTag = 'select * from tags';
 
-const querySelectProblems = (tagsToFetchFrom: string[]) => {
+const querySelectProblems = (
+  tagsToFetchFrom: string[],
+  difficultyLevelsToConsider: PROBLEM_DIFFICULTY[],
+  userId: number | null,
+) => {
   return `
     select 
     problems.id as "id", 
@@ -39,10 +43,20 @@ const querySelectProblems = (tagsToFetchFrom: string[]) => {
     on problems_tags.tag_id = tags.id
     left join comments
     on comments.problem_id = problems.id
-    ${tagsToFetchFrom.length ? 'where tags.name = ANY($3)' : ''}
-    ${tagsToFetchFrom.length ? 'and' : 'where'} problems.status = '${PROBLEM_STATUS.APPROVED}'
+    where problems.status = '${PROBLEM_STATUS.APPROVED}'
+    ${tagsToFetchFrom.length ? 'and tags.name = ANY($3)' : ''}
+    ${
+      difficultyLevelsToConsider.length
+        ? `and difficulty in
+        (${difficultyLevelsToConsider
+          .map((difficulty) => `'${difficulty}'`)
+          .join(', ')})
+      `
+        : ''
+    }
+    ${userId ? `and problems.id in (select problem_id from user_bookmarks where user_id = ${userId})` : ''}
     group by problems.id
-    order by problems.created_at desc
+    order by total_comments desc, problems.created_at desc
     limit $1 offset $2;
   `;
 };
@@ -70,7 +84,28 @@ const querySelectProblem = `
   group by problems.id;
 `;
 
-const querySelectProblemCount = (tagsToFetchFrom: string[]) => {
+const queryInsertUserBookmark = `
+  insert into user_bookmarks
+  (user_id, problem_id, created_at)
+  values ($1, $2, now());
+`;
+
+const queryDeletetUserBookmark = `
+  delete from user_bookmarks
+  where user_id = $1 and problem_id = $2;
+`;
+
+const queryCheckUserBookmark = `
+  select exists
+  (select 1 from user_bookmarks
+  where user_id = $1 AND problem_id = $2)
+`;
+
+const querySelectProblemCount = (
+  tagsToFetchFrom: string[],
+  difficultyLevelsToConsider: PROBLEM_DIFFICULTY[],
+  userId: number | null,
+) => {
   return `
     select count(1) as count from 
     (
@@ -82,8 +117,18 @@ const querySelectProblemCount = (tagsToFetchFrom: string[]) => {
       on problems_tags.tag_id = tags.id
       left join comments
       on comments.problem_id = problems.id
-      ${tagsToFetchFrom.length ? 'where tags.name = ANY($1)' : ''}
-      ${tagsToFetchFrom.length ? 'and' : 'where'} problems.status = '${PROBLEM_STATUS.APPROVED}'
+      where problems.status = '${PROBLEM_STATUS.APPROVED}'
+      ${tagsToFetchFrom.length ? 'and tags.name = ANY($1)' : ''}
+      ${
+        difficultyLevelsToConsider.length
+          ? `and difficulty in
+          (${difficultyLevelsToConsider
+            .map((difficulty) => `'${difficulty}'`)
+            .join(', ')})
+        `
+          : ''
+      }
+      ${userId ? `and problems.id in (select problem_id from user_bookmarks where user_id = ${userId})` : ''}
       group by problems.id
       order by problems.created_at desc
     ) sub_query;
@@ -138,10 +183,16 @@ const getProblems = async (
   limit: number,
   offset: number,
   tagsToFetchFrom: string[],
+  difficultyLevelsToConsider: PROBLEM_DIFFICULTY[],
+  userId: number | null,
 ): Promise<Problem[]> => {
   const queryResponse = await executeQuery({
     pool,
-    text: querySelectProblems(tagsToFetchFrom),
+    text: querySelectProblems(
+      tagsToFetchFrom,
+      difficultyLevelsToConsider,
+      userId,
+    ),
     values: tagsToFetchFrom.length
       ? [limit, offset, tagsToFetchFrom]
       : [limit, offset],
@@ -172,20 +223,72 @@ const getProblem = async (pool: Pool, problemId: number): Promise<Problem> => {
   };
 };
 
-const getProblemCount = async (pool: Pool, tagsToFetchFrom: string[]) => {
+const getProblemCount = async (
+  pool: Pool,
+  tagsToFetchFrom: string[],
+  difficultyLevelsToConsider: PROBLEM_DIFFICULTY[],
+  userId: number | null,
+) => {
   const queryResponse = await executeQuery({
     pool,
-    text: querySelectProblemCount(tagsToFetchFrom),
+    text: querySelectProblemCount(
+      tagsToFetchFrom,
+      difficultyLevelsToConsider,
+      userId,
+    ),
     values: tagsToFetchFrom.length ? [tagsToFetchFrom] : [],
   });
   const raw = queryResponse.rows || null;
   return Number(raw?.[0]?.count);
 };
+
+const insertUserBookmark = async (
+  pool: Pool,
+  userId: number,
+  problemId: number,
+) => {
+  await executeQuery({
+    pool,
+    text: queryInsertUserBookmark,
+    values: [userId, problemId],
+    transaction: true,
+  });
+};
+
+const deleteUserBookmark = async (
+  pool: Pool,
+  userId: number,
+  problemId: number,
+) => {
+  await executeQuery({
+    pool,
+    text: queryDeletetUserBookmark,
+    values: [userId, problemId],
+    transaction: true,
+  });
+};
+
+const checkUserBookmark = async (
+  pool: Pool,
+  userId: number,
+  problemId: number,
+): Promise<boolean> => {
+  const queryResponse = await executeQuery({
+    pool,
+    text: queryCheckUserBookmark,
+    values: [userId, problemId],
+  });
+  return queryResponse.rows[0].exists;
+};
+
 export {
   insertProblem,
   insertProblemTag,
+  insertUserBookmark,
   getTags,
   getProblem,
   getProblems,
   getProblemCount,
+  deleteUserBookmark,
+  checkUserBookmark,
 };

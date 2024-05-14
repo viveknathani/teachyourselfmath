@@ -39,3 +39,22 @@ h3,h5 {
     align-items: center;
     justify-content: center;
 }
+
+#filters, #selected-filters {
+    display: flex;
+    margin-top: 1%;
+    justify-content: center;
+}
+
+#filters * {
+    margin-left: 1px;
+    margin-right: 1px;
+}
+
+#bookmarked {
+    background-color: #f0f0f0;
+}
+
+label {
+    font-family: 'Inter', sans-serif;
+}

@@ -1,10 +1,164 @@
 body {
-    width: 70%;
+    width: 100%;
+    height: 100vh;
     margin: auto;
 }
 
-button {
-    border: 1px solid #8F9779;
+.page-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items:center;
+    justify-content: center;
+}
+
+.box-container {
+    display: flex;
+    align-items:center;
+    justify-content: center;
+    width: 100%;
+    position: relative;
+}
+
+#box {
+    overflow-x: hidden;
+    overflow-y: visible;
+    position: relative;
+    height: fit-content;
+}
+
+#login-form {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.auth-title {
+    text-align: center;
+    margin-bottom: 20px;
+    white-space: nowrap;
+}
+
+#login-title {
+    margin-bottom: 65px; 
+}
+
+#signup-title {
+    margin-bottom: 30px;
+}
+
+.auth-input {
+    display: inline-block;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    width: 230px;
+    border-bottom: 1px solid black;
+}
+
+.signup-login-prompt {
+    text-align: center;
+    white-space: nowrap;
+}
+
+.link {
+    color: black;
+    text-decoration: underline;
+}
+
+.link:hover {
     cursor: pointer;
-    background-color: #8F9779;
+}
+
+.link:visited {
+    color: black;
+}
+
+.link:active {
+    color: black;
+}
+
+#signup-message {
+    width: 400px;
+    text-align: center;
+    position: absolute;
+    top: 100%;
+    z-index: 3 !important;
+}
+
+.slide-out {
+    animation-duration: 800ms;
+    animation-name: slideout;
+    animation-fill-mode: both;
+}
+
+.slide-in {
+    animation-duration: 800ms;
+    animation-name: slidein;
+    animation-fill-mode: both;
+}
+
+.slide-delay-200ms {
+    animation-delay: 200ms;
+}
+
+.slide-delay-400ms {
+    animation-delay: 400ms;
+}
+.slide-delay-600ms {
+    animation-delay: 600ms;
+}
+.slide-delay-800ms {
+    animation-delay: 800ms;
+}
+.slide-delay-1000ms {
+    animation-delay: 1000ms;
+}
+
+.slide-delay-1200ms {
+    animation-delay: 1200ms;
+}
+.slide-delay-1400ms {
+    animation-delay: 1400ms;
+}
+.slide-delay-1600ms {
+    animation-delay: 1600ms;
+}
+.slide-delay-1800ms {
+    animation-delay: 1800ms;
+}
+.slide-delay-2200ms {
+    animation-delay: 2200ms;
+}
+
+@keyframes slideout{
+    from {
+      margin-left: 0%;
+    }
+  
+    to {
+      margin-left: -240%;
+    }
+}
+
+@keyframes slidein{
+    from {
+      margin-left: 120%;
+    }
+  
+    to {
+      margin-left: 0%;
+    }
+}
+
+button {
+    width: 250px;
+    margin: 20px 0;
+}
+
+input {
+    margin-bottom: 5%;
 }

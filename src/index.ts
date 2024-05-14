@@ -5,9 +5,8 @@ import cors from 'cors';
 import config from './config';
 import { router, pageRouter } from './routes';
 import * as path from 'path';
-import helmet from 'helmet';
-import { createDashboardAndGetRouter } from './queues/dashboard';
 import { SERVER_ENVIRONMENT } from './types';
+import { createBullDashboardAndAttachRouter } from './queues/dashboard';
 
 async function main() {
   const requestLogger = expressWinston.logger({
@@ -17,26 +16,13 @@ async function main() {
     expressFormat: true,
   });
   const app = express();
-  if (config.ENVIRONMENT === SERVER_ENVIRONMENT.DEV) {
-    app.use(
-      helmet({
-        contentSecurityPolicy: {
-          directives: {
-            'script-src': [
-              "'self'",
-              'cdn.jsdelivr.net',
-              'www.googletagmanager.com',
-            ],
-            'style-src': ["'self'", 'fonts.googleapis.com'],
-          },
-        },
-      }),
-    );
+  if (config.ENVIRONMENT !== SERVER_ENVIRONMENT.DEV) {
     app.set('trust proxy', true);
   }
   app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
   app.use(requestLogger);
-  app.use('/admin/queues', createDashboardAndGetRouter());
+  createBullDashboardAndAttachRouter(app);
   app.use(cors());
   app.use('/', pageRouter);
   app.use('/web', express.static(path.join(__dirname, './web')));
