@@ -50,13 +50,16 @@
             </select>
         </div>
         <div id="bookmarked">
-            <label>bookmarked? </label>
-            <input id="bookmark-checkbox" type="checkbox">
+            <select name="difficulty" id="bookmark-filter">
+                <option value="ANY">status</option>
+                <option value="true">bookmarked</option>
+            </select>
         </div>
     </div>
     <div id="selected-filters">
         <div id="difficulty-list"></div>
         <div id="tags-list"></div>
+        <div id="bookmark-list"></div>
     </div>
     <ol></ol>
     <div id="pagination" class="font-primary">

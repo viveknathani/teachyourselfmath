@@ -1,5 +1,10 @@
 let selectedDifficultyList = [];
 let selectedTagsList = [];
+let bookmarkList = [];
+
+function isBookmarked() {
+    return bookmarkList.length !== 0 && bookmarkList[0] === "true";
+}
 
 function combinedNumericAndStringPart(interval, text) {
     if (interval === 1) {
@@ -103,14 +108,15 @@ function fillFilterListFromSearchParams() {
 
 function fetchProblems() {
     const searchParams = new URLSearchParams(window.location.search);
-    const bookmarked = document.getElementById('bookmark-checkbox').checked;
     const params = new URLSearchParams({
         page: searchParams.get('page') || 1,
         tags: selectedTagsList.join(','),
         difficulty: selectedDifficultyList.join(','),
     });
-    if (bookmarked) {
+    if (isBookmarked()) {
         params.set('bookmarked', "true");
+    } else {
+        params.delete('bookmarked');
     }
     searchParams.set('page', params.page);
     searchParams.set('tags', params.tags);
@@ -120,6 +126,11 @@ function fetchProblems() {
     url.searchParams.set('page', paramsObject.page);
     url.searchParams.set('tags', paramsObject.tags);
     url.searchParams.set('difficulty', paramsObject.difficulty);
+    if (isBookmarked()) {
+        url.searchParams.set('bookmarked', "true");
+    } else {
+        url.searchParams.delete('bookmarked');
+    }
     window.history.pushState(null, '', url.toString());
     fetch(`/api/v1/problems?${params.toString()}`, {
         method: 'GET',
@@ -198,6 +209,22 @@ function renderSelectedTagsList() {
    }
 }
 
+function renderBookmarkList() {
+    const bookmarkListDiv = document.getElementById('bookmark-list');
+    bookmarkListDiv.innerHTML = '';
+    for (const bookmark of bookmarkList) {
+        const button = document.createElement('button');
+        button.className = 'closeButton';
+        button.innerHTML = `${toTitleCase(bookmark === 'true' ? 'bookmarked' : '')}  <i class="fa fa-minus-circle" aria-hidden="true"></i>`;
+        button.onclick = () => {
+            bookmarkList = bookmarkList.filter(item => item !== bookmark);
+            renderBookmarkList();
+            fetchProblems();
+        }
+        bookmarkListDiv.appendChild(button);
+    }
+}
+
 function listenToFilterChanges() {
     const difficultySelect = document.getElementById('difficulty-filter');
     difficultySelect.addEventListener('change', function() {
@@ -223,6 +250,15 @@ function listenToFilterChanges() {
         }
         tagsSelect.selectedIndex = 0;
         renderSelectedTagsList();
+        fetchProblems();
+    });
+    const bookmarkSelect = document.getElementById('bookmark-filter');
+    bookmarkSelect.addEventListener('change', function() {
+        const bookmark = this.value;
+        bookmarkList.push(bookmark);
+        bookmarkList = Array.from(new Set(bookmarkList));
+        bookmarkSelect.selectedIndex = 0;
+        renderBookmarkList();
         fetchProblems();
     });
     if (localStorage.getItem('authToken')) {
@@ -257,6 +293,7 @@ document.addEventListener('DOMContentLoaded', function() {
     fillFilterListFromSearchParams();
     renderSelectedDifficultyList();
     renderSelectedTagsList();
+    renderBookmarkList();
     fetchProblems();
     fetchTags();
     listenToFilterChanges();
