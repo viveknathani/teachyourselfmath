@@ -231,7 +231,7 @@ function toggleBookmark() {
         return;
     }
     const bookmarkButton = document.getElementById('problem-bookmark');
-    const isBookmarked = bookmarkButton.innerHTML.startsWith('bookmarked');
+    const isBookmarked = bookmarkButton.innerHTML.startsWith('unbookmark');
     fetch(`/api/v1/problems/${problemId}/bookmark`, {
         method: isBookmarked ? 'DELETE' : 'POST',
         headers: {
@@ -266,7 +266,7 @@ function fetchAndDisplayBookmarkStatus() {
         const bookmarkButton = document.getElementById('problem-bookmark');
         bookmarkButton.style.display = 'block';
         if (res.data.isBookmarked) {
-            bookmarkButton.innerHTML = 'bookmarked';
+            bookmarkButton.innerHTML = 'unbookmark';
             bookmarkButton.classList.add('bookmarked');
         } else {
             bookmarkButton.innerHTML = 'bookmark';
