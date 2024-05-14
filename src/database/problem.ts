@@ -56,7 +56,7 @@ const querySelectProblems = (
     }
     ${userId ? `and problems.id in (select problem_id from user_bookmarks where user_id = ${userId})` : ''}
     group by problems.id
-    order by problems.created_at desc
+    order by total_comments desc, problems.created_at desc
     limit $1 offset $2;
   `;
 };
