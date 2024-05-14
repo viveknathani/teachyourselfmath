@@ -261,9 +261,6 @@ function listenToFilterChanges() {
         renderBookmarkList();
         fetchProblems();
     });
-    if (localStorage.getItem('authToken')) {
-        document.getElementById('bookmark-checkbox').addEventListener('click', fetchProblems);
-    }
 }
 
 function fetchTags() {
@@ -289,7 +286,16 @@ function fetchTags() {
     });
 }
 
+function checkProfileSteps() {
+    if (localStorage.getItem('authToken')) {
+        document.getElementById('bookmark-filter').style.display = 'block';
+    } else {
+        bookmarkList = [];
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
+    checkProfileSteps();
     fillFilterListFromSearchParams();
     renderSelectedDifficultyList();
     renderSelectedTagsList();
