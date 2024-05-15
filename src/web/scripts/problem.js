@@ -113,6 +113,7 @@ function displayComments(comments) {
 
         commentsDiv.appendChild(commentDiv);
     }
+    runMathJaxAfterMarkdown();
 }
 
 function addComment() {
@@ -276,6 +277,27 @@ function fetchAndDisplayBookmarkStatus() {
     }).catch(err => {
         console.error('Failed to fetch bookmark status:', err);
     });
+}
+
+function runMathJaxAfterMarkdown() {
+    const elements = document.getElementsByClassName('comment');
+    const replacePairs = [
+        {
+            old: /\]/g,
+            new: "\\]",
+        },
+        {
+            old: /\[/g,
+            new: "\\[",
+        }
+    ];
+
+    for (const element of elements) {
+        replacePairs.forEach(pair => {
+            element.innerText = element.innerText.replace(pair.old, pair.new);
+        });
+    }
+    window.MathJax.typeset();
 }
 
 document.addEventListener('DOMContentLoaded', function() {
