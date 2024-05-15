@@ -294,7 +294,7 @@ function runMathJaxAfterMarkdown() {
 
     for (const element of elements) {
         replacePairs.forEach(pair => {
-            element.innerText = element.innerText.replace(pair.old, pair.new);
+            element.innerHTML = element.innerHTML.replace(pair.old, pair.new);
         });
     }
     window.MathJax.typeset();
