@@ -2,7 +2,9 @@
 
 I wished for a free website with an ever-growing list of math problems, teachyourselfmath is that website.
 
-### how does it work
+<img title="flow" alt="screenshot of website" src="./SCREENSHOT.png" width="330px" height="480px">
+
+### Architecture
 
 If a document containing math problem exists, we'd like to extract every problem from it and dump it in a database. LaTeX is something that can be understood by both, computers and humans. Hence, the problem boils down to converting a PDF into LaTeX, removing the irrelevant parts, and storing the remaining parts. 
 
@@ -12,7 +14,7 @@ Currently, I run this model's server locally on my computer with every PDF I can
 
 <img title="flow" alt="flow of all the steps" src="./FLOW.png">
 
-### setup
+### Setup
 
 1. Get `nougat` from [here](https://github.com/facebookresearch/nougat). Run it as a server.
 2. You will need PostgreSQL and Redis to run this.
@@ -46,6 +48,11 @@ Currently, I run this model's server locally on my computer with every PDF I can
 
 TODO: Create windows scripts
 
-### acknowledgements
+
+### Contributing
+
+I am happy to accept pull requests. No hard rules.
+
+### Acknowledgements
 
 created by Vivek Nathani ([@viveknathani_](https://twitter.com/viveknathani_)), licensed under the [MIT License](./LICENSE).

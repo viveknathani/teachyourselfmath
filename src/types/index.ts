@@ -20,6 +20,11 @@ enum PROBLEM_DIFFICULTY {
   HARD = 'HARD',
 }
 
+enum PROBLEM_STATUS {
+  DRAFT = 'DRAFT',
+  APPROVED = 'APPROVED',
+}
+
 enum VOTE_TYPE {
   UPVOTE = 'UPVOTE',
   DOWNVOTE = 'DOWNVOTE',
@@ -36,6 +41,23 @@ enum QUEUE_NAME {
   SPLIT_PREDICTION = 'SPLIT_PREDICTION',
   REMOVE_JUNK = 'REMOVE_JUNK',
   ADD_TO_DATABASE = 'ADD_TO_DATABASE',
+  SEND_NOTIFICATION = 'SEND_NOTIFICATION',
+}
+
+enum NOTIFICATION_CHANNEL {
+  EMAIL = 'EMAIL',
+}
+
+enum PASSWORD_RESET_STAGE {
+  SEND_REQUEST = 'SEND_REQUEST',
+  ENTER_CODE = 'ENTER_CODE',
+  UPDATE_PASSWORD = 'UPDATE_PASSWORD',
+}
+
+enum REDIS_KEY_PREFIX {
+  PASSWORD_RESET = 'PASSWORD_RESET',
+  EMAIL_LIMIT = 'EMAIL_LIMIT',
+  USER_SPECIFIC = 'USER_SPECIFIC',
 }
 
 interface ApiResponse {
@@ -56,12 +78,22 @@ interface AppState {
   cache: Redis;
 }
 
+interface UserPreference {
+  notifications: {
+    email: {
+      transactional: boolean;
+      promotional: boolean;
+    };
+  };
+}
+
 interface User {
   id: number;
   name: string;
   email: string;
   username: string;
   password: string;
+  preference: UserPreference | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -76,6 +108,7 @@ interface Problem {
   source: string;
   description: string;
   difficulty: PROBLEM_DIFFICULTY;
+  status: PROBLEM_STATUS;
   title: string;
   tags?: string[];
   totalComments?: number;
@@ -128,6 +161,40 @@ interface GetCommentsRequest {
 interface GetProblemsRequest {
   page?: number;
   tags?: string;
+  difficulty?: string;
+  bookmarked?: boolean;
+}
+
+interface PasswordResetSendRequestData {
+  email: string;
+}
+
+interface PasswordResetEnterCodeData {
+  email: string;
+  code: string;
+}
+
+interface PasswordResetUpdatePasswordData {
+  email: string;
+  newPassword: string;
+}
+
+interface PasswordResetStatus {
+  code: string;
+  verified: boolean;
+}
+
+interface PasswordResetRequest {
+  stage: PASSWORD_RESET_STAGE;
+  data:
+    | PasswordResetSendRequestData
+    | PasswordResetEnterCodeData
+    | PasswordResetUpdatePasswordData;
+}
+
+interface PassswordResetResponse {
+  stage: PASSWORD_RESET_STAGE;
+  message: string;
 }
 
 interface GetProblemsResponse {
@@ -136,6 +203,19 @@ interface GetProblemsResponse {
   pageSize: number;
   totalPages: number;
   problems: Problem[];
+}
+
+interface UpdateProfileRequest {
+  name?: string;
+}
+
+interface UpdateProfileResponse {
+  user: User;
+}
+
+interface UpdatePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
 }
 
 interface SplitFileJobData {
@@ -169,11 +249,24 @@ interface AddToDatabaseJobData {
   tags: string[];
 }
 
+interface SendNotificationRequest {
+  channel: NOTIFICATION_CHANNEL;
+  user: {
+    type: 'uuid' | 'email';
+    data: string;
+  };
+  payload: {
+    subject: string;
+    body: string;
+  };
+}
+
 export {
   ApiResponse,
   ExecuteQuery,
   AppState,
   User,
+  UserPreference,
   Tag,
   Problem,
   Comment,
@@ -184,6 +277,16 @@ export {
   GetCommentsRequest,
   GetProblemsRequest,
   GetProblemsResponse,
+  UpdateProfileRequest,
+  UpdateProfileResponse,
+  UpdatePasswordRequest,
+  SendNotificationRequest,
+  PasswordResetRequest,
+  PasswordResetSendRequestData,
+  PasswordResetEnterCodeData,
+  PasswordResetUpdatePasswordData,
+  PasswordResetStatus,
+  PassswordResetResponse,
   SplitFileJobData,
   PredictSegmentJobData,
   SplitPredictionJobData,
@@ -195,4 +298,8 @@ export {
   VOTE_TOPIC,
   QUEUE_NAME,
   PROBLEM_DIFFICULTY,
+  PROBLEM_STATUS,
+  NOTIFICATION_CHANNEL,
+  PASSWORD_RESET_STAGE,
+  REDIS_KEY_PREFIX,
 };

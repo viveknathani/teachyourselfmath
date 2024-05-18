@@ -2,8 +2,11 @@ import {
   AppState,
   GetProblemsRequest,
   GetProblemsResponse,
+  PROBLEM_DIFFICULTY,
   Problem,
+  REDIS_KEY_PREFIX,
 } from '../types';
+import * as errors from './errors';
 import * as database from '../database';
 import { TagService } from './TagService';
 import { getPaginationConfig, TIME_IN_SECONDS } from '../utils';
@@ -50,25 +53,36 @@ export class ProblemService {
   }
 
   public async getProblems(
+    userId: number | null,
     request: GetProblemsRequest,
   ): Promise<GetProblemsResponse> {
-    const cacheKey = `PROBLEMS:$${JSON.stringify(request)}`;
+    const cacheKey =
+      userId && request.bookmarked
+        ? `PROBLEMS:${userId}:${JSON.stringify(request)}`
+        : `PROBLEMS:${JSON.stringify(request)}`;
     const cachedData = await this.state.cache.get(cacheKey);
     let result: any = JSON.parse(cachedData || '{}');
     if (!cachedData) {
-      result = await this.getProblemsFromDb(request);
+      result = await this.getProblemsFromDb(userId, request);
       await this.state.cache.setex(
         cacheKey,
         TIME_IN_SECONDS.ONE_HOUR,
         JSON.stringify(result),
       );
     }
+    if (userId && request.bookmarked) {
+      await this.addToKeyOfKeys(this.getUserSpecificKey(userId), cacheKey);
+    }
     return result;
   }
 
   public async getProblemsFromDb(
+    userId: number | null,
     request: GetProblemsRequest,
   ): Promise<GetProblemsResponse> {
+    if (request.bookmarked && userId === null) {
+      throw new errors.ErrUserNotFound();
+    }
     const PAGE_SIZE = 20;
     const { limit, offset } = getPaginationConfig({
       page: request.page || 1,
@@ -78,15 +92,30 @@ export class ProblemService {
       (request.tags !== '' &&
         request.tags?.split(',').map((tag) => decodeURI(tag))) ||
       [];
+    const difficultyLevelsToConsider = Array.from(
+      new Set(
+        (request.difficulty !== '' &&
+          request.difficulty
+            ?.split(',')
+            .map(
+              (difficulty) => decodeURI(difficulty) as PROBLEM_DIFFICULTY,
+            )) ||
+          [],
+      ),
+    );
     const count = await database.getProblemCount(
       this.state.databasePool,
       tagsToFetchFrom,
+      difficultyLevelsToConsider,
+      userId && request.bookmarked ? userId : null,
     );
     const problems = await database.getProblems(
       this.state.databasePool,
       limit,
       offset,
       tagsToFetchFrom,
+      difficultyLevelsToConsider,
+      userId && request.bookmarked ? userId : null,
     );
     const currentPage = Number(request.page || 1);
     return {
@@ -100,5 +129,64 @@ export class ProblemService {
 
   public async getProblem(problemId: number) {
     return database.getProblem(this.state.databasePool, problemId);
+  }
+
+  public async bookmarkProblem(userId: number, problemId: number) {
+    const key = this.getUserSpecificKey(userId);
+    await this.deleteKeysForKeyOfKeys(key);
+    await this.removeKeyOfKeys(key);
+    return database.insertUserBookmark(
+      this.state.databasePool,
+      userId,
+      problemId,
+    );
+  }
+
+  public async unbookmarkProblem(userId: number, problemId: number) {
+    const key = this.getUserSpecificKey(userId);
+    await this.deleteKeysForKeyOfKeys(key);
+    await this.removeKeyOfKeys(key);
+    return database.deleteUserBookmark(
+      this.state.databasePool,
+      userId,
+      problemId,
+    );
+  }
+
+  public async isProblemBookmarkedByUser(
+    userId: number,
+    problemId: number,
+  ): Promise<{
+    isBookmarked: boolean;
+  }> {
+    const isBookmarked = await database.checkUserBookmark(
+      this.state.databasePool,
+      userId,
+      problemId,
+    );
+    return {
+      isBookmarked,
+    };
+  }
+
+  private async addToKeyOfKeys(keyOfKeys: string, key: string) {
+    await this.state.cache.sadd(keyOfKeys, key);
+  }
+
+  private async removeKeyOfKeys(keyOfKeys: string) {
+    await this.state.cache.del(keyOfKeys);
+  }
+
+  private async listKeysForKey(keyOfKeys: string): Promise<string[]> {
+    return this.state.cache.smembers(keyOfKeys);
+  }
+
+  private async deleteKeysForKeyOfKeys(keyOfKeys: string) {
+    const keys = await this.listKeysForKey(keyOfKeys);
+    await Promise.all(keys.map(async (key) => await this.state.cache.del(key)));
+  }
+
+  private getUserSpecificKey(userId: number) {
+    return `${REDIS_KEY_PREFIX.USER_SPECIFIC}:${userId}`;
   }
 }

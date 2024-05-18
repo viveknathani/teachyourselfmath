@@ -19,29 +19,34 @@
     <script defer src='/web/scripts/auth.js'></script>
 </head>
 <body>
-    <div id="box" class="font-primary">
-        <div id="login-form" class="form-container">
-            <h3>login</h3>
-            <form id="login-form-element">
-                <input type="text" placeholder="email" name="email">
-                <input type="password" placeholder="password" name="password">
-                <button type="button" id="login-button">submit</button>
-            </form>
-            <p id="login-message"></p>
-        </div>
-
-        <div id="signup-form" class="form-container">
-            <h3>signup</h3>
-            <form id="signup-form-element">
-                <input type="text" placeholder="name" name="name">
-                <input type="text" placeholder="email" name="email">
-                <input type="text" placeholder="username" name="username">
-                <input type="password" placeholder="password" name="password">
-                <button type="button" id="signup-button">submit</button>
-            </form>
-            <p id="signup-message"></p>
+    <div class="page-container">
+        <div class="box-container">
+            <div id="box" class="font-primary">
+                <div id="login-form" class="form-container">
+                    <h1 class="auth-title" id="login-title">login</h1>
+                    <form id="login-form-element">
+                        <input class="auth-input login-input" type="text" placeholder="email" name="email" id="login-email"><br/>
+                        <input class="auth-input login-input" type="password" placeholder="password" name="password" id="login-password"><br/>
+                        <button type="button" id="login-button">login</button>
+                    </form>
+                    <p class="signup-login-prompt" id="signup-prompt">don’t have an account? <a class="link" id="signup-link">create one</a></p>
+                    <p class="signup-login-prompt" id="reset-prompt">forgot your password? <a class="link" href="/auth/reset" id="signup-link">reset here</a></p>
+                </div>
+        
+                <div id="signup-form" class="form-container">
+                    <h1 class="auth-title" id="signup-title">sign up</h1>
+                    <form id="signup-form-element">
+                        <input class="auth-input signup-input" type="text" placeholder="name" name="name" id="signup-name"><br/>
+                        <input class="auth-input signup-input" type="text" placeholder="email" name="email" id="signup-email"><br/>
+                        <input class="auth-input signup-input" type="text" placeholder="username" name="username" id="signup-username"><br/>
+                        <input class="auth-input signup-input" type="password" placeholder="password" name="password" id="signup-password"><br/>
+                        <button type="button" id="signup-button">sign up</button>
+                    </form>
+                    <p class="signup-login-prompt" id="login-prompt">have an account already? <a class="link" id="login-link">log in</a></p>
+                </div>
+            </div>
+            <p id="signup-message" class="font-primary"></p>
         </div>
     </div>
-
 </body>
 </html>

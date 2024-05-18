@@ -58,10 +58,26 @@ textarea {
     display: block;
 }
 
+.editor-toolbar, .editor-statusbar, .CodeMirror {
+    width: 60%;
+}
+
 .comment-meta, .reply-meta {
     margin-bottom: -12px;
 }
 
 .reply {
     margin-left: 4%;
+}
+
+.comment {
+    border: 1px solid gray;
+    border-radius: 10px;
+    padding: 1%;
+    margin-right: 2%;
+    margin-top: 1%;
+}
+
+#add-comment-box {
+    margin-top: 1%;
 }

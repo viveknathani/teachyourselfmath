@@ -28,5 +28,3 @@ window.MathJax = {
       fontCache: 'global'
     }
 };
-
-console.log('i load first!')

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5MQXGYVY2T"></script>
+  <script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-5MQXGYVY2T');
+  </script>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>teachyourselfmath - password reset</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <link rel='stylesheet' type='text/css' media='screen' href='/web/styles/base.css'>
+  <link rel='stylesheet' type='text/css' media='screen' href='/web/styles/auth_reset.css'>
+  <script defer src='/web/scripts/auth_reset.js'></script>
+</head>
+<body>
+  <div id="header" class="font-heading">
+    <div id="left">
+        <h3>teachyourselfmath</h3>
+    </div>
+    <div id="right">
+        <h5><a href="./"><- home</a></h5>
+    </div>
+  </div>
+  <div id="container" class="font-primary">
+    <div id="stage1">
+      <h3>password reset: enter your email</h3>
+      <input id="password-reset-email" placeholder="email"></input>
+      <button onclick="sendResetRequest()">send OTP on my email</button>
+    </div>
+  
+    <div id="stage2" style="display:none;">
+      <h3>password reset: enter the code received in your email</h3>
+      <input type="text" id="code" placeholder="code">
+      <button onclick="enterCode()">submit</button>
+    </div>
+  
+    <div id="stage3" style="display:none;">
+      <h3>password reset: create a new password</h3>
+      <input type="password" id="newPassword" placeholder="password">
+      <button onclick="updatePassword()">save</button>
+    </div>
+  </div>
+</body>
+</html>
