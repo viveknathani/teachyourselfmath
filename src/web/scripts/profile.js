@@ -108,6 +108,11 @@ function updatePassword() {
   });;
 }
 
+function logout() {
+  localStorage.removeItem('authToken');
+  window.location.href = '/';
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   fetchProfile();
   document.getElementById('update-password-button').addEventListener('click', updatePassword);
