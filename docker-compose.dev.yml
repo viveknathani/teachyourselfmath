@@ -1,0 +1,49 @@
+version: '4'
+
+services:
+  web:
+    container_name: webapp
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/usr/src/app
+    networks:
+      - docker_network
+    depends_on:
+      - db
+      - redis
+
+  db:
+    container_name: postgres-dev
+    image: postgres:latest
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: teachyourselfmath
+    ports:
+      - "5432:5432"
+    networks:
+      - docker_network
+    # Prevents the database from being deleted when the container is removed
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer
+    ports:
+      - "8081:8080"
+
+  redis:
+    container_name: redis-dev
+    networks:
+      - docker_network
+    image: redis:latest
+
+# Persistent data
+volumes:
+  db_data:
+
+networks:
+  docker_network:
+    driver: bridge

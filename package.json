@@ -14,7 +14,10 @@
     "copy-files": "npx copyfiles -u 1 \"src/web/**/*\" build/",
     "migrate:up": "yarn migrate up",
     "migrate:down": "yarn migrate down",
-    "migrate:create": "yarn migrate create"
+    "migrate:create": "yarn migrate create",
+    "docker:up": "./scripts/start-dev.sh",
+    "docker:down": "./scripts/stop-dev.sh",
+    "docker:migrate": "./scripts/migrate-dev.sh"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.1",
