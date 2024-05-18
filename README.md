@@ -24,12 +24,17 @@ Currently, I run this model's server locally on my computer with every PDF I can
 5. `yarn start`!
 
 ### docker setup
+
 1. Make sure you have docker and docker-compose installed on your system.
+
 2. ONE TIME ONLY: give executable permission to `scripts` folder
+
     ```bash
     chmod +x ./scripts
     ```
+
 3. Run following command for building and starting docker containers
+
     ```bash
     yarn docker:up
     ```
@@ -38,10 +43,13 @@ Currently, I run this model's server locally on my computer with every PDF I can
     And database should be visible [http://localhost:8081/](http://localhost:8081/)
 
 4. To run migrations
+
     ```bash
     yarn docker:migrate up # or "down"
     ```
+
 5. To stop containers
+
     ```bash
     yarn docker:down
     ```
