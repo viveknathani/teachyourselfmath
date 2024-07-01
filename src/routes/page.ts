@@ -1,5 +1,6 @@
 import * as express from 'express';
 import * as path from 'path';
+import { readFileMemoized } from '../utils';
 
 const pageRouter: express.Router = express.Router();
 
@@ -8,10 +9,15 @@ type ExpressFunction = (
   res: express.Response,
 ) => Promise<void>;
 
-function directoryHandler(webPagePath: string): ExpressFunction {
+function sendHTML(webPagePath: string): ExpressFunction {
   return async (req: express.Request, res: express.Response) => {
     try {
-      res.sendFile(path.resolve(__dirname, webPagePath));
+      const text = await readFileMemoized(
+        path.join(__dirname, webPagePath),
+        'utf-8',
+      );
+      res.setHeader('Content-Type', 'text/html');
+      res.send(text);
     } catch (err) {
       console.log(err);
       res.status(500).json({ message: '' });
@@ -19,13 +25,13 @@ function directoryHandler(webPagePath: string): ExpressFunction {
   };
 }
 
-pageRouter.get('/', directoryHandler('../web/pages/home.html'));
-pageRouter.get('/about', directoryHandler('../web/pages/about.html'));
-pageRouter.get('/auth', directoryHandler('../web/pages/auth.html'));
-pageRouter.get('/auth/reset', directoryHandler('../web/pages/auth_reset.html'));
-pageRouter.get('/problem', directoryHandler('../web/pages/problem.html'));
-pageRouter.get('/tags', directoryHandler('../web/pages/tags.html'));
-pageRouter.get('/profile', directoryHandler('../web/pages/profile.html'));
+pageRouter.get('/', sendHTML('../web/pages/home.html'));
+pageRouter.get('/about', sendHTML('../web/pages/about.html'));
+pageRouter.get('/auth', sendHTML('../web/pages/auth.html'));
+pageRouter.get('/auth/reset', sendHTML('../web/pages/auth_reset.html'));
+pageRouter.get('/problem', sendHTML('../web/pages/problem.html'));
+pageRouter.get('/tags', sendHTML('../web/pages/tags.html'));
+pageRouter.get('/profile', sendHTML('../web/pages/profile.html'));
 pageRouter.get('/roadmap', (req, res) => {
   res.redirect(
     'https://viveknathani.notion.site/teachyourselfmath-public-roadmap-4eccf89a7308456fae201ce14c6c187b',

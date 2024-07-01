@@ -33,7 +33,15 @@ const executeQuery = async (request: ExecuteQuery) => {
   }
 };
 
-export { executeQuery, getDatabaseConnectionPool };
+const getDatabaseVersion = async (pool: Pool) => {
+  const queryResponse = await executeQuery({
+    pool,
+    text: 'select version();',
+  });
+  return queryResponse.rows;
+};
+
+export { executeQuery, getDatabaseConnectionPool, getDatabaseVersion };
 export * from './user';
 export * from './problem';
 export * from './comment';

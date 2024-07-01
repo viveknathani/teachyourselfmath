@@ -7,9 +7,11 @@ import { fileProcessorRouter } from './file-processor';
 import { pageRouter } from './page';
 import { utilityRouter } from './utility';
 import { tagRouter } from './tag';
+import { healthCheckRouter } from './health';
 
 const router: express.Router = express.Router();
 
+router.use('/', healthCheckRouter);
 router.use('/users', userRouter);
 router.use('/problems/', problemRouter);
 router.use('/comments/', commentRouter);

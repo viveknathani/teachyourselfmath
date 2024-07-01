@@ -4,6 +4,8 @@ import { rateLimit } from 'express-rate-limit';
 import RedisClient from 'ioredis';
 import config from '../config';
 import { RedisStore } from 'rate-limit-redis';
+import { readFile } from 'fs/promises';
+import memoizee from 'memoizee';
 import axios from 'axios';
 
 const sendStandardResponse = (
@@ -154,6 +156,10 @@ const getRandomNumber = (min: number, max: number) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
+const readFileMemoized = memoizee(readFile, {
+  promise: true,
+});
+
 export {
   sendStandardResponse,
   snakeCaseToCamelCaseObject,
@@ -167,4 +173,5 @@ export {
   sanitisePrediction,
   sendEmail,
   getRandomNumber,
+  readFileMemoized,
 };
