@@ -261,6 +261,12 @@ interface SendNotificationRequest {
   };
 }
 
+interface HealthCheckResponse {
+  allGood: boolean;
+  canConnectToDatabase: boolean;
+  canConnectToCache: boolean;
+}
+
 export {
   ApiResponse,
   ExecuteQuery,
@@ -292,6 +298,7 @@ export {
   SplitPredictionJobData,
   RemoveJunkJobData,
   AddToDatabaseJobData,
+  HealthCheckResponse,
   HTTP_CODE,
   SERVER_ENVIRONMENT,
   VOTE_TYPE,
