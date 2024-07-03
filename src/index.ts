@@ -27,6 +27,10 @@ async function main() {
   app.use('/', pageRouter);
   app.use('/web', express.static(path.join(__dirname, './web')));
   app.use('/api/v1', router);
+  app.get('/robots.txt', (req, res) => {
+    res.type('text/plain');
+    res.send('User-agent: *\nDisallow: /admin/');
+  });
   app.listen(config.PORT, () => {
     console.log(
       `💨 server is running at: ${config.HOST}:${config.PORT}, environment is ${config.ENVIRONMENT}`,
