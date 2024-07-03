@@ -1,0 +1,23 @@
+meta {
+  name: insert vote
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/votes/
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{process.env.AUTH_TOKEN}}
+}
+
+body:json {
+  {
+      "voteType": "DOWNVOTE",
+      "topicId": 3,
+      "topic": "COMMENT"
+  }
+}

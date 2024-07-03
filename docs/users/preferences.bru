@@ -1,0 +1,28 @@
+meta {
+  name: preferences
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/api/v1/users/preferences
+  body: json
+  auth: none
+}
+
+headers {
+  authorization: Bearer {{process.env.AUTH_TOKEN}}
+}
+
+body:json {
+  {
+    "data": {
+      "notifications": {
+        "email": {
+          "transactional": true,
+          "promotional": true
+        }
+      }
+    }
+  }
+}

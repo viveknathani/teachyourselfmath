@@ -1,0 +1,15 @@
+meta {
+  name: is bookmarked
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/api/v1/problems/147/is-bookmarked
+  body: none
+  auth: none
+}
+
+headers {
+  authorization: Bearer {{process.env.AUTH_TOKEN}}
+}

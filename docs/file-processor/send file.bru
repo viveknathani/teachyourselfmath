@@ -1,0 +1,20 @@
+meta {
+  name: send file
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/file-processor/send-file
+  body: multipartForm
+  auth: none
+}
+
+headers {
+  X-TYM-API-KEY: {{tymApiKey}}
+}
+
+body:multipart-form {
+  tym: undefined
+  tags: probability
+}

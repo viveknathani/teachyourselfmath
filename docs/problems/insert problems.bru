@@ -1,0 +1,74 @@
+meta {
+  name: insert problems
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/problems
+  body: json
+  auth: none
+}
+
+headers {
+  X-TYM-API-KEY: {{process.env.TYM_API_KEY}}
+}
+
+body:json {
+  [
+    {
+      "source": "generated",
+      "description": "Prove that \\( \\tan(x) + \\cot(x) = \\frac{2}{\\sin(2x)} \\)",
+      "difficulty": "MEDIUM",
+      "title": "Prove that \\( \\tan(x) + \\cot(x) = \\frac{2}{\\sin(2x)} \\)",
+      "tagsToAttachWhileInserting": [
+        "trigonometry"
+      ]
+    },
+    {
+      "source": "generated",
+      "description": "Find all solutions to \\( \\cos(2x) - \\sin^2(x) = 0 \\) for \\( 0 \\leq x < 2\\pi \\)",
+      "difficulty": "MEDIUM",
+      "title": "Find all solutions to \\( \\cos(2x) - \\sin^2(x) = 0 \\) for \\( 0 \\leq x < 2\\pi \\)",
+      "tagsToAttachWhileInserting": [
+        "trigonometry"
+      ]
+    },
+    {
+      "source": "generated",
+      "description": "If \\( \\tan(A) = \\frac{1}{3} \\) and \\( \\tan(B) = \\frac{1}{2} \\), find the value of \\( \\tan(A + B) \\)",
+      "difficulty": "MEDIUM",
+      "title": "If \\( \\tan(A) = \\frac{1}{3} \\) and \\( \\tan(B) = \\frac{1}{2} \\), find the value of \\( \\tan(A + B) \\)",
+      "tagsToAttachWhileInserting": [
+        "trigonometry"
+      ]
+    },
+    {
+      "source": "generated",
+      "description": "Prove the identity: \\( \\cos(x) - \\cos(3x) = 4 \\sin(x) \\sin^2(x) \\)",
+      "difficulty": "MEDIUM",
+      "title": "Prove the identity: \\( \\cos(x) - \\cos(3x) = 4 \\sin(x) \\sin^2(x) \\)",
+      "tagsToAttachWhileInserting": [
+        "trigonometry"
+      ]
+    },
+    {
+      "source": "generated",
+      "description": "Solve for \\( \\theta \\) in the equation \\( \\cos(2\\theta) = \\frac{1}{2} \\) for \\( 0 \\leq \\theta < 2\\pi \\)",
+      "difficulty": "MEDIUM",
+      "title": "Solve for \\( \\theta \\) in the equation \\( \\cos(2\\theta) = \\frac{1}{2} \\) for \\( 0 \\leq \\theta < 2\\pi \\)",
+      "tagsToAttachWhileInserting": [
+        "trigonometry"
+      ]
+    },
+    {
+      "source": "generated",
+      "description": "Given \\( \\sin(A) = \\frac{3}{5} \\) and \\( \\sin(B) = \\frac{5}{13} \\), find \\( \\sin(A + B) \\)",
+      "difficulty": "MEDIUM",
+      "title": "Given \\( \\sin(A) = \\frac{3}{5} \\) and \\( \\sin(B) = \\frac{5}{13} \\), find \\( \\sin(A + B) \\)",
+      "tagsToAttachWhileInserting": [
+        "trigonometry"
+      ]
+    }
+  ]
+}

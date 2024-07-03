@@ -1,0 +1,21 @@
+meta {
+  name: get profile
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/v1/users/profile
+  body: json
+  auth: none
+}
+
+headers {
+  authorization: Bearer {{process.env.AUTH_TOKEN}}
+}
+
+body:json {
+  {
+    "name": ""
+  }
+}

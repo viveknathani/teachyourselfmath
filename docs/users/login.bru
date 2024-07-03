@@ -1,0 +1,18 @@
+meta {
+  name: login
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/v1/users/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "email": "viveknathani2402@gmail.com",
+      "password": "Helloworld24@"
+  }
+}

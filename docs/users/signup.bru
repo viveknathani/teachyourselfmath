@@ -1,0 +1,20 @@
+meta {
+  name: signup
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/users/signup
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "name": "Vivek",
+      "email": "viveknathani@gmail.com",
+      "password": "Helloworld24@",
+      "username": "viveknathani_"
+  }
+}

@@ -1,0 +1,21 @@
+meta {
+  name: update profile
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/api/v1/users/profile
+  body: json
+  auth: none
+}
+
+headers {
+  authorization: Bearer {{process.env.AUTH_TOKEN}}
+}
+
+body:json {
+  {
+    "name": "Vivek updated 3"
+  }
+}

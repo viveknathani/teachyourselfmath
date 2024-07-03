@@ -1,0 +1,21 @@
+meta {
+  name: get problems
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/v1/problems?bookmarked=true&tags=number%20theory
+  body: none
+  auth: none
+}
+
+query {
+  bookmarked: true
+  tags: number%20theory
+  ~difficulty: MEDIUM
+}
+
+headers {
+  authorization: Bearer {{process.env.AUTH_TOKEN}}
+}

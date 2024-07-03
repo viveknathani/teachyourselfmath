@@ -1,0 +1,15 @@
+meta {
+  name: unbookmark problem
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{baseUrl}}/api/v1/problems/21/bookmark
+  body: none
+  auth: none
+}
+
+headers {
+  authorization: Bearer {{process.env.AUTH_TOKEN}}
+}

@@ -1,0 +1,21 @@
+meta {
+  name: clear cache
+  type: http
+  seq: 1
+}
+
+delete {
+  url: {{baseUrl}}/api/v1/utility/cache
+  body: json
+  auth: none
+}
+
+headers {
+  X-TYM-API-KEY: {{process.env.TYM_API_KEY}}
+}
+
+body:json {
+  {
+      "prefix": "PROBLEMS"
+  }
+}

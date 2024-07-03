@@ -1,0 +1,22 @@
+meta {
+  name: insert comment
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/comments
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{process.env.AUTH_TOKEN}}
+}
+
+body:json {
+  {
+      "problemId": 18,
+      "content": "some another comment bitch"
+  }
+}
