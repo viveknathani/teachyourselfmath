@@ -1,6 +1,7 @@
 
 let the_email = "";
 
+/* @preserve */
 async function sendResetRequest() {
   the_email = document.getElementById('password-reset-email').value;
   const resetResponse = await fetch('/api/v1/users/password/reset', {
@@ -23,6 +24,7 @@ async function sendResetRequest() {
   }
 }
 
+/* @preserve */
 async function enterCode() {
   const email = the_email;
   const code = document.getElementById("code").value;
@@ -45,6 +47,7 @@ async function enterCode() {
   }
 }
 
+/* @preserve */
 async function updatePassword() {
   const email = the_email;
   const code = document.getElementById("code").value;

@@ -8,10 +8,12 @@
   "scripts": {
     "lint": "npx eslint --fix src/",
     "format": "npx prettier --write src/",
-    "build": "yarn lint && yarn format && yarn tsc && yarn copy-files",
+    "build": "yarn lint && yarn format && yarn tsc && yarn copy-files && yarn minify-css && yarn minify-js",
     "start": "yarn build && node build/index.js",
     "migrate": "node-pg-migrate -m src/database/migrations",
     "copy-files": "npx copyfiles -u 1 \"src/web/**/*\" build/",
+    "minify-css": "npx postcss src/web/styles/ -d build/web/styles/",
+    "minify-js": "npx uglifyjs-folder src/web/scripts/ -eo build/web/scripts/ -x .js",
     "migrate:up": "yarn migrate up",
     "migrate:down": "yarn migrate down",
     "migrate:create": "yarn migrate create"
@@ -43,6 +45,7 @@
     "bullmq": "^4.13.2",
     "connect-ensure-login": "^0.1.1",
     "cors": "^2.8.5",
+    "cssnano": "^7.0.3",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-rate-limit": "^7.1.5",
@@ -59,7 +62,10 @@
     "passport-local": "^1.0.0",
     "pdf-lib": "^1.17.1",
     "pg": "^8.11.3",
+    "postcss": "^8.4.39",
+    "postcss-cli": "^11.0.0",
     "rate-limit-redis": "^4.2.0",
+    "uglifyjs-folder": "^3.3.0",
     "winston": "^3.11.0"
   }
 }
