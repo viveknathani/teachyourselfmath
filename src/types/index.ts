@@ -225,9 +225,7 @@ interface SplitFileJobData {
 
 interface PredictSegmentJobData {
   source: string;
-  file: Express.Multer.File;
-  start: number;
-  end: number;
+  imageBuffer: Buffer | null;
   tags: string;
 }
 
