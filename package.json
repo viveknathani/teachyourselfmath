@@ -61,6 +61,7 @@
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
     "pdf-lib": "^1.17.1",
+    "pdf2pic": "^3.1.1",
     "pg": "^8.11.3",
     "postcss": "^8.4.39",
     "postcss-cli": "^11.0.0",
