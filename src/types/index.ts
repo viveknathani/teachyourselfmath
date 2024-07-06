@@ -57,6 +57,7 @@ enum REDIS_KEY_PREFIX {
   PASSWORD_RESET = 'PASSWORD_RESET',
   EMAIL_LIMIT = 'EMAIL_LIMIT',
   USER_SPECIFIC = 'USER_SPECIFIC',
+  IMAGES = 'IMAGES',
 }
 
 enum IMAGE_FORMAT {
@@ -229,10 +230,7 @@ interface SplitFileJobData {
 
 interface PredictSegmentJobData {
   source: string;
-  image: {
-    buffer: Buffer;
-    format: IMAGE_FORMAT;
-  };
+  imageKey: string;
   tags: string;
 }
 

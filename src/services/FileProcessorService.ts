@@ -26,10 +26,7 @@ export class FileProcessorService {
     };
   }
 
-  public async extractProblemsFromImageBuffer(
-    imageBuffer: Buffer,
-    imageFormat: IMAGE_FORMAT,
-  ) {
+  public async extractProblemsFromImageUrl(url: string) {
     const response = await magic.chat.completions.create({
       model: 'gpt-4o',
       messages: [
@@ -43,7 +40,7 @@ export class FileProcessorService {
             {
               type: 'image_url',
               image_url: {
-                url: getBase64ImageUrlFromBuffer(imageBuffer, imageFormat),
+                url,
               },
             },
           ],
@@ -93,6 +90,14 @@ export class FileProcessorService {
       response.choices?.[0]?.message.tool_calls?.[0]?.function.arguments ||
         '{}',
     );
+  }
+
+  public async extractProblemsFromImageBuffer(
+    imageBuffer: Buffer,
+    imageFormat: IMAGE_FORMAT,
+  ) {
+    const url = getBase64ImageUrlFromBuffer(imageBuffer, imageFormat);
+    return this.extractProblemsFromImageUrl(url);
   }
 
   public async extractProblemsFromImageFile(
