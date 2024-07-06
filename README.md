@@ -6,6 +6,8 @@ I wished for a free website with an ever-growing list of math problems, teachyou
 
 ### Architecture
 
+**NOTE: The following architecture is now deprecated. The new engine now requires OS level dependencies to run. This is not documented yet. I'll get to it along with infrastructure migrations in the coming weeks.**
+
 If a document containing math problem exists, we'd like to extract every problem from it and dump it in a database. LaTeX is something that can be understood by both, computers and humans. Hence, the problem boils down to converting a PDF into LaTeX, removing the irrelevant parts, and storing the remaining parts. 
 
 Meta came up with a [model](https://facebookresearch.github.io/nougat/) to parse academic PDF documents and find the LaTeX math in it.
