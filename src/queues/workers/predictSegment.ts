@@ -1,24 +1,49 @@
 import { Job, JobsOptions } from 'bullmq';
-import config from '../../config';
 import { QUEUE_NAME, PredictSegmentJobData } from '../../types';
 import { createQueue, createWorker } from '../factory';
-import { addToSplitPredictionQueue } from './splitPrediction';
-import { readFile } from 'fs/promises';
-import axios from 'axios';
+import { FileProcessorService } from '../../services/FileProcessorService';
+import { addToDatabaseQueue } from './addToDatabase';
+import { state } from '../../state';
 
 const queueName = QUEUE_NAME.PREDICT_SEGMENT;
 
 const queue = createQueue(queueName);
 
 const worker = createWorker(queueName, async (job: Job) => {
-  const data = job.data as PredictSegmentJobData;
-  const text = await runModel(data.file.path, data.start, data.end);
-  await addToSplitPredictionQueue({
-    text,
-    source: data.source,
-    tags: data.tags,
-  });
+  const fileProcessorService = FileProcessorService.getInstance();
+  const { source, imageKey, tags } = job.data as PredictSegmentJobData;
+
+  // Use the image key to get the image from cache
+  const imageUrl = await getImageUrlFromImageKey(imageKey);
+  if (!imageUrl) {
+    throw new Error('imageUrl cannot be null!');
+  }
+
+  // Magic time, run the model!
+  const { problems } =
+    await fileProcessorService.extractProblemsFromImageUrl(imageUrl);
+  if (!Array.isArray(problems)) {
+    throw new Error(`problems is not an array!, ${JSON.stringify(problems)}`);
+  }
+
+  // Send to database
+  await Promise.all(
+    problems.map(async (problem: any) => {
+      if (problem?.description && problem?.difficulty) {
+        await addToDatabaseQueue({
+          description: problem.description,
+          difficulty: problem.difficulty,
+          source: source.replace('.pdf', ''),
+          tags: tags.split(','),
+        });
+      }
+    }),
+  );
 });
+
+const getImageUrlFromImageKey = async (key: string) => {
+  return state.cache.get(key);
+};
 
 const addToPredictSegmentQueue = (
   data: PredictSegmentJobData,
@@ -26,26 +51,6 @@ const addToPredictSegmentQueue = (
 ) => {
   const jobName = `${queueName}`;
   return queue.add(jobName, data, options);
-};
-
-const runModel = async (
-  filePath: string,
-  start: number,
-  stop: number,
-): Promise<string> => {
-  const formData = new FormData();
-  const buffer = await readFile(filePath);
-  formData.set('file', new Blob([buffer]));
-  const response = await axios.post(
-    `${config.MODEL_URL}/predict?start=${start}&stop=${stop}`,
-    formData,
-    {
-      headers: {
-        'Content-Type': 'application/pdf',
-      },
-    },
-  );
-  return response.data;
 };
 
 export { queue, worker, addToPredictSegmentQueue };

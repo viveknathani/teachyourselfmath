@@ -11,7 +11,7 @@ post {
 }
 
 headers {
-  X-TYM-API-KEY: {{tymApiKey}}
+  X-TYM-API-KEY: {{process.env.TYM_API_KEY}}
 }
 
 body:multipart-form {
