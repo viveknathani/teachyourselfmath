@@ -6,7 +6,6 @@ import {
   SplitFileJobData,
 } from '../../types';
 import { createQueue, createWorker } from '../factory';
-//import { addToPredictSegmentQueue } from './predictSegment';
 import pdf2pic from 'pdf2pic';
 import { readFile } from 'fs/promises';
 import { state } from '../../state';
