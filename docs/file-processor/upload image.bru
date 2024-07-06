@@ -1,0 +1,19 @@
+meta {
+  name: upload image
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/v1/file-processor/upload-image
+  body: multipartForm
+  auth: none
+}
+
+headers {
+  X-TYM-API-KEY: {{process.env.TYM_API_KEY}}
+}
+
+body:multipart-form {
+  image: @file(/Users/viveknathani/Desktop/Screenshot 2024-07-06 at 7.11.39 PM.png)
+}

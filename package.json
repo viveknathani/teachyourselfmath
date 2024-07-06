@@ -58,6 +58,7 @@
     "multer": "^1.4.5-lts.1",
     "nanoid": "^5.0.3",
     "node-pg-migrate": "^6.2.2",
+    "openai": "^4.52.3",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
     "pdf-lib": "^1.17.1",

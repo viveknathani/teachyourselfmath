@@ -18,11 +18,11 @@ const worker = createWorker(queueName, async (job: Job) => {
   const data = job.data as AddToDatabaseJobData;
   const MAX_TITLE_LENGTH = 150;
   await problemService.insertProblem({
-    description: data.sanitisedPrediction,
+    description: data.description,
     title:
-      data.sanitisedPrediction.length > MAX_TITLE_LENGTH
-        ? `${data.sanitisedPrediction.slice(0, MAX_TITLE_LENGTH)}...`
-        : data.sanitisedPrediction,
+      data.description.length > MAX_TITLE_LENGTH
+        ? `${data.description.slice(0, MAX_TITLE_LENGTH)}...`
+        : data.description,
     source: data.source,
     tagsToAttachWhileInserting: data.tags,
     difficulty: PROBLEM_DIFFICULTY.EASY,

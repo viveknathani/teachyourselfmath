@@ -1,5 +1,5 @@
 import { Job, JobsOptions } from 'bullmq';
-import { QUEUE_NAME, SplitFileJobData } from '../../types';
+import { IMAGE_FORMAT, QUEUE_NAME, SplitFileJobData } from '../../types';
 import { createQueue, createWorker } from '../factory';
 import { addToPredictSegmentQueue } from './predictSegment';
 import pdf2pic from 'pdf2pic';
@@ -14,7 +14,7 @@ const worker = createWorker(queueName, async (job: Job) => {
   const { file, tags } = job.data as SplitFileJobData;
   const buffer = await readFile(file.path);
   const converter = pdf2pic.fromBuffer(buffer, {
-    format: 'png',
+    format: IMAGE_FORMAT.PNG,
     width: 600,
     height: 400,
   });
@@ -22,13 +22,18 @@ const worker = createWorker(queueName, async (job: Job) => {
     responseType: 'buffer',
   });
   await Promise.all(
-    images.map((image) =>
-      addToPredictSegmentQueue({
-        source: file.originalname,
-        imageBuffer: image?.buffer || null,
-        tags,
-      }),
-    ),
+    images.map(async (image) => {
+      if (image.buffer) {
+        await addToPredictSegmentQueue({
+          source: file.originalname,
+          image: {
+            buffer: image.buffer,
+            format: IMAGE_FORMAT.PNG,
+          },
+          tags,
+        });
+      }
+    }),
   );
 });
 

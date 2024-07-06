@@ -1,4 +1,4 @@
-import { ApiResponse, HTTP_CODE } from '../types';
+import { ApiResponse, HTTP_CODE, IMAGE_FORMAT } from '../types';
 import express from 'express';
 import { rateLimit } from 'express-rate-limit';
 import RedisClient from 'ioredis';
@@ -7,6 +7,7 @@ import { RedisStore } from 'rate-limit-redis';
 import { readFile } from 'fs/promises';
 import memoizee from 'memoizee';
 import axios from 'axios';
+import OpenAI from 'openai';
 
 const sendStandardResponse = (
   statusCode: HTTP_CODE,
@@ -160,6 +161,18 @@ const readFileMemoized = memoizee(readFile, {
   promise: true,
 });
 
+const magic = new OpenAI({
+  apiKey: config.OPENAI_API_KEY,
+});
+
+const getBase64ImageUrlFromBuffer = (
+  imageBuffer: Buffer,
+  imageFormat: IMAGE_FORMAT,
+) => {
+  const base64Image = imageBuffer.toString('base64');
+  return `data:image/${imageFormat};base64,${base64Image}`;
+};
+
 export {
   sendStandardResponse,
   snakeCaseToCamelCaseObject,
@@ -174,4 +187,6 @@ export {
   sendEmail,
   getRandomNumber,
   readFileMemoized,
+  getBase64ImageUrlFromBuffer,
+  magic,
 };

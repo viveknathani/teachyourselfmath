@@ -39,7 +39,6 @@ enum QUEUE_NAME {
   SPLIT_FILE = 'SPLIT_FILE',
   PREDICT_SEGMENT = 'PREDICT_SEGMENT',
   SPLIT_PREDICTION = 'SPLIT_PREDICTION',
-  REMOVE_JUNK = 'REMOVE_JUNK',
   ADD_TO_DATABASE = 'ADD_TO_DATABASE',
   SEND_NOTIFICATION = 'SEND_NOTIFICATION',
 }
@@ -58,6 +57,11 @@ enum REDIS_KEY_PREFIX {
   PASSWORD_RESET = 'PASSWORD_RESET',
   EMAIL_LIMIT = 'EMAIL_LIMIT',
   USER_SPECIFIC = 'USER_SPECIFIC',
+}
+
+enum IMAGE_FORMAT {
+  JPEG = 'jpeg',
+  PNG = 'png',
 }
 
 interface ApiResponse {
@@ -225,7 +229,10 @@ interface SplitFileJobData {
 
 interface PredictSegmentJobData {
   source: string;
-  imageBuffer: Buffer | null;
+  image: {
+    buffer: Buffer;
+    format: IMAGE_FORMAT;
+  };
   tags: string;
 }
 
@@ -242,7 +249,8 @@ interface RemoveJunkJobData {
 }
 
 interface AddToDatabaseJobData {
-  sanitisedPrediction: string;
+  description: string;
+  difficulty: PROBLEM_DIFFICULTY;
   source: string;
   tags: string[];
 }
@@ -307,4 +315,5 @@ export {
   NOTIFICATION_CHANNEL,
   PASSWORD_RESET_STAGE,
   REDIS_KEY_PREFIX,
+  IMAGE_FORMAT,
 };
