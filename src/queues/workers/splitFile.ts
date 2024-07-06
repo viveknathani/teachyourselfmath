@@ -6,12 +6,13 @@ import {
   SplitFileJobData,
 } from '../../types';
 import { createQueue, createWorker } from '../factory';
-import { addToPredictSegmentQueue } from './predictSegment';
+//import { addToPredictSegmentQueue } from './predictSegment';
 import pdf2pic from 'pdf2pic';
 import { readFile } from 'fs/promises';
 import { state } from '../../state';
 import { BufferResponse } from 'pdf2pic/dist/types/convertResponse';
 import { getBase64ImageUrlFromBuffer } from '../../utils';
+import { addToPredictSegmentQueue } from './predictSegment';
 
 const queueName = QUEUE_NAME.SPLIT_FILE;
 
@@ -26,8 +27,10 @@ const worker = createWorker(queueName, async (job: Job) => {
   // Initialise converter
   const converter = pdf2pic.fromBuffer(buffer, {
     format: IMAGE_FORMAT.PNG,
-    width: 600,
-    height: 400,
+    width: 794,
+    height: 1123,
+    quality: 100,
+    density: 96,
   });
 
   // Convert all pages of the PDF to images
