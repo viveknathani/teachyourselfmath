@@ -18,7 +18,7 @@ Currently, I run this model's server locally on my computer with every PDF I can
 
 ### Setup
 
-1. Get `nougat` from [here](https://github.com/facebookresearch/nougat). Run it as a server.
+1. Get `nougat` from [here](https://github.com/facebookresearch/nougat). Run it as a server. (note: you can skip this step from now, it will be deprecated soon.)
 2. You will need PostgreSQL and Redis to run this.
 2. `yarn`
 3. `yarn build`
