@@ -65,6 +65,11 @@ enum IMAGE_FORMAT {
   PNG = 'png',
 }
 
+enum DIGEST_STATUS {
+  PREPARED = 'PREPARED',
+  PUBLISHED = 'PUBLISHED',
+}
+
 interface ApiResponse {
   status: 'success' | 'error';
   data?: any;
@@ -139,6 +144,33 @@ interface Vote {
   voteType: VOTE_TYPE;
   topicId: number;
   topic: VOTE_TOPIC;
+}
+
+interface UserConfiguration {
+  id: number;
+  userId: number;
+  tags: string[];
+  schedule: string;
+  lastRanAt?: Date;
+  countEasy: number;
+  countMedium: number;
+  countHard: number;
+  jobId?: number;
+  createdAt: Date;
+}
+
+interface Digest {
+  id: number;
+  configurationId: number;
+  status: DIGEST_STATUS;
+  createdAt: Date;
+}
+
+interface DigestProblem {
+  id: number;
+  digestId: number;
+  configurationId: number;
+  problemId: number;
 }
 
 interface SignupRequest {
@@ -281,6 +313,9 @@ export {
   Problem,
   Comment,
   Vote,
+  UserConfiguration,
+  Digest,
+  DigestProblem,
   SignupRequest,
   LoginRequest,
   LoginResponse,
@@ -314,4 +349,5 @@ export {
   PASSWORD_RESET_STAGE,
   REDIS_KEY_PREFIX,
   IMAGE_FORMAT,
+  DIGEST_STATUS,
 };
