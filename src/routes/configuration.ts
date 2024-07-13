@@ -5,6 +5,7 @@ import { sendStandardResponse } from '../utils';
 import { UserConfigurationService } from '../services/UserConfigurationService';
 import { state } from '../state';
 import { injectUserInfoMiddleWare } from './user';
+import { checkFailsForApiKey } from './apiKey';
 
 const configurationRouter: express.Router = express.Router();
 const userConfigurationService = UserConfigurationService.getInstance(state);
@@ -135,5 +136,33 @@ configurationRouter.delete(
     }
   },
 );
+
+configurationRouter.post('/bootstrap', async (req, res) => {
+  try {
+    if (checkFailsForApiKey(req, res)) {
+      return;
+    }
+
+    const result = await userConfigurationService.bootstrap();
+
+    sendStandardResponse(
+      HTTP_CODE.OK,
+      {
+        status: 'success',
+        data: result,
+      },
+      res,
+    );
+  } catch (err) {
+    console.log(err);
+    sendStandardResponse(
+      HTTP_CODE.SERVER_ERROR,
+      {
+        status: 'error',
+      },
+      res,
+    );
+  }
+});
 
 export { configurationRouter };

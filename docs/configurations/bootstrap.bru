@@ -1,0 +1,19 @@
+meta {
+  name: bootstrap
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/api/v1/configurations/bootstrap
+  body: none
+  auth: bearer
+}
+
+headers {
+  X-TYM-API-KEY: {{process.env.TYM_API_KEY}}
+}
+
+auth:bearer {
+  token: {{process.env.AUTH_TOKEN}}
+}

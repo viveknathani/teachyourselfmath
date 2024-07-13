@@ -18,4 +18,8 @@ const addToGenerateProblemsQueue = (
   return queue.add(jobName, data, options);
 };
 
-export { queue, worker, addToGenerateProblemsQueue };
+const getGenerateProblemsJobId = (configurationId: number, userId: number) => {
+  return `DIGEST:${configurationId}:${userId}`;
+};
+
+export { queue, worker, addToGenerateProblemsQueue, getGenerateProblemsJobId };

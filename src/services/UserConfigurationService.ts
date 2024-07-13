@@ -7,7 +7,11 @@ import * as database from '../database';
 import { isValidUserConfiguration } from '../validations';
 import { TagService } from './TagService';
 import { DataValidationError } from './errors';
-import { addToGenerateProblemsQueue } from '../queues/workers/generateProblems';
+import {
+  addToGenerateProblemsQueue,
+  getGenerateProblemsJobId,
+} from '../queues/workers/generateProblems';
+import { queue as GenerateProblemsQueue } from '../queues/workers/generateProblems';
 
 export class UserConfigurationService {
   private static instance: UserConfigurationService;
@@ -58,6 +62,10 @@ export class UserConfigurationService {
         repeat: {
           pattern: insertedConfiguration.schedule,
         },
+        jobId: getGenerateProblemsJobId(
+          insertedConfiguration.id,
+          insertedConfiguration.userId,
+        ),
       },
     );
 
@@ -84,5 +92,36 @@ export class UserConfigurationService {
       userId,
     );
     return result;
+  }
+
+  public async bootstrap(): Promise<string> {
+    const totalJobs = await GenerateProblemsQueue.count();
+    if (totalJobs === 0) {
+      const configurations = await database.getAllConfigurations(
+        this.state.databasePool,
+      );
+      await Promise.all(
+        configurations.map(async (configuration) => {
+          await addToGenerateProblemsQueue(
+            {
+              userId: configuration.userId,
+              configurationId: configuration.id,
+            },
+            {
+              jobId: getGenerateProblemsJobId(
+                configuration.id,
+                configuration.userId,
+              ),
+              repeat: {
+                pattern: configuration.schedule,
+              },
+            },
+          );
+        }),
+      );
+      return 'added to queue!';
+    }
+
+    return 'nothing to add!';
   }
 }
