@@ -1,6 +1,6 @@
 import { Pool } from 'pg';
 import { executeQuery } from '.';
-import { UserConfiguration } from '../types';
+import { Digest, DigestProblem, UserConfiguration } from '../types';
 import { snakeCaseToCamelCaseObject } from '../utils';
 
 const queryInsertUserConfiguration = `
@@ -52,6 +52,18 @@ const queryDigestProblems = `
     group by problems.id
     order by problems.created_at asc
     limit $4;
+`;
+
+const queryCreateDigest = `
+    insert into digests (configuration_id, status, created_at)
+    values ($1, $2, now())
+    returning *;
+`;
+
+const queryAddProblemsToDigest = `
+    insert into digests_problems (digest_id, configuration_id, problem_id)
+    values ($1, $2, unnest($3::int[]))
+    returning *;
 `;
 
 const insertUserConfiguration = async (
@@ -154,6 +166,37 @@ const getDigestProblems = async (
   return rawProblems.map((problem) => problem.id);
 };
 
+const createDigest = async (
+  pool: Pool,
+  configurationId: number,
+  status: string,
+): Promise<Digest> => {
+  const queryResponse = await executeQuery({
+    pool,
+    text: queryCreateDigest,
+    values: [configurationId, status],
+    transaction: true,
+  });
+  const rawDigest = queryResponse.rows?.[0] || null;
+  return snakeCaseToCamelCaseObject(rawDigest);
+};
+
+const addProblemsToDigest = async (
+  pool: Pool,
+  digestId: number,
+  configurationId: number,
+  problemIds: number[],
+): Promise<DigestProblem[]> => {
+  const queryResponse = await executeQuery({
+    pool,
+    text: queryAddProblemsToDigest,
+    values: [digestId, configurationId, problemIds],
+    transaction: true,
+  });
+  const rawDigestProblems = queryResponse.rows || [];
+  return rawDigestProblems.map(snakeCaseToCamelCaseObject);
+};
+
 export {
   insertUserConfiguration,
   deleteUserConfiguration,
@@ -161,4 +204,6 @@ export {
   getAllConfigurations,
   getConfigurationByIdAndUserId,
   getDigestProblems,
+  createDigest,
+  addProblemsToDigest,
 };

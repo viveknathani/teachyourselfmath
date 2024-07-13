@@ -2,6 +2,7 @@ import {
   AppState,
   CreateConfigurationRequest,
   CreateConfigurationResponse,
+  DIGEST_STATUS,
   PROBLEM_DIFFICULTY,
 } from '../types';
 import * as database from '../database';
@@ -150,5 +151,26 @@ export class UserConfigurationService {
     }
 
     return 'nothing to add!';
+  }
+
+  public async createDigest(configurationId: number) {
+    return database.createDigest(
+      this.state.databasePool,
+      configurationId,
+      DIGEST_STATUS.PREPARED,
+    );
+  }
+
+  public async storeProblems(
+    digestId: number,
+    configurationId: number,
+    problemIds: number[],
+  ) {
+    return database.addProblemsToDigest(
+      this.state.databasePool,
+      digestId,
+      configurationId,
+      problemIds,
+    );
   }
 }

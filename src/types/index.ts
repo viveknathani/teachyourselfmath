@@ -303,6 +303,12 @@ interface GenerateProblemsJobData {
   configurationId: number;
 }
 
+interface StoreProblemsJobData {
+  userId: number;
+  configurationId: number;
+  problemIds: number[];
+}
+
 interface SendNotificationRequest {
   channel: NOTIFICATION_CHANNEL;
   user: {
@@ -358,6 +364,7 @@ export {
   GenerateProblemsJobData,
   RemoveJunkJobData,
   AddToDatabaseJobData,
+  StoreProblemsJobData,
   HealthCheckResponse,
   HTTP_CODE,
   SERVER_ENVIRONMENT,

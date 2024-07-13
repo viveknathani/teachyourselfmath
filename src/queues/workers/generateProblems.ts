@@ -7,6 +7,7 @@ import {
 import { createQueue, createWorker } from '../factory';
 import { UserConfigurationService } from '../../services/UserConfigurationService';
 import { state } from '../../state';
+import { addToStoreProblemsQueue } from './storeProblems';
 
 const queueName = QUEUE_NAME.GENERATE_PROBLEMS;
 
@@ -63,6 +64,12 @@ const worker = createWorker(queueName, async (job: Job) => {
   const problemIds: number[] = [];
   const allPromises = await Promise.all(promises);
   allPromises.forEach((operation) => problemIds.push(...operation));
+
+  await addToStoreProblemsQueue({
+    configurationId: data.configurationId,
+    userId: data.userId,
+    problemIds,
+  });
 });
 
 const addToGenerateProblemsQueue = (
