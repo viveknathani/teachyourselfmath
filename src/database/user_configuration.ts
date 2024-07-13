@@ -16,6 +16,13 @@ const queryDeleteUserConfiguration = `
     returning *;
 `;
 
+const queryGetUserConfigurations = `
+    select *
+    from user_configurations
+    where user_id = $1
+    order by created_at desc;
+`;
+
 const insertUserConfiguration = async (
   pool: Pool,
   userConfiguration: Partial<UserConfiguration>,
@@ -38,6 +45,20 @@ const insertUserConfiguration = async (
   return snakeCaseToCamelCaseObject(rawConfig);
 };
 
+const getAllUserConfigurations = async (
+  pool: Pool,
+  userId: number,
+): Promise<UserConfiguration[]> => {
+  const queryResponse = await executeQuery({
+    pool,
+    text: queryGetUserConfigurations,
+    values: [userId],
+    transaction: false,
+  });
+  const rawConfigs = queryResponse.rows || [];
+  return rawConfigs.map(snakeCaseToCamelCaseObject);
+};
+
 const deleteUserConfiguration = async (
   pool: Pool,
   configurationId: number,
@@ -53,4 +74,8 @@ const deleteUserConfiguration = async (
   return snakeCaseToCamelCaseObject(rawConfig);
 };
 
-export { insertUserConfiguration, deleteUserConfiguration };
+export {
+  insertUserConfiguration,
+  deleteUserConfiguration,
+  getAllUserConfigurations,
+};

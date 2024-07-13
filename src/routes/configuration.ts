@@ -9,6 +9,32 @@ import { injectUserInfoMiddleWare } from './user';
 const configurationRouter: express.Router = express.Router();
 const userConfigurationService = UserConfigurationService.getInstance(state);
 
+configurationRouter.get('/', injectUserInfoMiddleWare, async (req, res) => {
+  try {
+    const result = await userConfigurationService.getAllConfigurations(
+      req.body.user.id,
+    );
+
+    sendStandardResponse(
+      HTTP_CODE.OK,
+      {
+        status: 'success',
+        data: result,
+      },
+      res,
+    );
+  } catch (err) {
+    console.log(err);
+    sendStandardResponse(
+      HTTP_CODE.SERVER_ERROR,
+      {
+        status: 'error',
+      },
+      res,
+    );
+  }
+});
+
 configurationRouter.post('/', injectUserInfoMiddleWare, async (req, res) => {
   try {
     const result = await userConfigurationService.createConfiguration(
@@ -68,19 +94,6 @@ configurationRouter.delete(
         res,
       );
     } catch (err) {
-      if (err instanceof DataValidationError) {
-        sendStandardResponse(
-          HTTP_CODE.CLIENT_ERROR,
-          {
-            status: 'error',
-            message: err.message,
-            data: err.details,
-          },
-          res,
-        );
-        return;
-      }
-
       console.log(err);
       sendStandardResponse(
         HTTP_CODE.SERVER_ERROR,
