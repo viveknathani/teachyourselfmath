@@ -2,6 +2,7 @@ import {
   AppState,
   CreateConfigurationRequest,
   CreateConfigurationResponse,
+  PROBLEM_DIFFICULTY,
 } from '../types';
 import * as database from '../database';
 import { isValidUserConfiguration } from '../validations';
@@ -25,6 +26,32 @@ export class UserConfigurationService {
       UserConfigurationService.instance = new UserConfigurationService(state);
     }
     return UserConfigurationService.instance;
+  }
+
+  public async getConfigurationByIdAndUserId(
+    configurationId: number,
+    userId: number,
+  ) {
+    return database.getConfigurationByIdAndUserId(
+      this.state.databasePool,
+      configurationId,
+      userId,
+    );
+  }
+
+  public async getDigestProblems(
+    tags: string[],
+    difficulty: PROBLEM_DIFFICULTY,
+    configurationId: number,
+    problemCount: number,
+  ) {
+    return database.getDigestProblems(
+      this.state.databasePool,
+      difficulty,
+      tags,
+      configurationId,
+      problemCount,
+    );
   }
 
   public async createConfiguration(

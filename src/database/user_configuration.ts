@@ -28,6 +28,32 @@ const queryGetAllConfigIdsAndUserIds = `
     from user_configurations;
 `;
 
+const queryGetUserConfigurationByIdAndUserId = `
+    select *
+    from user_configurations
+    where id = $1 and user_id = $2;
+`;
+
+const queryDigestProblems = `
+    select
+        problems.id as "id"
+    from problems
+    join problems_tags
+        on problems_tags.problem_id = problems.id
+    join tags
+        on problems_tags.tag_id = tags.id
+    where difficulty = $1
+        and tags.name = any($2)
+        and problems.id not in (
+            select problem_id
+            from digests_problems
+            where configuration_id = $3
+        )
+    group by problems.id
+    order by problems.created_at asc
+    limit $4;
+`;
+
 const insertUserConfiguration = async (
   pool: Pool,
   userConfiguration: Partial<UserConfiguration>,
@@ -96,9 +122,43 @@ const getAllConfigurations = async (
   }));
 };
 
+const getConfigurationByIdAndUserId = async (
+  pool: Pool,
+  configurationId: number,
+  userId: number,
+): Promise<UserConfiguration | null> => {
+  const queryResponse = await executeQuery({
+    pool,
+    text: queryGetUserConfigurationByIdAndUserId,
+    values: [configurationId, userId],
+    transaction: false,
+  });
+  const rawConfig = queryResponse.rows?.[0] || null;
+  return rawConfig ? snakeCaseToCamelCaseObject(rawConfig) : null;
+};
+
+const getDigestProblems = async (
+  pool: Pool,
+  difficulty: string,
+  tagValues: string[],
+  configurationId: number,
+  problemCount: number,
+): Promise<number[]> => {
+  const queryResponse = await executeQuery({
+    pool,
+    text: queryDigestProblems,
+    values: [difficulty, tagValues, configurationId, problemCount],
+    transaction: false,
+  });
+  const rawProblems = queryResponse.rows || [];
+  return rawProblems.map((problem) => problem.id);
+};
+
 export {
   insertUserConfiguration,
   deleteUserConfiguration,
   getAllUserConfigurations,
   getAllConfigurations,
+  getConfigurationByIdAndUserId,
+  getDigestProblems,
 };
