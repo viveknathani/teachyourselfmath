@@ -1,6 +1,6 @@
 import { Pool } from 'pg';
 import { executeQuery } from '.';
-import { Digest, DigestProblem, UserConfiguration } from '../types';
+import { Digest, DigestProblem, Problem, UserConfiguration } from '../types';
 import { snakeCaseToCamelCaseObject } from '../utils';
 
 const queryInsertUserConfiguration = `
@@ -64,6 +64,31 @@ const queryAddProblemsToDigest = `
     insert into digests_problems (digest_id, configuration_id, problem_id)
     values ($1, $2, unnest($3::int[]))
     returning *;
+`;
+
+const queryGetProblemsByDigestId = `
+    select 
+        problems.id as "id",
+        problems.source as "source",
+        problems.description as "description",
+        problems.difficulty as "difficulty",
+        problems.status as "status",
+        problems.title as "title",
+        problems.created_at as "createdAt",
+        problems.updated_at as "updatedAt"
+    from problems
+    join digests_problems
+        on digests_problems.problem_id = problems.id
+    where digests_problems.digest_id = $1;
+`;
+
+const queryGetUserIdByDigestId = `
+    select 
+        uc.user_id as "userId"
+    from digests d
+    join user_configurations uc
+        on d.configuration_id = uc.id
+    where d.id = $1;
 `;
 
 const insertUserConfiguration = async (
@@ -197,6 +222,34 @@ const addProblemsToDigest = async (
   return rawDigestProblems.map(snakeCaseToCamelCaseObject);
 };
 
+const getProblemsByDigestId = async (
+  pool: Pool,
+  digestId: number,
+): Promise<Problem[]> => {
+  const queryResponse = await executeQuery({
+    pool,
+    text: queryGetProblemsByDigestId,
+    values: [digestId],
+    transaction: false,
+  });
+  const rawProblems = queryResponse.rows || [];
+  return rawProblems.map(snakeCaseToCamelCaseObject);
+};
+
+const getUserIdByDigestId = async (
+  pool: Pool,
+  digestId: number,
+): Promise<number | null> => {
+  const queryResponse = await executeQuery({
+    pool,
+    text: queryGetUserIdByDigestId,
+    values: [digestId],
+    transaction: false,
+  });
+  const rawResult = queryResponse.rows?.[0] || null;
+  return rawResult ? rawResult.userId : null;
+};
+
 export {
   insertUserConfiguration,
   deleteUserConfiguration,
@@ -206,4 +259,6 @@ export {
   getDigestProblems,
   createDigest,
   addProblemsToDigest,
+  getProblemsByDigestId,
+  getUserIdByDigestId,
 };

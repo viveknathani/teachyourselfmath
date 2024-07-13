@@ -3,6 +3,7 @@ import {
   CreateConfigurationRequest,
   CreateConfigurationResponse,
   DIGEST_STATUS,
+  GetDigestResponse,
   PROBLEM_DIFFICULTY,
 } from '../types';
 import * as database from '../database';
@@ -14,6 +15,7 @@ import {
   getGenerateProblemsJobId,
 } from '../queues/workers/generateProblems';
 import { queue as GenerateProblemsQueue } from '../queues/workers/generateProblems';
+import { UserService } from './UserService';
 
 export class UserConfigurationService {
   private static instance: UserConfigurationService;
@@ -172,5 +174,26 @@ export class UserConfigurationService {
       configurationId,
       problemIds,
     );
+  }
+
+  public async getProblemsByDigestId(
+    digestId: number,
+  ): Promise<GetDigestResponse> {
+    const userService = UserService.getInstance(this.state);
+    const problems = await database.getProblemsByDigestId(
+      this.state.databasePool,
+      digestId,
+    );
+    const userId = await database.getUserIdByDigestId(
+      this.state.databasePool,
+      digestId,
+    );
+    const user = await userService.getProfile(userId!);
+    return {
+      user: {
+        name: user.name,
+      },
+      problems,
+    };
   }
 }

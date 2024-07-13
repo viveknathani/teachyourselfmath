@@ -37,7 +37,7 @@ configurationRouter.get('/', injectUserInfoMiddleWare, async (req, res) => {
 });
 
 configurationRouter.get(
-  '/digests/:configurationId',
+  '/digests/latest/:configurationId',
   injectUserInfoMiddleWare,
   async (req, res) => {
     try {
@@ -65,6 +65,32 @@ configurationRouter.get(
     }
   },
 );
+
+configurationRouter.get('/digests/:digestId', async (req, res) => {
+  try {
+    const result = await userConfigurationService.getProblemsByDigestId(
+      Number(req.params.digestId),
+    );
+
+    sendStandardResponse(
+      HTTP_CODE.OK,
+      {
+        status: 'success',
+        data: result,
+      },
+      res,
+    );
+  } catch (err) {
+    console.log(err);
+    sendStandardResponse(
+      HTTP_CODE.SERVER_ERROR,
+      {
+        status: 'error',
+      },
+      res,
+    );
+  }
+});
 
 configurationRouter.post('/', injectUserInfoMiddleWare, async (req, res) => {
   try {

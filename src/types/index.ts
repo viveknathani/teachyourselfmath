@@ -268,6 +268,13 @@ interface CreateConfigurationResponse {
   configuration: UserConfiguration;
 }
 
+interface GetDigestResponse {
+  user: {
+    name: string;
+  };
+  problems: Problem[];
+}
+
 interface SplitFileJobData {
   file: Express.Multer.File;
   tags: string;
@@ -366,6 +373,7 @@ export {
   AddToDatabaseJobData,
   StoreProblemsJobData,
   HealthCheckResponse,
+  GetDigestResponse,
   HTTP_CODE,
   SERVER_ENVIRONMENT,
   VOTE_TYPE,
