@@ -1,0 +1,15 @@
+meta {
+  name: delete configuration
+  type: http
+  seq: 2
+}
+
+delete {
+  url: {{baseUrl}}/api/v1/configurations/5
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{process.env.AUTH_TOKEN}}
+}

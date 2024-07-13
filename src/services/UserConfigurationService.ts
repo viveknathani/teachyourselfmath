@@ -65,4 +65,13 @@ export class UserConfigurationService {
       configuration: insertedConfiguration,
     };
   }
+
+  public async deleteConfiguration(userId: number, configurationId: number) {
+    const result = await database.deleteUserConfiguration(
+      this.state.databasePool,
+      configurationId,
+      userId,
+    );
+    return result;
+  }
 }

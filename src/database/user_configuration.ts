@@ -10,6 +10,12 @@ const queryInsertUserConfiguration = `
     returning *;
 `;
 
+const queryDeleteUserConfiguration = `
+    delete from user_configurations
+    where id = $1 and user_id = $2
+    returning *;
+`;
+
 const insertUserConfiguration = async (
   pool: Pool,
   userConfiguration: Partial<UserConfiguration>,
@@ -32,4 +38,19 @@ const insertUserConfiguration = async (
   return snakeCaseToCamelCaseObject(rawConfig);
 };
 
-export { insertUserConfiguration };
+const deleteUserConfiguration = async (
+  pool: Pool,
+  configurationId: number,
+  userId: number,
+): Promise<UserConfiguration | null> => {
+  const queryResponse = await executeQuery({
+    pool,
+    text: queryDeleteUserConfiguration,
+    values: [configurationId, userId],
+    transaction: true,
+  });
+  const rawConfig = queryResponse.rows?.[0] || null;
+  return snakeCaseToCamelCaseObject(rawConfig);
+};
+
+export { insertUserConfiguration, deleteUserConfiguration };

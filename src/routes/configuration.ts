@@ -49,4 +49,48 @@ configurationRouter.post('/', injectUserInfoMiddleWare, async (req, res) => {
   }
 });
 
+configurationRouter.delete(
+  '/:id',
+  injectUserInfoMiddleWare,
+  async (req, res) => {
+    try {
+      const result = await userConfigurationService.deleteConfiguration(
+        req.body.user.id,
+        Number(req.params.id),
+      );
+
+      sendStandardResponse(
+        HTTP_CODE.OK,
+        {
+          status: 'success',
+          data: result,
+        },
+        res,
+      );
+    } catch (err) {
+      if (err instanceof DataValidationError) {
+        sendStandardResponse(
+          HTTP_CODE.CLIENT_ERROR,
+          {
+            status: 'error',
+            message: err.message,
+            data: err.details,
+          },
+          res,
+        );
+        return;
+      }
+
+      console.log(err);
+      sendStandardResponse(
+        HTTP_CODE.SERVER_ERROR,
+        {
+          status: 'error',
+        },
+        res,
+      );
+    }
+  },
+);
+
 export { configurationRouter };
