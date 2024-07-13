@@ -27,7 +27,8 @@ exports.up = (pgm) => {
     },
     problem_id: {
       type: 'integer',
-      notNull: true,
+      references: 'problems(id)',
+      notNull: 'cascade',
     },
   });
 };

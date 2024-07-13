@@ -70,6 +70,13 @@ export class UserConfigurationService {
     return database.getAllUserConfigurations(this.state.databasePool, userId);
   }
 
+  public async getLatestDigestProblems(configurationId: number) {
+    return database.getLatestDigestProblems(
+      this.state.databasePool,
+      configurationId,
+    );
+  }
+
   public async deleteConfiguration(userId: number, configurationId: number) {
     const result = await database.deleteUserConfiguration(
       this.state.databasePool,

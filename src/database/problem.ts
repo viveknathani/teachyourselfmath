@@ -61,6 +61,28 @@ const querySelectProblems = (
   `;
 };
 
+const queryGetLatestDigestProblems = `
+    select
+        p.id as "id",
+        p.source,
+        p.description,
+        p.difficulty,
+        p.status,
+        p.title,
+        p.created_at,
+        p.updated_at
+    from problems p
+    join digests_problems dp on dp.problem_id = p.id
+    join digests d on d.id = dp.digest_id
+    where d.id = (
+        select id
+        from digests
+        where configuration_id = $1
+        order by created_at desc
+        limit 1
+    );
+`;
+
 const querySelectProblem = `
   select 
   problems.id as "id", 
@@ -281,6 +303,20 @@ const checkUserBookmark = async (
   return queryResponse.rows[0].exists;
 };
 
+const getLatestDigestProblems = async (
+  pool: Pool,
+  configurationId: number,
+): Promise<Problem[]> => {
+  const queryResponse = await executeQuery({
+    pool,
+    text: queryGetLatestDigestProblems,
+    values: [configurationId],
+    transaction: false,
+  });
+  const rawProblems = queryResponse.rows || [];
+  return rawProblems.map(snakeCaseToCamelCaseObject);
+};
+
 export {
   insertProblem,
   insertProblemTag,
@@ -291,4 +327,5 @@ export {
   getProblemCount,
   deleteUserBookmark,
   checkUserBookmark,
+  getLatestDigestProblems,
 };

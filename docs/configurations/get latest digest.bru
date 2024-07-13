@@ -1,0 +1,15 @@
+meta {
+  name: get latest digest
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/v1/configurations/digests/2
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{process.env.AUTH_TOKEN}}
+}

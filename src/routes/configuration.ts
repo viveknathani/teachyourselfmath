@@ -35,6 +35,36 @@ configurationRouter.get('/', injectUserInfoMiddleWare, async (req, res) => {
   }
 });
 
+configurationRouter.get(
+  '/digests/:configurationId',
+  injectUserInfoMiddleWare,
+  async (req, res) => {
+    try {
+      const result = await userConfigurationService.getLatestDigestProblems(
+        Number(req.params.configurationId),
+      );
+
+      sendStandardResponse(
+        HTTP_CODE.OK,
+        {
+          status: 'success',
+          data: result,
+        },
+        res,
+      );
+    } catch (err) {
+      console.log(err);
+      sendStandardResponse(
+        HTTP_CODE.SERVER_ERROR,
+        {
+          status: 'error',
+        },
+        res,
+      );
+    }
+  },
+);
+
 configurationRouter.post('/', injectUserInfoMiddleWare, async (req, res) => {
   try {
     const result = await userConfigurationService.createConfiguration(
