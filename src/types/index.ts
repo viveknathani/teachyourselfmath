@@ -41,6 +41,7 @@ enum QUEUE_NAME {
   SPLIT_PREDICTION = 'SPLIT_PREDICTION',
   ADD_TO_DATABASE = 'ADD_TO_DATABASE',
   SEND_NOTIFICATION = 'SEND_NOTIFICATION',
+  GENERATE_PROBLEMS = 'GENERATE_PROBLEMS',
 }
 
 enum NOTIFICATION_CHANNEL {
@@ -155,7 +156,6 @@ interface UserConfiguration {
   countEasy: number;
   countMedium: number;
   countHard: number;
-  jobId?: number;
   createdAt: Date;
 }
 
@@ -255,6 +255,18 @@ interface UpdatePasswordRequest {
   newPassword: string;
 }
 
+interface CreateConfigurationRequest {
+  tags: string[];
+  schedule: string;
+  count_easy: number;
+  count_medium: number;
+  count_hard: number;
+}
+
+interface CreateConfigurationResponse {
+  configuration: UserConfiguration;
+}
+
 interface SplitFileJobData {
   file: Express.Multer.File;
   tags: string;
@@ -283,6 +295,11 @@ interface AddToDatabaseJobData {
   difficulty: PROBLEM_DIFFICULTY;
   source: string;
   tags: string[];
+}
+
+interface GenerateProblemsJobData {
+  userId: number;
+  configurationId: number;
 }
 
 interface SendNotificationRequest {
@@ -332,9 +349,12 @@ export {
   PasswordResetUpdatePasswordData,
   PasswordResetStatus,
   PassswordResetResponse,
+  CreateConfigurationRequest,
+  CreateConfigurationResponse,
   SplitFileJobData,
   PredictSegmentJobData,
   SplitPredictionJobData,
+  GenerateProblemsJobData,
   RemoveJunkJobData,
   AddToDatabaseJobData,
   HealthCheckResponse,

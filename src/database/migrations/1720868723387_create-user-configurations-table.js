@@ -37,17 +37,12 @@ exports.up = (pgm) => {
       type: 'integer',
       notNull: true,
     },
-    job_id: {
-      type: 'integer',
-    },
     created_at: {
       type: 'timestamp with time zone',
       notNull: true,
     },
   });
-  pgm.createIndex('user_configurations', ['user_id'], {
-    unique: true,
-  });
+  pgm.createIndex('user_configurations', ['user_id']);
 };
 
 exports.down = (pgm) => {

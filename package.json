@@ -45,6 +45,7 @@
     "bullmq": "^4.13.2",
     "connect-ensure-login": "^0.1.1",
     "cors": "^2.8.5",
+    "cron-validate": "^1.4.5",
     "cssnano": "^7.0.3",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
@@ -68,6 +69,7 @@
     "postcss-cli": "^11.0.0",
     "rate-limit-redis": "^4.2.0",
     "uglifyjs-folder": "^3.3.0",
-    "winston": "^3.11.0"
+    "winston": "^3.11.0",
+    "zod": "^3.23.8"
   }
 }
