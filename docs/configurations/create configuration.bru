@@ -1,0 +1,25 @@
+meta {
+  name: create configuration
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/configurations
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{process.env.AUTH_TOKEN}}
+}
+
+body:json {
+  {
+    "tags": ["algebra"],
+    "schedule": "01 02 * * 01",
+    "countEasy": 3,
+    "countMedium": 4,
+    "countHard": 5
+  }
+}

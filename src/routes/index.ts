@@ -8,6 +8,7 @@ import { pageRouter } from './page';
 import { utilityRouter } from './utility';
 import { tagRouter } from './tag';
 import { healthCheckRouter } from './health';
+import { configurationRouter } from './configuration';
 
 const router: express.Router = express.Router();
 
@@ -19,5 +20,6 @@ router.use('/votes/', voteRouter);
 router.use('/file-processor', fileProcessorRouter);
 router.use('/utility', utilityRouter);
 router.use('/tags', tagRouter);
+router.use('/configurations', configurationRouter);
 
 export { router, pageRouter };

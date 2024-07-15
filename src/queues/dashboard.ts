@@ -5,6 +5,8 @@ import { queue as SplitFileQueue } from './workers/splitFile';
 import { queue as PredictSegmentQueue } from './workers/predictSegment';
 import { queue as AddToDatabaseQueue } from './workers/addToDatabase';
 import { queue as SendNotificationQueue } from './workers/sendNotification';
+import { queue as GenerateProblemsQueue } from './workers/generateProblems';
+import { queue as StoreProblemsQueue } from './workers/storeProblems';
 import session from 'express-session';
 import { Express } from 'express';
 import passport from 'passport';
@@ -43,6 +45,8 @@ const queues = [
   new BullMQAdapter(PredictSegmentQueue),
   new BullMQAdapter(AddToDatabaseQueue),
   new BullMQAdapter(SendNotificationQueue),
+  new BullMQAdapter(GenerateProblemsQueue),
+  new BullMQAdapter(StoreProblemsQueue),
 ];
 
 const createBullDashboardAndAttachRouter = (app: Express) => {

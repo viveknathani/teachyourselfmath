@@ -46,3 +46,4 @@ export * from './user';
 export * from './problem';
 export * from './comment';
 export * from './vote';
+export * from './user_configuration';

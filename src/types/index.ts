@@ -41,6 +41,8 @@ enum QUEUE_NAME {
   SPLIT_PREDICTION = 'SPLIT_PREDICTION',
   ADD_TO_DATABASE = 'ADD_TO_DATABASE',
   SEND_NOTIFICATION = 'SEND_NOTIFICATION',
+  GENERATE_PROBLEMS = 'GENERATE_PROBLEMS',
+  STORE_PROBLEMS = 'STORE_PROBLEMS',
 }
 
 enum NOTIFICATION_CHANNEL {
@@ -63,6 +65,11 @@ enum REDIS_KEY_PREFIX {
 enum IMAGE_FORMAT {
   JPEG = 'jpeg',
   PNG = 'png',
+}
+
+enum DIGEST_STATUS {
+  PREPARED = 'PREPARED',
+  PUBLISHED = 'PUBLISHED',
 }
 
 interface ApiResponse {
@@ -139,6 +146,32 @@ interface Vote {
   voteType: VOTE_TYPE;
   topicId: number;
   topic: VOTE_TOPIC;
+}
+
+interface UserConfiguration {
+  id: number;
+  userId: number;
+  tags: string[];
+  schedule: string;
+  lastRanAt?: Date;
+  countEasy: number;
+  countMedium: number;
+  countHard: number;
+  createdAt: Date;
+}
+
+interface Digest {
+  id: number;
+  configurationId: number;
+  status: DIGEST_STATUS;
+  createdAt: Date;
+}
+
+interface DigestProblem {
+  id: number;
+  digestId: number;
+  configurationId: number;
+  problemId: number;
 }
 
 interface SignupRequest {
@@ -223,6 +256,25 @@ interface UpdatePasswordRequest {
   newPassword: string;
 }
 
+interface CreateConfigurationRequest {
+  tags: string[];
+  schedule: string;
+  count_easy: number;
+  count_medium: number;
+  count_hard: number;
+}
+
+interface CreateConfigurationResponse {
+  configuration: UserConfiguration;
+}
+
+interface GetDigestResponse {
+  user: {
+    name: string;
+  };
+  problems: Problem[];
+}
+
 interface SplitFileJobData {
   file: Express.Multer.File;
   tags: string;
@@ -253,6 +305,17 @@ interface AddToDatabaseJobData {
   tags: string[];
 }
 
+interface GenerateProblemsJobData {
+  userId: number;
+  configurationId: number;
+}
+
+interface StoreProblemsJobData {
+  userId: number;
+  configurationId: number;
+  problemIds: number[];
+}
+
 interface SendNotificationRequest {
   channel: NOTIFICATION_CHANNEL;
   user: {
@@ -281,6 +344,9 @@ export {
   Problem,
   Comment,
   Vote,
+  UserConfiguration,
+  Digest,
+  DigestProblem,
   SignupRequest,
   LoginRequest,
   LoginResponse,
@@ -297,12 +363,17 @@ export {
   PasswordResetUpdatePasswordData,
   PasswordResetStatus,
   PassswordResetResponse,
+  CreateConfigurationRequest,
+  CreateConfigurationResponse,
   SplitFileJobData,
   PredictSegmentJobData,
   SplitPredictionJobData,
+  GenerateProblemsJobData,
   RemoveJunkJobData,
   AddToDatabaseJobData,
+  StoreProblemsJobData,
   HealthCheckResponse,
+  GetDigestResponse,
   HTTP_CODE,
   SERVER_ENVIRONMENT,
   VOTE_TYPE,
@@ -314,4 +385,5 @@ export {
   PASSWORD_RESET_STAGE,
   REDIS_KEY_PREFIX,
   IMAGE_FORMAT,
+  DIGEST_STATUS,
 };
