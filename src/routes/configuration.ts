@@ -94,6 +94,10 @@ configurationRouter.get('/digests/:digestId', async (req, res) => {
 
 configurationRouter.post('/', injectUserInfoMiddleWare, async (req, res) => {
   try {
+    if (checkFailsForApiKey(req, res)) {
+      return;
+    }
+
     const result = await userConfigurationService.createConfiguration(
       req.body.user.id,
       req.body,
