@@ -9,7 +9,7 @@
     "lint": "npx eslint --fix src/",
     "format": "npx prettier --write src/",
     "build": "yarn lint && yarn format && yarn tsc && yarn copy-files && yarn minify-css && yarn minify-js",
-    "start": "yarn build && node build/index.js",
+    "start": "yarn migrate:up && yarn build && node build/index.js",
     "migrate": "node-pg-migrate -m src/database/migrations",
     "copy-files": "npx copyfiles -u 1 \"src/web/**/*\" build/",
     "minify-css": "npx postcss src/web/styles/ -d build/web/styles/",
