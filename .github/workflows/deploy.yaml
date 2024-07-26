@@ -1,0 +1,17 @@
+name: deploy via ssh
+on:
+  push:
+    branches:
+      - master
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: deployment
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        script: bash ~/nattukaka/services/teachyourselfmath/deploy.sh
