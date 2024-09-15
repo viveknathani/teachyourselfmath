@@ -24,19 +24,19 @@ const querySelectProblems = (
   userId: number | null,
 ) => {
   return `
-    select 
-    problems.id as "id", 
+    select
+    problems.id as "id",
     source,
-    description, 
+    description,
     difficulty,
     status,
     title,
     string_agg(distinct tags.name, ',') tags_list,
     count(distinct comments.id) total_comments,
     problems.created_at,
-    problems.updated_at 
+    problems.updated_at
     from
-    problems 
+    problems
     join problems_tags
     on problems_tags.problem_id = problems.id
     join tags
@@ -84,24 +84,24 @@ const queryGetLatestDigestProblems = `
 `;
 
 const querySelectProblem = `
-  select 
-  problems.id as "id", 
-  source,
-  description, 
-  difficulty,
-  title,
-  string_agg(distinct tags.name, ',') tags_list,
-  count(distinct comments.id) total_comments,
-  problems.created_at,
-  problems.updated_at 
+  select
+    problems.id as "id",
+    source,
+    description,
+    difficulty,
+    title,
+    nullif(string_agg(distinct tags.name, ','), '') as tags_list,
+    count(distinct comments.id) as total_comments,
+    problems.created_at,
+    problems.updated_at
   from
-  problems 
-  join problems_tags
-  on problems_tags.problem_id = problems.id
-  join tags
-  on problems_tags.tag_id = tags.id
+    problems
+  left join problems_tags
+    on problems_tags.problem_id = problems.id
+  left join tags
+    on problems_tags.tag_id = tags.id
   left join comments
-  on comments.problem_id = problems.id
+    on comments.problem_id = problems.id
   where problems.id = $1
   group by problems.id;
 `;
@@ -129,10 +129,10 @@ const querySelectProblemCount = (
   userId: number | null,
 ) => {
   return `
-    select count(1) as count from 
+    select count(1) as count from
     (
       select problems.id from
-      problems 
+      problems
       join problems_tags
       on problems_tags.problem_id = problems.id
       join tags
@@ -240,7 +240,7 @@ const getProblem = async (pool: Pool, problemId: number): Promise<Problem> => {
   const obj = snakeCaseToCamelCaseObject(rawProblems[0]);
   return {
     ...obj,
-    tags: rawProblems[0].tags_list.split(','),
+    tags: rawProblems[0]?.tags_list?.split(',') || [],
     totalComments: Number(obj.totalComments),
   };
 };
