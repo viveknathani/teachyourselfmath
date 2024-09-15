@@ -7,7 +7,7 @@ import { RedisStore } from 'rate-limit-redis';
 import { readFile } from 'fs/promises';
 import memoizee from 'memoizee';
 import axios from 'axios';
-import OpenAI from 'openai';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const sendStandardResponse = (
   statusCode: HTTP_CODE,
@@ -161,9 +161,7 @@ const readFileMemoized = memoizee(readFile, {
   promise: true,
 });
 
-const magic = new OpenAI({
-  apiKey: config.OPENAI_API_KEY,
-});
+const magic = new GoogleGenerativeAI(config.GEMINI_API_KEY);
 
 const getBase64ImageUrlFromBuffer = (
   imageBuffer: Buffer,
