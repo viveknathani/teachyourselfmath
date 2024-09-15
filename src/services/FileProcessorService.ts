@@ -83,15 +83,17 @@ export class FileProcessorService {
                 data: imagePart,
                 // `formatPart`` will be `data:image/${imageFormat};base64`
                 // and we just need `image/${imageFormat}`
-                mimeType: formatPart.split(';')[0].split(':')[1], // formatPart will be
+                mimeType: formatPart.split(';')[0].split(':')[1],
               },
             },
           ],
         },
       ],
     });
-    return response.response.candidates?.[0]?.content?.parts?.[0]?.functionCall
-      ?.args;
+    return (
+      response.response.candidates?.[0]?.content?.parts?.[0]?.functionCall
+        ?.args || {}
+    );
   }
 
   public async extractProblemsFromImageBuffer(

@@ -20,8 +20,9 @@ const worker = createWorker(queueName, async (job: Job) => {
   }
 
   // Magic time, run the model!
-  const { problems } =
+  const magicResponse: any =
     await fileProcessorService.extractProblemsFromImageUrl(imageUrl);
+  const problems = magicResponse['problems'];
   if (!Array.isArray(problems)) {
     throw new Error(`problems is not an array!, ${JSON.stringify(problems)}`);
   }
