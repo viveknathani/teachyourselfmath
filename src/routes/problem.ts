@@ -136,7 +136,7 @@ problemRouter.get('/', async (req, res) => {
       req.query,
     );
     sendStandardResponse(
-      HTTP_CODE.CREATED,
+      HTTP_CODE.OK,
       {
         status: 'success',
         data: response,
