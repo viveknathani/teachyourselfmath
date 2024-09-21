@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      type="text/javascript"
+      id="MathJax-script"
+      defer
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
+    ></script>
+    <script src="/web/scripts/load-math-jax.js"></script>
+    <title>Draft Problem Editor</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 20px;
+        background-color: #f4f4f4;
+      }
+      .container {
+        max-width: 800px;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        text-align: center;
+        color: #333;
+      }
+      .navigation {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+      button {
+        padding: 10px 15px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      button:disabled {
+        background-color: #cccccc;
+      }
+      label {
+        display: block;
+        margin-top: 10px;
+      }
+      input[type='text'],
+      textarea,
+      select {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+      textarea {
+        height: 100px;
+      }
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 10px;
+      }
+      .tag {
+        padding: 5px 10px;
+        background-color: #e9ecef;
+        border-radius: 20px;
+        cursor: pointer;
+      }
+      .tag.selected {
+        background-color: #007bff;
+        color: white;
+      }
+      #alertMessage {
+        margin-top: 20px;
+        padding: 10px;
+        border-radius: 4px;
+        display: none;
+      }
+      .success {
+        background-color: #d4edda;
+        color: #155724;
+      }
+      .error {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Draft Problem Editor</h1>
+      <div class="navigation">
+        <button id="prevButton" onclick="navigateProblem(-1)">
+          &lt; Previous
+        </button>
+        <span id="problemId"></span>
+        <button id="nextButton" onclick="navigateProblem(1)">Next &gt;</button>
+      </div>
+      <form id="problemForm">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" required />
+
+        <label for="description">Description:</label>
+        <p id="rendered-description"></p>
+        <textarea id="description" name="description" required></textarea>
+
+        <label for="difficulty">Difficulty:</label>
+        <select id="difficulty" name="difficulty">
+          <option value="EASY">Easy</option>
+          <option value="MEDIUM">Medium</option>
+          <option value="HARD">Hard</option>
+        </select>
+
+        <label for="status">Status:</label>
+        <select id="status" name="status">
+          <option value="DISCARDED">Discarded</option>
+          <option value="RELEASE_CANDIDATE">Release Candidate</option>
+        </select>
+
+        <label>Tags:</label>
+        <div id="tags" class="tags"></div>
+
+        <button type="submit" style="margin-top: 20px">Update Problem</button>
+      </form>
+      <div id="alertMessage"></div>
+    </div>
+
+    <script>
+      let problemIds = [];
+      let currentIndex = 0;
+      let allTags = {};
+      let apiKey = '';
+
+      // Fetch all draft problem IDs
+      async function fetchDraftProblemIds() {
+        try {
+          const response = await fetch('/api/v1/problems/draft', {
+            headers: {
+              'X-TYM-API-KEY': apiKey,
+            },
+          });
+          const data = await response.json();
+          if (data.status === 'success') {
+            problemIds = data.data;
+            updateNavigation();
+            fetchProblem(problemIds[currentIndex]);
+          }
+        } catch (error) {
+          console.error('Error fetching draft problem IDs:', error);
+          if (error.message.includes('401')) {
+            alert('Invalid API key. Please try again.');
+            promptForApiKey();
+            fetchDraftProblemIds();
+          }
+        }
+      }
+
+      // Prompt for API key
+      function promptForApiKey() {
+        apiKey = prompt('Please enter your API key:');
+        if (!apiKey) {
+          alert('API key is required to fetch and update problems.');
+          promptForApiKey();
+        }
+      }
+
+      // Fetch all tags
+      async function fetchTags() {
+        try {
+          const response = await fetch('/api/v1/tags');
+          const data = await response.json();
+          if (data.status === 'success') {
+            allTags = data.data;
+            renderTags();
+          }
+        } catch (error) {
+          console.error('Error fetching tags:', error);
+        }
+      }
+
+      // Fetch problem by ID
+      async function fetchProblem(id) {
+        try {
+          const response = await fetch(`/api/v1/problems/${id}`);
+          const data = await response.json();
+          if (data.status === 'success') {
+            populateForm(data.data);
+          }
+        } catch (error) {
+          console.error('Error fetching problem:', error);
+        }
+      }
+
+      // Populate form with problem data
+      function populateForm(problem) {
+        document.getElementById('problemId').textContent =
+          `Problem ID: ${problem.id}`;
+        document.getElementById('title').value = problem.title;
+        document.getElementById('description').value = problem.description;
+        document.getElementById('rendered-description').innerHTML =
+          problem.description;
+        document.getElementById('difficulty').value = problem.difficulty;
+        document.getElementById('status').value = problem.status;
+        updateSelectedTags(problem.tags);
+        window.MathJax.typeset();
+      }
+
+      // Render tags
+      function renderTags() {
+        const tagsContainer = document.getElementById('tags');
+        tagsContainer.innerHTML = '';
+        Object.values(allTags).forEach((tag) => {
+          const tagElement = document.createElement('span');
+          tagElement.className = 'tag';
+          tagElement.textContent = tag.name;
+          tagElement.onclick = () => toggleTag(tagElement, tag.name);
+          tagsContainer.appendChild(tagElement);
+        });
+      }
+
+      // Toggle tag selection
+      function toggleTag(element, tagName) {
+        element.classList.toggle('selected');
+      }
+
+      // Update selected tags
+      function updateSelectedTags(selectedTags) {
+        document.querySelectorAll('.tag').forEach((tagElement) => {
+          tagElement.classList.toggle(
+            'selected',
+            selectedTags.includes(tagElement.textContent),
+          );
+        });
+      }
+
+      // Navigate between problems
+      function navigateProblem(direction) {
+        currentIndex += direction;
+        currentIndex = Math.max(
+          0,
+          Math.min(currentIndex, problemIds.length - 1),
+        );
+        updateNavigation();
+        fetchProblem(problemIds[currentIndex]);
+      }
+
+      // Update navigation buttons
+      function updateNavigation() {
+        document.getElementById('prevButton').disabled = currentIndex === 0;
+        document.getElementById('nextButton').disabled =
+          currentIndex === problemIds.length - 1;
+      }
+
+      // Handle form submission
+      document.getElementById('problemForm').onsubmit = async function (e) {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const selectedTags = Array.from(
+          document.querySelectorAll('.tag.selected'),
+        ).map((tag) => tag.textContent);
+
+        const problemData = {
+          id: problemIds[currentIndex],
+          title: formData.get('title'),
+          description: formData.get('description'),
+          difficulty: formData.get('difficulty'),
+          status: formData.get('status'),
+          tagsToAttachWhileInserting: selectedTags,
+        };
+
+        try {
+          const response = await fetch('/api/v1/problems', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-TYM-API-KEY': apiKey,
+            },
+            body: JSON.stringify(problemData),
+          });
+          const data = await response.json();
+          showAlert(
+            data.status === 'success'
+              ? 'Problem updated successfully!'
+              : 'Failed to update problem.',
+            data.status === 'success',
+          );
+        } catch (error) {
+          console.error('Error updating problem:', error);
+          showAlert('Error updating problem. Please try again.', false);
+        }
+      };
+
+      // Show alert message
+      function showAlert(message, isSuccess) {
+        const alertElement = document.getElementById('alertMessage');
+        alertElement.textContent = message;
+        alertElement.className = isSuccess ? 'success' : 'error';
+        alertElement.style.display = 'block';
+        setTimeout(() => (alertElement.style.display = 'none'), 5000);
+      }
+
+      // Initialize
+      promptForApiKey();
+      fetchDraftProblemIds();
+      fetchTags();
+    </script>
+  </body>
+</html>
