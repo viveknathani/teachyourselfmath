@@ -10,6 +10,7 @@ import * as errors from './errors';
 import * as database from '../database';
 import { TagService } from './TagService';
 import { getPaginationConfig, TIME_IN_SECONDS } from '../utils';
+import { DataValidationError } from './errors';
 
 export class ProblemService {
   private static instance: ProblemService;
@@ -167,6 +168,49 @@ export class ProblemService {
     return {
       isBookmarked,
     };
+  }
+
+  public async updateProblem(problem: Partial<Problem>): Promise<void> {
+    if (
+      !problem.id ||
+      !problem.title ||
+      !problem.description ||
+      !problem.difficulty ||
+      !problem.status
+    ) {
+      throw new DataValidationError(
+        'problem requires id, title, description, difficulty',
+      );
+    }
+
+    // update main content
+    await database.updateProblem(
+      this.state.databasePool,
+      problem.id,
+      problem.title,
+      problem.description,
+      problem.difficulty,
+      problem.status,
+    );
+
+    // remove old tags
+    await database.deleteExistingProblemTags(
+      this.state.databasePool,
+      problem.id,
+    );
+
+    // add new tags
+    const tagService = TagService.getInstance(this.state);
+    const tagsMap = await tagService.getTags();
+    problem.tagsToAttachWhileInserting?.forEach(async (tag) => {
+      if (tagsMap[tag]) {
+        await database.insertProblemTag(
+          this.state.databasePool,
+          problem.id!,
+          tagsMap[tag].id,
+        );
+      }
+    });
   }
 
   public async getDraftProblemIds(): Promise<number[]> {

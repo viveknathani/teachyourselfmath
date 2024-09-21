@@ -5,7 +5,11 @@ import { HTTP_CODE } from '../types';
 import { sendStandardResponse } from '../utils';
 import { checkFailsForApiKey } from './apiKey';
 import { injectOptionalUserInfoMiddleWare } from './user';
-import { ErrUserNotFound, ErrorCodesOfSQL } from '../services/errors';
+import {
+  DataValidationError,
+  ErrUserNotFound,
+  ErrorCodesOfSQL,
+} from '../services/errors';
 
 const problemRouter: express.Router = express.Router();
 const problemService = ProblemService.getInstance(state);
@@ -86,6 +90,41 @@ problemRouter.get('/:problemId', async (req, res) => {
         },
         res,
       );
+  }
+});
+
+problemRouter.put('/', async (req, res) => {
+  try {
+    if (checkFailsForApiKey(req, res)) {
+      return;
+    }
+    const response = await problemService.updateProblem(req.body);
+    sendStandardResponse(
+      HTTP_CODE.CREATED,
+      {
+        status: 'success',
+        data: response,
+      },
+      res,
+    );
+  } catch (err) {
+    if (err instanceof DataValidationError) {
+      sendStandardResponse(
+        HTTP_CODE.CLIENT_ERROR,
+        {
+          status: 'error',
+        },
+        res,
+      );
+      return;
+    }
+    sendStandardResponse(
+      HTTP_CODE.SERVER_ERROR,
+      {
+        status: 'error',
+      },
+      res,
+    );
   }
 });
 

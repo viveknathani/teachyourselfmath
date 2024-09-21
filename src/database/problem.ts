@@ -159,6 +159,12 @@ const querySelectProblemCount = (
   `;
 };
 
+const queryUpdateProblem =
+  'update problems set title = $2, description = $3, difficulty = $4, status = $5, updated_at = now() where id = $1';
+
+const queryDeleteExistingProblemTags =
+  'delete from problems_tags where problem_id = $1';
+
 const insertProblem = async (
   pool: Pool,
   problem: Partial<Problem>,
@@ -330,6 +336,31 @@ const getDraftProblemIds = async (pool: Pool): Promise<number[]> => {
   return rawProblems.map((problem) => problem.id);
 };
 
+const updateProblem = async (
+  pool: Pool,
+  problemId: number,
+  title: string,
+  description: string,
+  difficulty: PROBLEM_DIFFICULTY,
+  status: PROBLEM_STATUS,
+): Promise<void> => {
+  await executeQuery({
+    pool,
+    text: queryUpdateProblem,
+    values: [problemId, title, description, difficulty, status],
+    transaction: false,
+  });
+};
+
+const deleteExistingProblemTags = async (pool: Pool, problemId: number) => {
+  await executeQuery({
+    pool,
+    text: queryDeleteExistingProblemTags,
+    values: [problemId],
+    transaction: false,
+  });
+};
+
 export {
   insertProblem,
   insertProblemTag,
@@ -342,4 +373,6 @@ export {
   checkUserBookmark,
   getLatestDigestProblems,
   getDraftProblemIds,
+  updateProblem,
+  deleteExistingProblemTags,
 };

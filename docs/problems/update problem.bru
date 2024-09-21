@@ -1,0 +1,26 @@
+meta {
+  name: update problem
+  type: http
+  seq: 8
+}
+
+put {
+  url: {{baseUrl}}/api/v1/problems
+  body: json
+  auth: none
+}
+
+headers {
+  X-TYM-API-KEY: {{process.env.TYM_API_KEY}}
+}
+
+body:json {
+  {
+    "id": 2,
+    "title": "Show that any amount of postage that is an integer number of cents greater than 53 cents can be formed using just 7-cent and 10-cent stamps. UPDATED",
+    "description": "Show that any amount of postage that is an integer number of cents greater than 53 cents can be formed using just 7-cent and 10-cent stamps. UPDATED",
+    "difficulty": "HARD",
+    "status": "RELEASE_CANDIDATE",
+    "tagsToAttachWhileInserting": ["number theory"]
+  }
+}
