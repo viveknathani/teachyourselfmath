@@ -169,6 +169,11 @@ export class ProblemService {
     };
   }
 
+  public async getDraftProblemIds(): Promise<number[]> {
+    const ids = await database.getDraftProblemIds(this.state.databasePool);
+    return ids;
+  }
+
   private async addToKeyOfKeys(keyOfKeys: string, key: string) {
     await this.state.cache.sadd(keyOfKeys, key);
   }

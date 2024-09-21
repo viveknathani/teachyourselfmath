@@ -18,6 +18,8 @@ const queryInsertProblemTag = `
 
 const querySelectTag = 'select * from tags';
 
+const querySelectDraftProblemIds = `select id from problems where status = '${PROBLEM_STATUS.DRAFT}' order by id asc;`;
+
 const querySelectProblems = (
   tagsToFetchFrom: string[],
   difficultyLevelsToConsider: PROBLEM_DIFFICULTY[],
@@ -317,6 +319,17 @@ const getLatestDigestProblems = async (
   return rawProblems.map(snakeCaseToCamelCaseObject);
 };
 
+const getDraftProblemIds = async (pool: Pool): Promise<number[]> => {
+  const queryResponse = await executeQuery({
+    pool,
+    text: querySelectDraftProblemIds,
+    values: [],
+    transaction: false,
+  });
+  const rawProblems = queryResponse.rows || [];
+  return rawProblems.map((problem) => problem.id);
+};
+
 export {
   insertProblem,
   insertProblemTag,
@@ -328,4 +341,5 @@ export {
   deleteUserBookmark,
   checkUserBookmark,
   getLatestDigestProblems,
+  getDraftProblemIds,
 };
