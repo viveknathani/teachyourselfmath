@@ -18,7 +18,7 @@ const queryInsertProblemTag = `
 
 const querySelectTag = 'select * from tags';
 
-const querySelectDraftProblemIds = `select id from problems where status = '${PROBLEM_STATUS.DRAFT}' order by id asc;`;
+const querySelectDraftProblemIds = `select id from problems where status = '${PROBLEM_STATUS.RELEASE_CANDIDATE}' and source in ('IMO', 'vikas-gupta-jee') order by id asc;`;
 
 const querySelectProblems = (
   tagsToFetchFrom: string[],
