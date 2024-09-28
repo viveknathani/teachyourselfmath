@@ -1,24 +1,20 @@
 # teachyourselfmath
 
-I wished for a free website with an ever-growing list of math problems, teachyourselfmath is that website.
+![build](https://github.com/viveknathani/teachyourselfmath/actions/workflows/build.yaml/badge.svg) ![deployment](https://github.com/viveknathani/teachyourselfmath/actions/workflows/deploy.yaml/badge.svg) ![stars](https://img.shields.io/github/stars/viveknathani/teachyourselfmath?style=social)
+
+I wished for a free website with a large list of math problems, teachyourselfmath is that website.
 
 <img title="flow" alt="screenshot of website" src="./SCREENSHOT.png" width="330px" height="480px">
 
-### Architecture
+### Description
 
-**NOTE: The following architecture is now deprecated. The new engine now requires OS level dependencies to run. This is not documented yet. I'll get to it along with infrastructure migrations in the coming weeks.**
+If a document containing math problem exists, we'd like to extract every problem from it and dump it in a database. LaTeX is something that can be understood by both, computers and humans. Hence, the problem boils down to converting a PDF into LaTeX, removing the irrelevant parts, and storing the remaining parts.
 
-If a document containing math problem exists, we'd like to extract every problem from it and dump it in a database. LaTeX is something that can be understood by both, computers and humans. Hence, the problem boils down to converting a PDF into LaTeX, removing the irrelevant parts, and storing the remaining parts. 
-
-Meta came up with a [model](https://facebookresearch.github.io/nougat/) to parse academic PDF documents and find the LaTeX math in it.
-
-Currently, I run this model's server locally on my computer with every PDF I can get my hands on. The main server has a queue-based system that interacts with the model's server and processes all the problems. Here is a visual illustration of how it works:
-
-<img title="flow" alt="flow of all the steps" src="./FLOW.png">
+When I started this project, I used [Meta's model](https://facebookresearch.github.io/nougat/) to parse academic PDF documents and find the LaTeX math in it. This approach was promising but the model is computationally expensive to run. Thankfully, LLMs have gotten much better at finding the contents of an image. If I could first convert the PDF into an image, LaTeX extraction would then be easier. And this is exactly what I am doing right now.
 
 ### Setup
 
-1. Get `nougat` from [here](https://github.com/facebookresearch/nougat). Run it as a server. (note: you can skip this step from now, it will be deprecated soon.)
+1. We use [pdf2pic](https://www.npmjs.com/package/pdf2pic) which has the following system dependencies: ghostscript, graphicsmagick.
 2. You will need PostgreSQL and Redis to run this.
 2. `yarn`
 3. `yarn build`
