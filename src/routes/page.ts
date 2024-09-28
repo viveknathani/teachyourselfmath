@@ -34,10 +34,5 @@ pageRouter.get('/tags', sendHTML('../web/pages/tags.html'));
 pageRouter.get('/profile', sendHTML('../web/pages/profile.html'));
 pageRouter.get('/digests', sendHTML('../web/pages/digest.html'));
 pageRouter.get('/drafts', sendHTML('../web/pages/drafts.html'));
-pageRouter.get('/roadmap', (req, res) => {
-  res.redirect(
-    'https://viveknathani.notion.site/teachyourselfmath-public-roadmap-4eccf89a7308456fae201ce14c6c187b',
-  );
-});
 
 export { pageRouter };
