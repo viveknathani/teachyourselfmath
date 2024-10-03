@@ -12,6 +12,8 @@ If a document containing math problem exists, we'd like to extract every problem
 
 When I started this project, I used [Meta's model](https://facebookresearch.github.io/nougat/) to parse academic PDF documents and find the LaTeX math in it. This approach was promising but the model is computationally expensive to run. Thankfully, LLMs have gotten much better at finding the contents of an image. If I could first convert the PDF into an image, LaTeX extraction would then be easier. And this is exactly what I am doing right now.
 
+For a longer and less technical rant about this project - read [this](https://vivekn.dev/blog/teachyourselfmath).
+
 ### Setup
 
 1. We use [pdf2pic](https://www.npmjs.com/package/pdf2pic) which has the following system dependencies: ghostscript, graphicsmagick.

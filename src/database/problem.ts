@@ -28,7 +28,7 @@ const querySelectProblems = (
   return `
     select
     problems.id as "id",
-    source,
+    '' as source,
     description,
     difficulty,
     status,
@@ -88,7 +88,7 @@ const queryGetLatestDigestProblems = `
 const querySelectProblem = `
   select
     problems.id as "id",
-    source,
+    '' as source,
     description,
     difficulty,
     title,
