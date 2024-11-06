@@ -22,6 +22,12 @@ Let S be a set of positive integers with the following properties:
 
 Then S is the set of all positive integers.
 
+### triangular numbers
+A number is triangular if and only if it is of the form n * (n + 1) / 2 for some n >= 1.
+
+### the division algorithm
+Given integers a and b, with b > 0, there exist unique integers q and r satisfying a = bq + r, 0 <= r < b
+
 ### conjectures
 A conjecture is an idea or statement that someone believes to be true but hasn't been proven with absolute certainty.
 
