@@ -35,11 +35,22 @@ The gcd of a and b, gcd(a, b) is the positive integer d satisying the following:
 (i) d | a and d | b
 (ii) if c | a and c | b, then c <= d
 
-There also exist two integers x and y such that, gcd(a, b) = ax + by
+There also exist two integers x and y such that, gcd(a, b) = ax + by. More generally, gcd(a, b, c) = ax + by + cz.
 
 If gcd(a, b) = d, then gcd(a / d, b / d) = 1
 
 If a | c and b | c with gcd(a, b) = 1, then ab | c.
+
+If gcd(a, b) = 1, a and b are relatively prime or coprime.
+
+euclid's lemma: If a | bc, with gcd(a, b) = 1, then a | c.
+
+euclidean algorithm: If a = qb + r, then gcd(a, b) = gcd(b, r)
+
+gcd(a, b) * lcm(a, b) = a * b
+
+### the binomial theorem
+(a + b) ^ n = sum from k = 0 to k = n of (nck * x^k * y^(n-k))
 
 ### conjectures
 A conjecture is an idea or statement that someone believes to be true but hasn't been proven with absolute certainty.
