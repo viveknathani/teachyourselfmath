@@ -49,6 +49,12 @@ euclidean algorithm: If a = qb + r, then gcd(a, b) = gcd(b, r)
 
 gcd(a, b) * lcm(a, b) = a * b
 
+## the diophantine equation
+It is an equation, typically a polynomial equation in two or more unknowns with integer coefficients, for which only integer solutions are of interest.
+
+Most common form seen out there: ax + by = c. A solution for this exists if and only if d | c where d = gcd(a, b).
+
+
 ### the binomial theorem
 (a + b) ^ n = sum from k = 0 to k = n of (nck * x^k * y^(n-k))
 
