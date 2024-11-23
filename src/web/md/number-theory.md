@@ -54,6 +54,24 @@ It is an equation, typically a polynomial equation in two or more unknowns with 
 
 Most common form seen out there: ax + by = c. A solution for this exists if and only if d | c where d = gcd(a, b).
 
+# prime numbers: the fundamental theorem of arithmetic
+Every integer greater than 1 can be uniquely expressed as a product of prime numbers, up to the order of the factors.
+
+# prime numbers: the seive of eratosthenes
+The sieve of Eratosthenes is an algorithm for finding all prime numbers up to any given limit.
+
+Steps:
+1. Initialize: Create a list of numbers from 2 to n.
+2. Mark Multiples: Starting with 2, mark all multiples of the current number as composite (non-prime).
+3. Repeat: Move to the next unmarked number (the next prime) and mark its multiples. Continue this process up to sqrt(n).
+4. Collect Primes: The unmarked numbers remaining in the list are the primes up to n.
+
+Any composite number must have at least one factor less than or equal to sqrt(n). By marking multiples of numbers up to sqrt(n), we ensure all composite numbers are identified.
+
+# prime numbers: how many?
+Euclid gave a detailed proof that there is an infinite number of primes.
+
+# prime numbers:
 
 ### the binomial theorem
 (a + b) ^ n = sum from k = 0 to k = n of (nck * x^k * y^(n-k))
