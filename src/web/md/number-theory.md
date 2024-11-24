@@ -49,15 +49,15 @@ euclidean algorithm: If a = qb + r, then gcd(a, b) = gcd(b, r)
 
 gcd(a, b) * lcm(a, b) = a * b
 
-## the diophantine equation
+### the diophantine equation
 It is an equation, typically a polynomial equation in two or more unknowns with integer coefficients, for which only integer solutions are of interest.
 
 Most common form seen out there: ax + by = c. A solution for this exists if and only if d | c where d = gcd(a, b).
 
-# prime numbers: the fundamental theorem of arithmetic
+### prime numbers: the fundamental theorem of arithmetic
 Every integer greater than 1 can be uniquely expressed as a product of prime numbers, up to the order of the factors.
 
-# prime numbers: the seive of eratosthenes
+### prime numbers: the seive of eratosthenes
 The sieve of Eratosthenes is an algorithm for finding all prime numbers up to any given limit.
 
 Steps:
@@ -68,7 +68,7 @@ Steps:
 
 Any composite number must have at least one factor less than or equal to sqrt(n). By marking multiples of numbers up to sqrt(n), we ensure all composite numbers are identified.
 
-# prime numbers: how many?
+### prime numbers: how many?
 Euclid gave a detailed proof that there is an infinite number of primes.
 
 ### the binomial theorem
