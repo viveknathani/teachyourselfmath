@@ -71,8 +71,6 @@ Any composite number must have at least one factor less than or equal to sqrt(n)
 # prime numbers: how many?
 Euclid gave a detailed proof that there is an infinite number of primes.
 
-# prime numbers:
-
 ### the binomial theorem
 (a + b) ^ n = sum from k = 0 to k = n of (nck * x^k * y^(n-k))
 
@@ -82,6 +80,10 @@ A conjecture is an idea or statement that someone believes to be true but hasn't
 1. 3n + 1 conjecture
 
 f(n) = (3n + 1) / 2 if n is odd, n / 2 if n is even.
+
+2. the goldbach conjecture
+
+Every even integer greater than 2 can be expressed as the sum of two prime numbers.
 
 ### sequences
 
