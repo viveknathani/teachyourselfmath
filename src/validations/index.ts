@@ -4,7 +4,6 @@ import cron from 'cron-validate';
 const isValidCronExpression = (expression: string): boolean => {
   const result = cron(expression, { preset: 'default' });
   if (!result.isValid()) {
-    console.log('nahi muje hi dikkat hai', result);
     return false;
   }
 
@@ -12,7 +11,6 @@ const isValidCronExpression = (expression: string): boolean => {
 
   // Should not run more than once a day
   if (minutes.includes('*') || hours.includes('*')) {
-    console.log('returning from here!');
     return false;
   }
 
