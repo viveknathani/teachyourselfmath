@@ -74,6 +74,10 @@ Euclid gave a detailed proof that there is an infinite number of primes.
 ### the binomial theorem
 (a + b) ^ n = sum from k = 0 to k = n of (nck * x^k * y^(n-k))
 
+### pascal's rule
+
+n+1Ck = nCk + nC(k-1), 1 <= k <= n
+
 ### conjectures
 A conjecture is an idea or statement that someone believes to be true but hasn't been proven with absolute certainty.
 
