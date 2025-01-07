@@ -20,6 +20,5 @@ router.use('/votes/', voteRouter);
 router.use('/file-processor', fileProcessorRouter);
 router.use('/utility', utilityRouter);
 router.use('/tags', tagRouter);
-router.use('/configurations', configurationRouter);
 
 export { router, pageRouter };
