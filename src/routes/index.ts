@@ -8,7 +8,6 @@ import { pageRouter } from './page';
 import { utilityRouter } from './utility';
 import { tagRouter } from './tag';
 import { healthCheckRouter } from './health';
-import { configurationRouter } from './configuration';
 
 const router: express.Router = express.Router();
 
