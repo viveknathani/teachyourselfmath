@@ -49,6 +49,7 @@
     "cron-validate": "^1.4.5",
     "cssnano": "^7.0.3",
     "dotenv": "^16.3.1",
+    "ejs": "^3.1.10",
     "express": "^4.20.0",
     "express-rate-limit": "^7.1.5",
     "express-session": "^1.18.0",
