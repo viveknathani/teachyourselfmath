@@ -29,6 +29,7 @@ pageRouter.get('/', sendHTML('../web/pages/home.html'));
 pageRouter.get('/about', sendHTML('../web/pages/about.html'));
 pageRouter.get('/auth', sendHTML('../web/pages/auth.html'));
 pageRouter.get('/auth/reset', sendHTML('../web/pages/auth_reset.html'));
+pageRouter.get('/club', sendHTML('../web/pages/club.html'));
 pageRouter.get('/problem', sendHTML('../web/pages/problem.html'));
 pageRouter.get('/tags', sendHTML('../web/pages/tags.html'));
 pageRouter.get('/profile', sendHTML('../web/pages/profile.html'));
