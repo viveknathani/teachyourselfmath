@@ -14,4 +14,4 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
-        script: bash ~/nattukaka/services/teachyourselfmath/deploy.sh
+        script: bash ~/nattukaka/apps/teachyourselfmath/deploy.sh
