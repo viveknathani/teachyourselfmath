@@ -1,0 +1,15 @@
+meta {
+  name: search
+  type: http
+  seq: 9
+}
+
+get {
+  url: {{baseUrl}}/api/v1/problems/search?q=drop table users;
+  body: none
+  auth: none
+}
+
+query {
+  q: drop table users;
+}

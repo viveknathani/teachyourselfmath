@@ -245,6 +245,12 @@ interface GetProblemsResponse {
   problems: Problem[];
 }
 
+interface SearchProblemsResponse {
+  problems: Problem[];
+  query: string;
+  count: number;
+}
+
 interface UpdateProfileRequest {
   name?: string;
 }
@@ -340,6 +346,7 @@ export {
   ApiResponse,
   ExecuteQuery,
   AppState,
+  SearchProblemsResponse,
   User,
   UserPreference,
   Tag,

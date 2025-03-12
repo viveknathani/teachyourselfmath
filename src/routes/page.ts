@@ -35,5 +35,6 @@ pageRouter.get('/tags', sendHTML('../web/pages/tags.html'));
 pageRouter.get('/profile', sendHTML('../web/pages/profile.html'));
 pageRouter.get('/digests', sendHTML('../web/pages/digest.html'));
 pageRouter.get('/drafts', sendHTML('../web/pages/drafts.html'));
+pageRouter.get('/search', sendHTML('../web/pages/search.html'));
 
 export { pageRouter };

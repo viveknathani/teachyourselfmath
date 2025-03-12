@@ -159,6 +159,33 @@ const querySelectProblemCount = (
   `;
 };
 
+const querySearchProblems = `
+  select
+    problems.id as "id",
+    '' as source,
+    description,
+    difficulty,
+    status,
+    title,
+    string_agg(distinct tags.name, ',') tags_list,
+    count(distinct comments.id) total_comments,
+    problems.created_at,
+    problems.updated_at
+  from
+    problems
+  join problems_tags
+    on problems_tags.problem_id = problems.id
+  join tags
+    on problems_tags.tag_id = tags.id
+  left join comments
+    on comments.problem_id = problems.id
+  where
+    problems.status = '${PROBLEM_STATUS.APPROVED}'
+    and (lower(title) like lower($1) or lower(description) like lower($1))
+  group by problems.id
+  order by id asc;
+`;
+
 const queryUpdateProblem =
   'update problems set title = $2, description = $3, difficulty = $4, status = $5, updated_at = now() where id = $1';
 
@@ -352,6 +379,25 @@ const updateProblem = async (
   });
 };
 
+const searchProblems = async (
+  pool: Pool,
+  query: string,
+): Promise<Problem[]> => {
+  const searchPattern = `%${query}%`;
+  const queryResponse = await executeQuery({
+    pool,
+    text: querySearchProblems,
+    values: [searchPattern],
+  });
+  return queryResponse.rows.map((row) => {
+    const problem = snakeCaseToCamelCaseObject(row);
+    if (row.tags_list) {
+      problem.tags = row.tags_list.split(',');
+    }
+    return problem;
+  });
+};
+
 const deleteExistingProblemTags = async (pool: Pool, problemId: number) => {
   await executeQuery({
     pool,
@@ -365,6 +411,7 @@ export {
   insertProblem,
   insertProblemTag,
   insertUserBookmark,
+  searchProblems,
   getTags,
   getProblem,
   getProblems,

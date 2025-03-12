@@ -68,6 +68,41 @@ problemRouter.get('/draft', async (req, res) => {
   }
 });
 
+problemRouter.get('/search', async (req, res) => {
+  try {
+    const query = req.query.q as string;
+    if (!query) {
+      sendStandardResponse(
+        HTTP_CODE.CLIENT_ERROR,
+        {
+          status: 'error',
+          message: 'Search query is required',
+        },
+        res,
+      );
+      return;
+    }
+    const response = await problemService.searchProblems(query);
+    sendStandardResponse(
+      HTTP_CODE.OK,
+      {
+        status: 'success',
+        data: response,
+      },
+      res,
+    );
+  } catch (err) {
+    console.log(err);
+    sendStandardResponse(
+      HTTP_CODE.SERVER_ERROR,
+      {
+        status: 'error',
+      },
+      res,
+    );
+  }
+});
+
 problemRouter.get('/:problemId', async (req, res) => {
   try {
     const response = await problemService.getProblem(
@@ -129,6 +164,7 @@ problemRouter.put('/', async (req, res) => {
 });
 
 problemRouter.use(injectOptionalUserInfoMiddleWare);
+
 problemRouter.get('/', async (req, res) => {
   try {
     const response = await problemService.getProblems(

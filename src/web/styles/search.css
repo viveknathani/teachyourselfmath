@@ -1,0 +1,97 @@
+#header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #8F9779;
+    padding: 5px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+#right {
+    display: flex;
+    gap: 10px;
+}
+
+h3, h5 {
+    margin: 0;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+#search-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.search-box {
+    display: flex;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+#search-input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+#search-input:focus {
+    border-color: #8F9779;
+}
+
+#search-button {
+    padding: 0.75rem 1.5rem;
+    background-color: #8F9779;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#search-button:hover {
+    background-color: #7a8266;
+}
+
+#search-results {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+#results-info {
+    margin: 1rem 0;
+    color: #666;
+    font-family: 'Inter', sans-serif;
+}
+
+ol {
+    padding-left: 2em;
+    margin: 0;
+}
+
+#topDiv {
+    margin-bottom: -10px;
+}
+
+#bottomDiv {
+    margin-top: -10px;
+}
+
+#bottomDiv p {
+    display: inline-block;
+    margin: 0;
+}
+
+#problems-list li {
+    margin-bottom: 20px;
+}

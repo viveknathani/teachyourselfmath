@@ -5,6 +5,7 @@ import {
   PROBLEM_DIFFICULTY,
   Problem,
   REDIS_KEY_PREFIX,
+  SearchProblemsResponse,
 } from '../types';
 import * as errors from './errors';
 import * as database from '../database';
@@ -168,6 +169,51 @@ export class ProblemService {
     return {
       isBookmarked,
     };
+  }
+
+  private sanitizeSearchQuery(query: string): string {
+    // Remove any potentially harmful characters and limit length
+    return query
+      .replace(/[^a-zA-Z0-9\s-_.,?!]/g, '')
+      .trim()
+      .slice(0, 100);
+  }
+
+  public async searchProblems(query: string): Promise<SearchProblemsResponse> {
+    const sanitizedQuery = this.sanitizeSearchQuery(query);
+    if (!sanitizedQuery) {
+      return {
+        problems: [],
+        query: query,
+        count: 0,
+      };
+    }
+
+    const cacheKey = `PROBLEMS:SEARCH:${sanitizedQuery}`;
+    const cachedData = await this.state.cache.get(cacheKey);
+
+    if (cachedData) {
+      return JSON.parse(cachedData);
+    }
+
+    const problems = await database.searchProblems(
+      this.state.databasePool,
+      sanitizedQuery,
+    );
+
+    const result = {
+      problems,
+      query,
+      count: problems.length,
+    };
+
+    await this.state.cache.setex(
+      cacheKey,
+      TIME_IN_SECONDS.ONE_HOUR,
+      JSON.stringify(result),
+    );
+
+    return result;
   }
 
   public async updateProblem(problem: Partial<Problem>): Promise<void> {
