@@ -14,6 +14,24 @@
     gap: 10px;
 }
 
+@media screen and (max-width: 450px) {
+    #header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px;
+    }
+
+    #right {
+        flex-wrap: wrap;
+        margin-top: 8px;
+        gap: 15px;
+    }
+
+    #right h5 {
+        font-size: 0.9em;
+    }
+}
+
 h3,h5 {
     margin: 0;
     padding-top: 3px;
