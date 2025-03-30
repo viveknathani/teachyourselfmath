@@ -343,7 +343,7 @@ export interface ProduceProblemRequest {
 }
 
 export interface ProduceProblemSetRequest {
-  problems: ProduceProblemRequest[];
+  problemRequests: ProduceProblemRequest[];
   maxProblems?: number;
 }
 

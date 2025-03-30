@@ -408,21 +408,21 @@ const deleteExistingProblemTags = async (pool: Pool, problemId: number) => {
 };
 
 const queryGetRandomProblems = `
-  WITH RankedProblems AS (
-    SELECT 
+  with ranked_problems as (
+    select
       problems.*,
       string_agg(distinct tags.name, ',') as tags_list,
-      ROW_NUMBER() OVER (PARTITION BY problems.difficulty ORDER BY RANDOM()) as rn
-    FROM problems
-    JOIN problems_tags ON problems_tags.problem_id = problems.id
-    JOIN tags ON problems_tags.tag_id = tags.id
-    WHERE 
+      row_number() over (partition by problems.difficulty order by random()) as rn
+    from problems
+    join problems_tags on problems_tags.problem_id = problems.id
+    join tags on problems_tags.tag_id = tags.id
+    where
       problems.status = $1
-      AND problems.difficulty = $2
-      AND tags.name = $3
-    GROUP BY problems.id
+      and problems.difficulty = $2
+      and tags.name = $3
+    group by problems.id
   )
-  SELECT 
+  select
     id,
     source,
     description,
@@ -432,8 +432,8 @@ const queryGetRandomProblems = `
     tags_list,
     created_at,
     updated_at
-  FROM RankedProblems
-  WHERE rn <= $4;
+  from ranked_problems
+  where rn <= $4;
 `;
 
 const getRandomProblems = async (

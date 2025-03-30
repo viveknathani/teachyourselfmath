@@ -263,13 +263,17 @@ export class ProblemService {
   public async produceProblems(
     request: ProduceProblemSetRequest,
   ): Promise<Problem[]> {
-    const { problems, maxProblems = 30 } = request;
+    const { problemRequests , maxProblems = 30 } = request;
 
-    if (!problems || !Array.isArray(problems)) {
-      throw new DataValidationError('problems must be an array');
+    if (!problemRequests || !Array.isArray(problemRequests)) {
+      throw new DataValidationError('problemRequests must be an array');
     }
 
-    const totalProblems = problems.reduce((acc, p) => acc + p.count, 0);
+    if (problemRequests.length === 0) {
+      throw new DataValidationError('problemRequests cannot be empty');
+    }
+
+    const totalProblems = problemRequests.reduce((acc, p) => acc + p.count, 0);
     if (totalProblems > maxProblems) {
       throw new DataValidationError(
         `total problems cannot exceed ${maxProblems}`,
@@ -277,27 +281,25 @@ export class ProblemService {
     }
 
     const allProblems: Problem[] = [];
-    for (const problem of problems) {
-      // Convert difficulty to uppercase to match enum
-      const difficulty = problem.difficulty.toUpperCase() as PROBLEM_DIFFICULTY;
+    for (const problemRequest of problemRequests) {
+      const difficulty = problemRequest.difficulty.toUpperCase() as PROBLEM_DIFFICULTY;
 
-      // Validate difficulty
       if (!Object.values(PROBLEM_DIFFICULTY).includes(difficulty)) {
         throw new DataValidationError(
-          `invalid difficulty: ${problem.difficulty}. must be one of: ${Object.values(PROBLEM_DIFFICULTY).join(', ')}`,
+          `invalid difficulty: ${problemRequest.difficulty}. must be one of: ${Object.values(PROBLEM_DIFFICULTY).join(', ')}`,
         );
       }
 
       const randomProblems = await database.getRandomProblems(
         this.state.databasePool,
         difficulty,
-        problem.subject,
-        problem.count,
+        problemRequest.subject,
+        problemRequest.count,
       );
 
-      if (randomProblems.length < problem.count) {
+      if (randomProblems.length < problemRequest.count) {
         throw new DataValidationError(
-          `not enough ${difficulty} problems found for subject: ${problem.subject}. requested ${problem.count}, found ${randomProblems.length}`,
+          `not enough ${difficulty} problems found for subject: ${problemRequest.subject}. requested ${problemRequest.count}, found ${randomProblems.length}`,
         );
       }
 
