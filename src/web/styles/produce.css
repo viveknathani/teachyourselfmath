@@ -1,0 +1,199 @@
+#header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #8F9779;
+    padding: 5px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+#right {
+    display: flex;
+    gap: 10px;
+}
+
+h3, h5 {
+    margin: 0;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+#description {
+    width: 100%;
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+#description h3 {
+    margin-bottom: 0.5rem;
+}
+
+#description p {
+    color: #666;
+    margin: 0;
+}
+
+#problem-set-container {
+    width: 100%;
+    max-width: 570px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    box-sizing: border-box;
+}
+
+.problem-request {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem 0;
+    flex-wrap: wrap;
+}
+
+.problem-request select {
+    flex: 2;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    font-family: 'Inter', sans-serif;
+    min-width: 0;
+}
+
+.problem-request input[type="number"] {
+    flex: 0.5;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    font-family: 'Inter', sans-serif;
+    min-width: 0;
+    width: 60px;
+}
+
+@media (max-width: 570px) {
+    .problem-request select,
+    .problem-request input {
+        width: 100%;
+        flex: auto;
+    }
+
+
+}
+
+.problem-request select {
+    background-color: white;
+}
+
+
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 0.3rem;
+    margin: 1rem 0;
+}
+
+#add-request,
+#generate-button {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    background-color: #3E4A40;
+    color: white;
+    font-family: 'Inter', sans-serif;
+}
+
+#max-problems {
+    margin: 2rem 0;
+}
+
+#max-problems label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+}
+
+#maxProblemsSlider {
+    width: 100%;
+    margin: 0.5rem 0;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    border-radius: 2px;
+    background: linear-gradient(to right, #8F9779 var(--value, 50%), #e5e5e5 var(--value, 50%));
+    outline: none;
+}
+
+#maxProblemsSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #8F9779;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-top: -6px;
+}
+
+#maxProblemsSlider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: #8F9779;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+#maxProblemsSlider::-moz-range-track {
+    height: 4px;
+    background: #e5e5e5;
+    border: none;
+    border-radius: 2px;
+}
+
+#problemSetResult {
+    margin-top: 2rem;
+    font-family: 'Inter', sans-serif;
+}
+
+#problemSetResult h2 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+#problems-list {
+    list-style: decimal;
+    padding-left: 2em;
+    margin: 0;
+}
+
+#problems-list li {
+    margin-bottom: 1.5em;
+    padding-bottom: 1em;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+#problems-list li:last-child {
+    border-bottom: none;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Responsive fixes */
+@media (max-width: 570px) {
+    .problem-request {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .problem-request select,
+    .problem-request input,
+    .remove-button {
+        width: 100%;
+    }
+}

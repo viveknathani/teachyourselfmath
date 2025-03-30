@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5MQXGYVY2T"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-5MQXGYVY2T');
+    </script>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>teachyourselfmath - produce</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <meta name="description" content="Generate custom math problem sets on teachyourselfmath.">
+    <link rel='stylesheet' type='text/css' media='screen' href='/web/styles/base.css'>
+    <link rel='stylesheet' type='text/css' media='screen' href='/web/styles/produce.css'>
+    <!-- Load MathJax first -->
+    <script type="text/javascript">
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            svg: {
+                fontCache: 'global'
+            },
+            options: {
+                enableMenu: false
+            }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" defer
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script defer src="/web/scripts/produce.js"></script>
+</head>
+<body>
+    <div id="header" class="font-heading">
+        <div id="left">
+            <h3>teachyourselfmath</h3>
+        </div>
+        <div id="right">
+            <h5><a href="/"><- back to home</a></h5>
+        </div>
+    </div>
+
+    <!-- describe what this page is -->
+    <div id="description" class="font-primary">
+        <h3>Produce your own problem set</h3>
+        <p>Use this tool to generate custom math problem sets for your students or for your own practice!</p>
+    </div>
+
+    <div id="problem-set-container">
+        <div id="problemRequests">
+            <!-- Problem requests will be added here -->
+        </div>
+
+        <div class="button-container">
+            <button id="add-request">
+                +
+            </button>
+
+            <button id="generate-button">
+                produce!
+            </button>
+        </div>
+
+        <div id="problemSetResult" class="hidden">
+            <!-- Generated problems will be displayed here -->
+        </div>
+    </div>
+
+</body>
+</html>

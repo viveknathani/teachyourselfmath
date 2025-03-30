@@ -407,6 +407,50 @@ const deleteExistingProblemTags = async (pool: Pool, problemId: number) => {
   });
 };
 
+const queryGetRandomProblems = `
+  with ranked_problems as (
+    select
+      problems.*,
+      string_agg(distinct tags.name, ',') as tags_list,
+      row_number() over (partition by problems.difficulty order by random()) as rn
+    from problems
+    join problems_tags on problems_tags.problem_id = problems.id
+    join tags on problems_tags.tag_id = tags.id
+    where
+      problems.status = $1
+      and problems.difficulty = $2
+      and tags.name = $3
+    group by problems.id
+  )
+  select
+    id,
+    source,
+    description,
+    difficulty,
+    status,
+    title,
+    tags_list,
+    created_at,
+    updated_at
+  from ranked_problems
+  where rn <= $4;
+`;
+
+const getRandomProblems = async (
+  pool: Pool,
+  difficulty: PROBLEM_DIFFICULTY,
+  subject: string,
+  count: number,
+): Promise<Problem[]> => {
+  const result = await executeQuery({
+    pool,
+    text: queryGetRandomProblems,
+    values: [PROBLEM_STATUS.APPROVED, difficulty, subject, count],
+    transaction: false,
+  });
+  return result.rows.map((row) => snakeCaseToCamelCaseObject(row));
+};
+
 export {
   insertProblem,
   insertProblemTag,
@@ -422,4 +466,5 @@ export {
   getDraftProblemIds,
   updateProblem,
   deleteExistingProblemTags,
+  getRandomProblems,
 };

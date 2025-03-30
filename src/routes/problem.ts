@@ -68,6 +68,41 @@ problemRouter.get('/draft', async (req, res) => {
   }
 });
 
+problemRouter.post('/produce', async (req, res) => {
+  try {
+    const problems = await problemService.produceProblems(req.body);
+    sendStandardResponse(
+      HTTP_CODE.OK,
+      {
+        status: 'success',
+        data: { problems },
+      },
+      res,
+    );
+  } catch (err) {
+    if (err instanceof DataValidationError) {
+      sendStandardResponse(
+        HTTP_CODE.CLIENT_ERROR,
+        {
+          status: 'error',
+          message: err.message,
+        },
+        res,
+      );
+      return;
+    }
+
+    sendStandardResponse(
+      HTTP_CODE.SERVER_ERROR,
+      {
+        status: 'error',
+        message: 'Internal server error',
+      },
+      res,
+    );
+  }
+});
+
 problemRouter.get('/search', async (req, res) => {
   try {
     const query = req.query.q as string;
