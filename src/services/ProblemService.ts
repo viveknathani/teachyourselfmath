@@ -4,6 +4,7 @@ import {
   GetProblemsResponse,
   PROBLEM_DIFFICULTY,
   Problem,
+  ProduceProblemSetRequest,
   REDIS_KEY_PREFIX,
   SearchProblemsResponse,
 } from '../types';
@@ -257,6 +258,53 @@ export class ProblemService {
         );
       }
     });
+  }
+
+  public async produceProblems(
+    request: ProduceProblemSetRequest,
+  ): Promise<Problem[]> {
+    const { problems, maxProblems = 30 } = request;
+
+    if (!problems || !Array.isArray(problems)) {
+      throw new DataValidationError('problems must be an array');
+    }
+
+    const totalProblems = problems.reduce((acc, p) => acc + p.count, 0);
+    if (totalProblems > maxProblems) {
+      throw new DataValidationError(
+        `total problems cannot exceed ${maxProblems}`,
+      );
+    }
+
+    const allProblems: Problem[] = [];
+    for (const problem of problems) {
+      // Convert difficulty to uppercase to match enum
+      const difficulty = problem.difficulty.toUpperCase() as PROBLEM_DIFFICULTY;
+
+      // Validate difficulty
+      if (!Object.values(PROBLEM_DIFFICULTY).includes(difficulty)) {
+        throw new DataValidationError(
+          `invalid difficulty: ${problem.difficulty}. must be one of: ${Object.values(PROBLEM_DIFFICULTY).join(', ')}`,
+        );
+      }
+
+      const randomProblems = await database.getRandomProblems(
+        this.state.databasePool,
+        difficulty,
+        problem.subject,
+        problem.count,
+      );
+
+      if (randomProblems.length < problem.count) {
+        throw new DataValidationError(
+          `not enough ${difficulty} problems found for subject: ${problem.subject}. requested ${problem.count}, found ${randomProblems.length}`,
+        );
+      }
+
+      allProblems.push(...randomProblems);
+    }
+
+    return allProblems;
   }
 
   public async getDraftProblemIds(): Promise<number[]> {

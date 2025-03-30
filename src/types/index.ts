@@ -336,6 +336,21 @@ interface SendNotificationRequest {
   };
 }
 
+export interface ProduceProblemRequest {
+  subject: string;
+  difficulty: PROBLEM_DIFFICULTY;
+  count: number;
+}
+
+export interface ProduceProblemSetRequest {
+  problems: ProduceProblemRequest[];
+  maxProblems?: number;
+}
+
+export interface ProduceProblemSetResponse {
+  problems: Problem[];
+}
+
 interface HealthCheckResponse {
   allGood: boolean;
   canConnectToDatabase: boolean;
