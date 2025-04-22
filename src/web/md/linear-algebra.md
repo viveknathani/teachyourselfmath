@@ -190,3 +190,43 @@ A permutation matrix has exactly one entry of 1 in each row and each column, wit
 Multiplying a matrix by a permutation matrix on the left reorders the matrix’s rows; multiplying on the right reorders its columns.
 
 When doing elimination, sometimes the pivot (the entry we want to use to clear entries below it) is zero or too small (which can cause numerical issues). To fix that, we swap rows so that a non-zero or larger entry becomes the pivot. The permutation matrix P is the formal way of “recording” those row swaps. Multiplying on the left by P effectively reorders the rows of A, making the pivot factorization PA = LU possible.
+
+### determinants
+
+The determinant represents the volume of the parallelepiped spanned by the matrix's columns.
+
+A matrix is invertible if and only if its determinant is non-zero.
+
+### vector space, column space, null space
+
+A vector space is a set of vectors that are closed under addition and scalar multiplication.
+
+The column space of a matrix is the set of all possible linear combinations of its columns.
+
+The null space of a matrix is the set of all vectors that, when multiplied by the matrix, give the zero vector.
+
+### span
+
+The span of a set of vectors is the set of all possible linear combinations of those vectors.
+
+### basis
+
+A basis is a set of linearly independent vectors that span the vector space.
+
+### dimension
+
+The dimension of a vector space is the number of vectors in a basis.
+
+### rank
+
+The rank of a matrix is the dimension of its column space.
+
+### eigenvectors and eigenvalues
+
+Eigenvectors are non-zero vectors that only get scaled (stretched or shrunk), not rotated, by a linear transformation.
+
+Eigenvalues are the scalars by which the eigenvectors are scaled.
+
+In simple terms, when you apply a matrix (representing a linear transformation) to an eigenvector, it just stretches or shrinks the vector, without changing its direction. The factor by which it stretches or shrinks is the eigenvalue.
+
+NOTE: Pausing the study of this subject for now because it feels TOO NON-INTUITIVE. I may or may not come back to it.
