@@ -263,7 +263,7 @@ export class ProblemService {
   public async produceProblems(
     request: ProduceProblemSetRequest,
   ): Promise<Problem[]> {
-    const { problemRequests , maxProblems = 30 } = request;
+    const { problemRequests, maxProblems = 30 } = request;
 
     if (!problemRequests || !Array.isArray(problemRequests)) {
       throw new DataValidationError('problemRequests must be an array');
@@ -282,7 +282,8 @@ export class ProblemService {
 
     const allProblems: Problem[] = [];
     for (const problemRequest of problemRequests) {
-      const difficulty = problemRequest.difficulty.toUpperCase() as PROBLEM_DIFFICULTY;
+      const difficulty =
+        problemRequest.difficulty.toUpperCase() as PROBLEM_DIFFICULTY;
 
       if (!Object.values(PROBLEM_DIFFICULTY).includes(difficulty)) {
         throw new DataValidationError(
