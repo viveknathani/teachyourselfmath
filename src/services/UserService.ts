@@ -83,8 +83,15 @@ export class UserService {
     if (!isGood) {
       throw new errors.ErrInvalidEmailPassword();
     }
-    user.password = '';
+
     user.name = '';
+    user.email = '';
+    user.password = '';
+    user.username = '';
+    user.preference = null;
+    user.createdAt = new Date(0);
+    user.updatedAt = new Date(0);
+
     return {
       user,
       authToken: this.createAuthToken(user),
