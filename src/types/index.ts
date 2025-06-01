@@ -140,6 +140,7 @@ interface Comment {
   parentId: number | null;
   createdAt: Date;
   updatedAt: Date;
+  timeAgo?: string;
 }
 
 interface Vote {
@@ -199,10 +200,11 @@ interface GetCommentsRequest {
 }
 
 interface GetProblemsRequest {
-  page?: number;
-  tags?: string;
   difficulty?: string;
+  tags?: string;
   bookmarked?: boolean;
+  page?: number;
+  limit?: number;
 }
 
 interface PasswordResetSendRequestData {

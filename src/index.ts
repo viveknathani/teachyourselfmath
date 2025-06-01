@@ -24,6 +24,7 @@ async function main() {
   app.use(requestLogger);
   createBullDashboardAndAttachRouter(app);
   app.set('view engine', 'ejs');
+  app.set('views', path.join(__dirname, './web/views'));
   app.use(cors());
   app.use('/', pageRouter);
   app.use('/web', express.static(path.join(__dirname, './web')));

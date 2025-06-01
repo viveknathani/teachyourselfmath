@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5MQXGYVY2T"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-5MQXGYVY2T');
+    </script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Problem #<%= problem.id %> | teachyourselfmath</title>
+    <meta name="description" content="<%= problem.description.substring(0, 150) %>...">
+    
+    <!-- OpenGraph tags -->
+    <meta property="og:title" content="Problem #<%= problem.id %> | teachyourselfmath">
+    <meta property="og:description" content="<%= problem.description.substring(0, 150) %>...">
+    <meta property="og:type" content="article">
+    
+    <!-- Schema.org markup for math problem -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Question",
+      "name": "Problem #<%= problem.id %>",
+      "text": "<%= problem.description %>",
+      "dateCreated": "<%= problem.createdAt %>",
+      "author": {
+        "@type": "Organization",
+        "name": "teachyourselfmath"
+      },
+      "comment": {
+        "@type": "Comment",
+        "commentCount": <%= comments.length %>
+      }
+    }
+    </script>
+
+    <script>
+        window.getTimeAgo = function getTimeAgo(date) {
+            let seconds = Math.floor((new Date() - new Date(date)) / 1000);
+            let interval = seconds / 31536000;
+
+            if (interval > 1) {
+                return combinedNumericAndStringPart(Math.floor(interval), 'years');
+            }
+            interval = seconds / 2592000;
+            if (interval > 1) {
+                return combinedNumericAndStringPart(Math.floor(interval), 'months');
+            }
+            interval = seconds / 86400;
+            if (interval > 1) {
+                return combinedNumericAndStringPart(Math.floor(interval), 'days');
+            }
+            interval = seconds / 3600;
+            if (interval > 1) {
+                return combinedNumericAndStringPart(Math.floor(interval), 'hours');
+            }
+            interval = seconds / 60;
+            if (interval > 1) {
+                return combinedNumericAndStringPart(Math.floor(interval), 'minutes');
+            }
+            return combinedNumericAndStringPart(Math.floor(seconds), 'seconds');
+        }
+    </script>
+
+    <link rel='stylesheet' type='text/css' media='screen' href='/web/styles/base.css'>
+    <link rel='stylesheet' type='text/css' media='screen' href='/web/styles/problem.css'>
+    <script defer src='/web/scripts/load-math-jax.js'></script>
+    <script type="text/javascript" id="MathJax-script" defer
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+    </script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script defer src='/web/scripts/problem-ssr.js'></script>
+</head>
+<body>
+    <div id="header" class="font-heading">
+        <div id="left">
+            <h3>teachyourselfmath</h3>
+        </div>
+        <div id="right">
+            <h5><a href="/"><- back to home</a></h5>
+        </div>
+    </div>
+    <div id="problem" class="font-primary">
+        <p id="problem-title">Problem #<%= problem.id %></p>
+        <p id="problem-meta" class="font-accent">
+            <%= comments.length %> <%= comments.length === 1 ? 'comment' : 'comments' %> | 
+            <%= problem.tags.join(',') %> | 
+            <%= problem.difficulty.toLowerCase() %>
+        </p>
+        <p id="problem-description"><%- problem.description %></p>
+        <button id="problem-bookmark" style="display: none;"></button>
+    </div>
+    <div id="comments" class="font-primary">
+        <div id="add-comment-box">
+            <textarea rows="10" cols="50" id="user-comment"></textarea>
+            <button type="button" id="add-comment-button">add comment</button>
+            <p id="add-comment-message"></p>
+        </div>
+        <% comments.forEach(comment => { %>
+            <div class="comment" id="comment-<%= comment.id %>">
+                <p class="font-accent comment-meta">
+                    <%= comment.timeAgo %> | <%= comment.author %>
+                </p>
+                <p><%- marked.parse(comment.content) %></p>
+                <button class="comment-action-buttons" onclick="showReplyArea('<%= comment.id %>')">reply</button>
+                <% if (comment.replyCount > 0) { %>
+                    <button class="comment-action-buttons" onclick="fetchReplies('<%= comment.id %>', this)">show replies</button>
+                <% } %>
+            </div>
+        <% }); %>
+    </div>
+    <p style="color: antiquewhite;">easter egg hahaha</p>
+    <div id="footer">
+        <p>made with ❤️ in 🇮🇳 by <a href="https://vivekn.dev" style="text-decoration: underline;">viveknathani</a></p>
+        <p>like my work? <a href="https://www.buymeacoffee.com/viveknathani" style="text-decoration: underline;">buy me a coffee ☕️</a></p>
+    </div>
+</body>
+</html>

@@ -57,6 +57,7 @@
     "helmet": "^7.1.0",
     "ioredis": "^5.3.2",
     "jsonwebtoken": "^9.0.2",
+    "marked": "^15.0.12",
     "memoizee": "^0.4.17",
     "multer": "^1.4.5-lts.1",
     "nanoid": "^5.0.3",

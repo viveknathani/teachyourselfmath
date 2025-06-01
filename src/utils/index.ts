@@ -171,6 +171,40 @@ const getBase64ImageUrlFromBuffer = (
   return `data:image/${imageFormat};base64,${base64Image}`;
 };
 
+const combinedNumericAndStringPart = (interval: number, text: string) => {
+  if (interval === 1) {
+    return `${interval} ${text.slice(0, -1)} ago`;
+  }
+  return `${interval} ${text} ago`;
+};
+
+const getTimeAgo = (date: string) => {
+  // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'new'.
+  const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+  let interval = seconds / 31536000;
+
+  if (interval > 1) {
+    return combinedNumericAndStringPart(Math.floor(interval), 'years');
+  }
+  interval = seconds / 2592000;
+  if (interval > 1) {
+    return combinedNumericAndStringPart(Math.floor(interval), 'months');
+  }
+  interval = seconds / 86400;
+  if (interval > 1) {
+    return combinedNumericAndStringPart(Math.floor(interval), 'days');
+  }
+  interval = seconds / 3600;
+  if (interval > 1) {
+    return combinedNumericAndStringPart(Math.floor(interval), 'hours');
+  }
+  interval = seconds / 60;
+  if (interval > 1) {
+    return combinedNumericAndStringPart(Math.floor(interval), 'minutes');
+  }
+  return combinedNumericAndStringPart(Math.floor(seconds), 'seconds');
+};
+
 export {
   sendStandardResponse,
   snakeCaseToCamelCaseObject,
@@ -187,4 +221,5 @@ export {
   readFileMemoized,
   getBase64ImageUrlFromBuffer,
   magic,
+  getTimeAgo,
 };

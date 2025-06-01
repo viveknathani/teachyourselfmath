@@ -2,6 +2,7 @@ import { Pool } from 'pg';
 import { executeQuery } from '.';
 import { Comment } from '../types';
 import { snakeCaseToCamelCaseObject } from '../utils';
+import { getTimeAgo } from '../utils';
 
 const queryInsertComment = `
     insert into comments
@@ -60,6 +61,7 @@ const getCommentsByProblem = async (pool: Pool, problemId: number) => {
   const rawComments = queryResponse.rows;
   return rawComments.map((comment: any) => {
     const obj = snakeCaseToCamelCaseObject(comment);
+    obj.timeAgo = getTimeAgo(obj.createdAt);
     return {
       ...obj,
       replyCount: Number(obj.replyCount),
@@ -78,7 +80,11 @@ const getCommentsByProblemAndParent = async (
     values: [problemId, parentId],
   });
   const rawComments = queryResponse.rows;
-  return rawComments.map((comment: any) => snakeCaseToCamelCaseObject(comment));
+  return rawComments.map((comment: any) => {
+    const obj = snakeCaseToCamelCaseObject(comment);
+    obj.timeAgo = getTimeAgo(obj.createdAt);
+    return obj;
+  });
 };
 
 export { insertComment, getCommentsByProblem, getCommentsByProblemAndParent };
