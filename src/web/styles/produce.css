@@ -2,11 +2,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #8F9779;
     padding: 5px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
 }
 
 #right {
@@ -23,9 +19,10 @@ h3, h5 {
 #description {
     width: 100%;
     max-width: 800px;
-    margin: 2rem auto;
-    padding: 0 1rem;
-    box-sizing: border-box;
+    margin: 0 auto;
+    padding: 1rem;
+    font-family: 'Inter', sans-serif;
+    background-color: white;
     text-align: center;
 }
 
@@ -96,13 +93,13 @@ h3, h5 {
     margin: 1rem 0;
 }
 
-#add-request,
-#generate-button {
+button {
+    background-color: #09290E;
+    color: black;
+    border: none;
     padding: 0.5rem 1rem;
+    border-radius: 4px;
     cursor: pointer;
-    background-color: #3E4A40;
-    color: white;
-    font-family: 'Inter', sans-serif;
 }
 
 #max-problems {
@@ -123,7 +120,7 @@ h3, h5 {
     appearance: none;
     height: 4px;
     border-radius: 2px;
-    background: linear-gradient(to right, #8F9779 var(--value, 50%), #e5e5e5 var(--value, 50%));
+    background: linear-gradient(to right, #f5f5f5 var(--value, 50%), #e5e5e5 var(--value, 50%));
     outline: none;
 }
 
@@ -132,7 +129,7 @@ h3, h5 {
     appearance: none;
     width: 16px;
     height: 16px;
-    background: #8F9779;
+    background: #f5f5f5;
     border-radius: 50%;
     cursor: pointer;
     margin-top: -6px;
@@ -141,7 +138,7 @@ h3, h5 {
 #maxProblemsSlider::-moz-range-thumb {
     width: 16px;
     height: 16px;
-    background: #8F9779;
+    background: #f5f5f5;
     border: none;
     border-radius: 50%;
     cursor: pointer;

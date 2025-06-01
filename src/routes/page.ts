@@ -26,6 +26,7 @@ function sendHTML(webPagePath: string): ExpressFunction {
 }
 
 pageRouter.get('/', sendHTML('../web/pages/home.html'));
+pageRouter.get('/problems', sendHTML('../web/pages/problems.html'));
 pageRouter.get('/about', sendHTML('../web/pages/about.html'));
 pageRouter.get('/auth', sendHTML('../web/pages/auth.html'));
 pageRouter.get('/auth/reset', sendHTML('../web/pages/auth_reset.html'));

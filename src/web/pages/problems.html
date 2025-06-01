@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5MQXGYVY2T"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-5MQXGYVY2T');
+    </script>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>teachyourselfmath</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <meta name="description" content="Discover teachyourselfmath, a math PDF extraction engine designed to gather math problems from various sources. Founded by software engineer Vivek, this open-source project aims to simplify problem-solving for math enthusiasts. Join our community and contribute to the project!">
+    <link rel='stylesheet' type='text/css' media='screen' href='/web/styles/base.css'>
+    <link rel='stylesheet' type='text/css' media='screen' href='/web/styles/problems.css'>
+    <script defer src='/web/scripts/load-math-jax.js'></script>
+    <script type="text/javascript" id="MathJax-script" defer
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script defer src='/web/scripts/problems.js'></script>
+</script>
+</head>
+<body>
+    <div id="header" class="font-heading">
+        <div id="left">
+            <h3>teachyourselfmath</h3>
+        </div>
+        <div id="right">
+            <h5><a href="./about">about</a></h5>
+            <h5 id="login-link"><a href="./auth">login</a></h5>
+            <h5 id="profile-link"><a href="./profile">profile</a></h5>
+        </div>
+    </div>
+    <div id="filters">
+        <div id="difficulty">
+            <select name="difficulty" id="difficulty-filter">
+                <option value="ANY">difficulty</option>
+                <option value="EASY">Easy</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="HARD">Hard</option>
+            </select>
+        </div>
+        <div id="tags">
+            <select name="tags" id="tags-filter" style="display: none;">
+            </select>
+        </div>
+        <div id="bookmarked">
+            <select name="difficulty" id="bookmark-filter" style="display: none;">
+                <option value="ANY">status</option>
+                <option value="true">bookmarked</option>
+            </select>
+        </div>
+    </div>
+    <div id="selected-filters">
+        <div id="difficulty-list"></div>
+        <div id="tags-list"></div>
+        <div id="bookmark-list"></div>
+    </div>
+    <ol></ol>
+    <div id="pagination" class="font-primary">
+    </div>
+</body>
+</html>

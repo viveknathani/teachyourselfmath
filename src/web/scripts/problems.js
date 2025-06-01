@@ -83,7 +83,7 @@ function displayProblems(problems, paginationConfig) {
 
   if (paginationConfig.hasPreviousPage) {
     const prevLink = document.createElement('a');
-    prevLink.href = `/?page=${paginationConfig.currentPage - 1}&${params.toString()}`;
+    prevLink.href = `/problems?page=${paginationConfig.currentPage - 1}&${params.toString()}`;
     prevLink.innerText = 'prev';
     pagination.appendChild(prevLink);
   }
@@ -94,7 +94,7 @@ function displayProblems(problems, paginationConfig) {
   }
   if (paginationConfig.hasNextPage) {
     const nextLink = document.createElement('a');
-    nextLink.href = `/?page=${paginationConfig.currentPage + 1}&${params.toString()}`;
+    nextLink.href = `/problems?page=${paginationConfig.currentPage + 1}&${params.toString()}`;
     nextLink.innerText = 'next';
     pagination.appendChild(nextLink);
   }

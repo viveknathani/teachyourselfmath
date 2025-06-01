@@ -2,11 +2,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #8F9779;
     padding: 5px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
 }
 
 #right {
@@ -44,13 +40,13 @@ h3, h5 {
 }
 
 #search-input:focus {
-    border-color: #8F9779;
+    border-color: #eee;
 }
 
 #search-button {
     padding: 0.75rem 1.5rem;
-    background-color: #8F9779;
-    color: white;
+    background-color: #f5f5f5;
+    color: black;
     border: none;
     border-radius: 4px;
     cursor: pointer;
