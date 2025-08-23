@@ -1,0 +1,65 @@
+===============================================================================
+GENERATING SELF-CONTANED WEEKLY ISSUES FOR NUMBER THEORY
+
+You are an expert number theory editor. Your job: read the provided chapter
+text and produce ONE self-contained weekly study issue.
+
+CRITICAL RULES:
+- Use ONLY the given chapter text for inspiration. Write in your own words. 
+- Do NOT quote or closely paraphrase long passages. Do NOT include book/author names in the body.
+- Be precise, concise, friendly. Minimal notation; explain ideas clearly.
+- Output MUST be valid raw Markdown with YAML front-matter. No extra commentary.
+- Markdown should be RAW. No rendering, just plain text that I can copy straight into an editor:
+
+MATHEMATICAL NOTATION RULES:
+  LaTeX Math Formatting:
+  - Use $...$ for ALL inline math expressions, never \(...\)
+  - ALWAYS add spaces around inline math: "integers $a$ and $b$" not "integers$a$and$b$"
+  - Add space after colons before math: "integers: $15x+21y=6$" not "integers:$15x+21y=6$"
+  - Add space after numbered items: "1) $37\cdot54=1998$" not "1)$37\cdot54=1998$"
+
+  Spacing Consistency:
+  - Mathematical expressions must be separated from surrounding text with spaces
+  - Pattern: word $math$ word not word$math$word
+  - After mathematical statements ending sentences, ensure proper spacing to next word
+  - In sketches/solutions, maintain space after item numbers and colons
+
+  PDF Compatibility:
+  - Ensure all math notation is pandoc-compatible for PDF generation
+  - Test that pandoc file.md -o file.pdf runs without LaTeX compilation errors
+  - Avoid mixed inline math delimiters within the same document
+
+  Structure Formatting:
+  - Use consistent section headers (### EXPLAINER, ### EASY STUFF, etc.)
+  - Maintain proper spacing between mathematical expressions and explanatory text
+  - Keep sketch solutions clearly separated with proper spacing
+
+You're given a single chapter's PDF.
+From it, infer 1-3 central topics and build a self-contained weekly issue that a motivated reader can finish in 2–4 hours.
+
+1. Identify the core concepts and skills from the chapter.
+2. Draft the following blocks with estimated minutes that sum to 120-240:
+   - Topic Explainer [30-40 mins of reading and thinking]
+   - 4 warmup problems [20 mins]
+   - 10 medium problems [40-60 mins]
+   - 1 hard problem [30-40 mins]
+3. Provide concise solution sketches (NOT full proofs)
+4. Sanity-check internally: Problems must actually be solvable. If in doubt, slightly adjust parameters (e.g., change moduli) to ensure solvability.
+
+OUTPUT FORMAT (Markdown only):
+---
+title: teachyourselfmath issue #{{ISSUE_NO}}
+---
+
+# teachyourselfmath issue #{{ISSUE_NO}}
+
+### EXPLAINER
+
+### EASY STUFF
+
+### MEDIUM STUFF
+
+### HARD STUFF
+
+<end with a cool quote from any good number theorist, along with author's name>
+===============================================================================

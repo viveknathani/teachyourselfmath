@@ -23,6 +23,27 @@ For a longer and less technical rant about this project - read [this](https://vi
 4. Setup the `.env` file using the `.env.example` file.
 5. `yarn start`!
 
+### [OPTIONAL DEPENDENCY] now experimenting with online issues for the math club:
+
+Trying to figure out a pipeline driven by AI that generates raw markdown files like [this one](./src/web/md/ISSUE_001.md) and we run pandoc over it to get a file like [this one](./src/web/pdfs/ISSUE_001.pdf).
+
+Prompts available at: [prompts.txt](./scripts/prompts.txt)
+
+Sample also available at: [teachyourselfmath.app/issues/001](https://teachyourselfmath.app/issues/001)
+
+Get pandoc from: https://pandoc.org/
+
+On MacOS, we also need `pdflatex`:
+```bash
+brew install basictex
+eval "$(/usr/libexec/path_helper)"
+```
+
+Generate stuff by:
+```
+pandoc src/web/md/ISSUE_001.md -o src/web/pdf/ISSUE_001.pdf
+```
+
 ### Contributing
 
 I am happy to accept pull requests. No hard rules.

@@ -38,5 +38,28 @@ pageRouter.get('/profile', sendHTML('../web/pages/profile.html'));
 pageRouter.get('/digests', sendHTML('../web/pages/digest.html'));
 pageRouter.get('/drafts', sendHTML('../web/pages/drafts.html'));
 pageRouter.get('/search', sendHTML('../web/pages/search.html'));
+pageRouter.get('/issues/:issueNumber', async (req, res) => {
+  try {
+    const issueNumber = req.params.issueNumber;
+    if (!/^\d+$/.test(issueNumber)) {
+      res.status(400).send('Bad issue number');
+      return;
+    }
+    const filePath = `../web/pdfs/ISSUE_${issueNumber}.pdf`;
+    const downloadFilename = path.basename(filePath);
+    res.setHeader(
+      'Content-Disposition',
+      `inline; filename="${downloadFilename}"`,
+    );
+    res.setHeader(
+      'Content-Type',
+      `application/${downloadFilename.split('.').pop()}`,
+    );
+    res.sendFile(path.resolve(__dirname, filePath));
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: '' });
+  }
+});
 
 export { pageRouter };
