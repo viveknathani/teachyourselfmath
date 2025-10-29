@@ -203,6 +203,7 @@ interface GetProblemsRequest {
   tags?: string;
   difficulty?: string;
   bookmarked?: boolean;
+  solved?: boolean;
 }
 
 interface PasswordResetSendRequestData {

@@ -264,6 +264,33 @@ function toggleBookmark() {
     });
 }
 
+function toggleSolve() {
+  const authToken = localStorage.getItem('authToken');
+  if (!authToken) {
+    return;
+  }
+  const solveButton = document.getElementById('problem-solve');
+  const isSolved = solveButton.innerHTML.startsWith('unsolve');
+  fetch(`/api/v1/problems/${problemId}/solve`, {
+    method: isSolved ? 'DELETE' : 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: `Bearer ${authToken}`,
+    },
+  })
+    .then((res) => res.json())
+    .then((res) => {
+      if (res.status === 'success') {
+        fetchAndDisplaySolvedStatus();
+      } else {
+        console.error('Failed to toggle solve:', res.message);
+      }
+    })
+    .catch((err) => {
+      console.error('Error toggling solve:', err);
+    });
+}
+
 function fetchAndDisplayBookmarkStatus() {
   const authToken = localStorage.getItem('authToken');
   if (!authToken) {
@@ -293,6 +320,35 @@ function fetchAndDisplayBookmarkStatus() {
     });
 }
 
+function fetchAndDisplaySolvedStatus() {
+  const authToken = localStorage.getItem('authToken');
+  if(!authToken) {
+    return;
+  }
+  fetch(`/api/v1/problems/${problemId}/is-solved`, {
+    method: 'GET',
+    headers: {
+      authorization: `Bearer ${authToken}`
+    }
+  }).then(res => res.json())
+  .then((res) => {
+    const solveButton = document.getElementById('problem-solve');
+    solveButton.style.display = 'block';
+    if(res.data.isSolved) {
+      solveButton.innerHTML = 'unsolve';
+      solveButton.classList.add('solved');
+    }
+    else {
+      solveButton.innerHTML = 'solve';
+      solveButton.classList.remove('solved');
+    }
+    solveButton.onclick = toggleSolve
+  })
+  .catch(err => {
+    console.error('Failed to fetch solved status', err);
+  })
+}
+
 function runMathJaxAfterMarkdown() {
   const elements = document.getElementsByClassName('comment');
   const replacePairs = [
@@ -319,4 +375,5 @@ document.addEventListener('DOMContentLoaded', function () {
   fetchProblem();
   fetchComments();
   fetchAndDisplayBookmarkStatus();
+  fetchAndDisplaySolvedStatus();
 });
