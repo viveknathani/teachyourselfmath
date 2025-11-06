@@ -3,7 +3,11 @@ let selectedTagsList = [];
 let bookmarkList = [];
 
 function isBookmarked() {
-  return bookmarkList.length !== 0 && bookmarkList[0] === 'true';
+  return bookmarkList.length !== 0 && bookmarkList.includes('bookmark');
+}
+
+function isSolved() {
+  return bookmarkList.length !== 0 && bookmarkList.includes('solved'); 
 }
 
 function combinedNumericAndStringPart(interval, text) {
@@ -122,6 +126,11 @@ function fetchProblems() {
   } else {
     params.delete('bookmarked');
   }
+  if (isSolved()) {
+    params.set('solved', 'true');
+  } else {
+    params.delete('solved');
+  }
   searchParams.set('page', params.page);
   searchParams.set('tags', params.tags);
   searchParams.set('difficulty', params.difficulty);
@@ -134,6 +143,11 @@ function fetchProblems() {
     url.searchParams.set('bookmarked', 'true');
   } else {
     url.searchParams.delete('bookmarked');
+  }
+  if (isSolved()) {
+    url.searchParams.set('solved', 'true');
+  } else {
+    url.searchParams.delete('solved');
   }
   window.history.pushState(null, '', url.toString());
   fetch(`/api/v1/problems?${params.toString()}`, {
@@ -225,12 +239,16 @@ function renderSelectedTagsList() {
 function renderBookmarkList() {
   const bookmarkListDiv = document.getElementById('bookmark-list');
   bookmarkListDiv.innerHTML = '';
-  for (const bookmark of bookmarkList) {
+  for (const filter of bookmarkList) {
     const button = document.createElement('button');
     button.className = 'closeButton';
-    button.innerHTML = `${toTitleCase(bookmark === 'true' ? 'bookmarked' : '')}  <i class="fa fa-minus-circle" aria-hidden="true"></i>`;
+    if (filter === 'bookmark') {
+      button.innerHTML = `bookmarked  <i class="fa fa-minus-circle" aria-hidden="true"></i>`;
+    } else if (filter === 'solved') {
+      button.innerHTML = `solved  <i class="fa fa-minus-circle" aria-hidden="true"></i>`;
+    }
     button.onclick = () => {
-      bookmarkList = bookmarkList.filter((item) => item !== bookmark);
+      bookmarkList = bookmarkList.filter((item) => item !== filter);
       renderBookmarkList();
       fetchProblems();
     };
@@ -267,9 +285,10 @@ function listenToFilterChanges() {
   });
   const bookmarkSelect = document.getElementById('bookmark-filter');
   bookmarkSelect.addEventListener('change', function () {
-    const bookmark = this.value;
-    bookmarkList.push(bookmark);
-    bookmarkList = Array.from(new Set(bookmarkList));
+    const selectedFilter = this.value;
+    
+    bookmarkList = selectedFilter === 'ANY' ? [] : [selectedFilter];
+
     bookmarkSelect.selectedIndex = 0;
     renderBookmarkList();
     fetchProblems();

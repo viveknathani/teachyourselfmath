@@ -1,6 +1,12 @@
 import { Pool } from 'pg';
 import { executeQuery } from '.';
-import { Problem, PROBLEM_DIFFICULTY, PROBLEM_STATUS, Tag } from '../types';
+import {
+  GetProblemsRequest,
+  Problem,
+  PROBLEM_DIFFICULTY,
+  PROBLEM_STATUS,
+  Tag,
+} from '../types';
 import { snakeCaseToCamelCaseObject } from '../utils';
 
 const queryInsertProblem = `
@@ -24,7 +30,17 @@ const querySelectProblems = (
   tagsToFetchFrom: string[],
   difficultyLevelsToConsider: PROBLEM_DIFFICULTY[],
   userId: number | null,
+  request: GetProblemsRequest,
 ) => {
+  let filterTable = '';
+
+  if (userId) {
+    if (request.bookmarked) {
+      filterTable = 'user_bookmarks';
+    } else if (request.solved) {
+      filterTable = 'user_solved';
+    }
+  }
   return `
     select
     problems.id as "id",
@@ -56,7 +72,7 @@ const querySelectProblems = (
       `
         : ''
     }
-    ${userId ? `and problems.id in (select problem_id from user_bookmarks where user_id = ${userId})` : ''}
+    ${userId ? `and problems.id in (select problem_id from ${filterTable} where user_id = ${userId})` : ''}
     group by problems.id
     order by id asc
     limit $1 offset $2;
@@ -125,11 +141,39 @@ const queryCheckUserBookmark = `
   where user_id = $1 AND problem_id = $2)
 `;
 
+const queryInsertUserSolved = `
+  insert into user_solved
+  (user_id, problem_id, created_at)
+  values ($1, $2, now());
+`;
+
+const queryDeletetUserSolved = `
+  delete from user_solved
+  where user_id = $1 and problem_id = $2;
+`;
+
+const queryCheckUserSolved = `
+  select exists
+  (select 1 from user_solved
+  where user_id = $1 AND problem_id = $2)
+`;
+
 const querySelectProblemCount = (
   tagsToFetchFrom: string[],
   difficultyLevelsToConsider: PROBLEM_DIFFICULTY[],
   userId: number | null,
+  request: GetProblemsRequest,
 ) => {
+  let filterTable = '';
+
+  if (userId) {
+    if (request.bookmarked) {
+      filterTable = 'user_bookmarks';
+    } else if (request.solved) {
+      filterTable = 'user_solved';
+    }
+  }
+
   return `
     select count(1) as count from
     (
@@ -152,7 +196,7 @@ const querySelectProblemCount = (
         `
           : ''
       }
-      ${userId ? `and problems.id in (select problem_id from user_bookmarks where user_id = ${userId})` : ''}
+      ${userId ? `and problems.id in (select problem_id from ${filterTable} where user_id = ${userId})` : ''}
       group by problems.id
       order by id asc
     ) sub_query;
@@ -242,6 +286,7 @@ const getProblems = async (
   tagsToFetchFrom: string[],
   difficultyLevelsToConsider: PROBLEM_DIFFICULTY[],
   userId: number | null,
+  request: GetProblemsRequest,
 ): Promise<Problem[]> => {
   const queryResponse = await executeQuery({
     pool,
@@ -249,6 +294,7 @@ const getProblems = async (
       tagsToFetchFrom,
       difficultyLevelsToConsider,
       userId,
+      request,
     ),
     values: tagsToFetchFrom.length
       ? [limit, offset, tagsToFetchFrom]
@@ -285,6 +331,7 @@ const getProblemCount = async (
   tagsToFetchFrom: string[],
   difficultyLevelsToConsider: PROBLEM_DIFFICULTY[],
   userId: number | null,
+  request: GetProblemsRequest,
 ) => {
   const queryResponse = await executeQuery({
     pool,
@@ -292,6 +339,7 @@ const getProblemCount = async (
       tagsToFetchFrom,
       difficultyLevelsToConsider,
       userId,
+      request,
     ),
     values: tagsToFetchFrom.length ? [tagsToFetchFrom] : [],
   });
@@ -333,6 +381,45 @@ const checkUserBookmark = async (
   const queryResponse = await executeQuery({
     pool,
     text: queryCheckUserBookmark,
+    values: [userId, problemId],
+  });
+  return queryResponse.rows[0].exists;
+};
+
+const insertUserSolved = async (
+  pool: Pool,
+  userId: number,
+  problemId: number,
+) => {
+  await executeQuery({
+    pool,
+    text: queryInsertUserSolved,
+    values: [userId, problemId],
+    transaction: true,
+  });
+};
+
+const deleteUserSolved = async (
+  pool: Pool,
+  userId: number,
+  problemId: number,
+) => {
+  await executeQuery({
+    pool,
+    text: queryDeletetUserSolved,
+    values: [userId, problemId],
+    transaction: true,
+  });
+};
+
+const checkUserSolved = async (
+  pool: Pool,
+  userId: number,
+  problemId: number,
+): Promise<boolean> => {
+  const queryResponse = await executeQuery({
+    pool,
+    text: queryCheckUserSolved,
     values: [userId, problemId],
   });
   return queryResponse.rows[0].exists;
@@ -455,13 +542,16 @@ export {
   insertProblem,
   insertProblemTag,
   insertUserBookmark,
+  insertUserSolved,
   searchProblems,
   getTags,
   getProblem,
   getProblems,
   getProblemCount,
   deleteUserBookmark,
+  deleteUserSolved,
   checkUserBookmark,
+  checkUserSolved,
   getLatestDigestProblems,
   getDraftProblemIds,
   updateProblem,

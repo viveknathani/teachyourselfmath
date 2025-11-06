@@ -360,4 +360,127 @@ problemRouter.get('/:problemId/is-bookmarked', async (req, res) => {
   }
 });
 
+problemRouter.post('/:problemId/solve', async (req, res) => {
+  try {
+    if (!req.body.user?.id) {
+      sendStandardResponse(
+        HTTP_CODE.UNAUTHORIZED,
+        {
+          status: 'error',
+          message: 'you need to login',
+        },
+        res,
+      );
+      return;
+    }
+    const response = await problemService.solveProblem(
+      req.body.user?.id,
+      req.params.problemId as any,
+    );
+    sendStandardResponse(
+      HTTP_CODE.CREATED,
+      {
+        status: 'success',
+        data: response,
+      },
+      res,
+    );
+  } catch (err) {
+    console.log(err);
+    if ((err as any)?.code === ErrorCodesOfSQL.UNIQUE_CONSTRAINT_VIOLATION) {
+      sendStandardResponse(
+        HTTP_CODE.CLIENT_ERROR,
+        {
+          status: 'error',
+          message:
+            'unique constraint violation, the operation you are trying to do has already happened.',
+        },
+        res,
+      );
+      return;
+    }
+    sendStandardResponse(
+      HTTP_CODE.SERVER_ERROR,
+      {
+        status: 'error',
+      },
+      res,
+    );
+  }
+});
+
+problemRouter.delete('/:problemId/solve', async (req, res) => {
+  try {
+    if (!req.body.user?.id) {
+      sendStandardResponse(
+        HTTP_CODE.UNAUTHORIZED,
+        {
+          status: 'error',
+          message: 'you need to login',
+        },
+        res,
+      );
+      return;
+    }
+    const response = await problemService.unsolveProblem(
+      req.body.user?.id,
+      req.params.problemId as any,
+    );
+    sendStandardResponse(
+      HTTP_CODE.CREATED,
+      {
+        status: 'success',
+        data: response,
+      },
+      res,
+    );
+  } catch (err) {
+    console.log(err);
+    sendStandardResponse(
+      HTTP_CODE.SERVER_ERROR,
+      {
+        status: 'error',
+      },
+      res,
+    );
+  }
+});
+
+problemRouter.get('/:problemId/is-solved', async (req, res) => {
+  try {
+    if (!req.body.user?.id) {
+      sendStandardResponse(
+        HTTP_CODE.UNAUTHORIZED,
+        {
+          status: 'error',
+          message: 'you need to login',
+        },
+        res,
+      );
+      return;
+    }
+    const response = await problemService.isProblemSolvedByUser(
+      req.body.user?.id,
+      req.params.problemId as any,
+    );
+    sendStandardResponse(
+      HTTP_CODE.CREATED,
+      {
+        status: 'success',
+        data: response,
+      },
+      res,
+    );
+  } catch (err) {
+    console.log(err);
+    sendStandardResponse(
+      HTTP_CODE.SERVER_ERROR,
+      {
+        status: 'error',
+      },
+      res,
+    );
+  }
+});
+
 export { problemRouter };

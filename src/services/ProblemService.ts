@@ -60,7 +60,7 @@ export class ProblemService {
     request: GetProblemsRequest,
   ): Promise<GetProblemsResponse> {
     const cacheKey =
-      userId && request.bookmarked
+      userId && (request.bookmarked || request.solved)
         ? `PROBLEMS:${userId}:${JSON.stringify(request)}`
         : `PROBLEMS:${JSON.stringify(request)}`;
     const cachedData = await this.state.cache.get(cacheKey);
@@ -73,7 +73,7 @@ export class ProblemService {
         JSON.stringify(result),
       );
     }
-    if (userId && request.bookmarked) {
+    if (userId && (request.bookmarked || request.solved)) {
       await this.addToKeyOfKeys(this.getUserSpecificKey(userId), cacheKey);
     }
     return result;
@@ -83,7 +83,7 @@ export class ProblemService {
     userId: number | null,
     request: GetProblemsRequest,
   ): Promise<GetProblemsResponse> {
-    if (request.bookmarked && userId === null) {
+    if ((request.bookmarked || request.solved) && userId === null) {
       throw new errors.ErrUserNotFound();
     }
     const PAGE_SIZE = 20;
@@ -110,7 +110,8 @@ export class ProblemService {
       this.state.databasePool,
       tagsToFetchFrom,
       difficultyLevelsToConsider,
-      userId && request.bookmarked ? userId : null,
+      userId,
+      request,
     );
     const problems = await database.getProblems(
       this.state.databasePool,
@@ -118,7 +119,8 @@ export class ProblemService {
       offset,
       tagsToFetchFrom,
       difficultyLevelsToConsider,
-      userId && request.bookmarked ? userId : null,
+      userId,
+      request,
     );
     const currentPage = Number(request.page || 1);
     return {
@@ -169,6 +171,44 @@ export class ProblemService {
     );
     return {
       isBookmarked,
+    };
+  }
+
+  public async solveProblem(userId: number, problemId: number) {
+    const key = this.getUserSpecificKey(userId);
+    await this.deleteKeysForKeyOfKeys(key);
+    await this.removeKeyOfKeys(key);
+    return database.insertUserSolved(
+      this.state.databasePool,
+      userId,
+      problemId,
+    );
+  }
+
+  public async unsolveProblem(userId: number, problemId: number) {
+    const key = this.getUserSpecificKey(userId);
+    await this.deleteKeysForKeyOfKeys(key);
+    await this.removeKeyOfKeys(key);
+    return database.deleteUserSolved(
+      this.state.databasePool,
+      userId,
+      problemId,
+    );
+  }
+
+  public async isProblemSolvedByUser(
+    userId: number,
+    problemId: number,
+  ): Promise<{
+    isSolved: boolean;
+  }> {
+    const isSolved = await database.checkUserSolved(
+      this.state.databasePool,
+      userId,
+      problemId,
+    );
+    return {
+      isSolved,
     };
   }
 
