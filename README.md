@@ -16,8 +16,7 @@ For a longer and less technical rant about this project - read [this](https://vi
 
 ### Setup
 
-1. We use [pdf2pic](https://www.npmjs.com/package/pdf2pic) which has the following system dependencies: ghostscript, graphicsmagick.
-2. You will need PostgreSQL and Redis to run this.
+1. You will need PostgreSQL and Redis to run this.
 2. `yarn`
 3. `yarn build`
 4. Setup the `.env` file using the `.env.example` file.
