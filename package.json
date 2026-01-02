@@ -58,7 +58,7 @@
     "ioredis": "^5.3.2",
     "jsonwebtoken": "^9.0.2",
     "memoizee": "^0.4.17",
-    "multer": "^2.0.1",
+    "multer": "^2.0.2",
     "nanoid": "^5.0.3",
     "node-pg-migrate": "^6.2.2",
     "openai": "^4.52.3",
