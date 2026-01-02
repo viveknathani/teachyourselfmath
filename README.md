@@ -1,6 +1,6 @@
 # teachyourselfmath
 
-![build](https://github.com/viveknathani/teachyourselfmath/actions/workflows/build.yaml/badge.svg) ![deployment](https://github.com/viveknathani/teachyourselfmath/actions/workflows/deploy.yaml/badge.svg) ![stars](https://img.shields.io/github/stars/viveknathani/teachyourselfmath?style=social)
+![build](https://github.com/viveknathani/teachyourselfmath/actions/workflows/build.yaml/badge.svg) ![stars](https://img.shields.io/github/stars/viveknathani/teachyourselfmath?style=social)
 
 I wished for a free website with a large list of math problems, teachyourselfmath is that website.
 
