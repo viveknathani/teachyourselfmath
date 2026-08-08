@@ -2,47 +2,59 @@
 
 ![build](https://github.com/viveknathani/teachyourselfmath/actions/workflows/build.yaml/badge.svg) ![stars](https://img.shields.io/github/stars/viveknathani/teachyourselfmath?style=social)
 
-### Description
+Welcome to my little math project on the internet. As of today, it is a collection of math problems and also hosts a small explainer series on the Reimann Hypothesis. Back in the day, it was more than this. Follow along to understand.
 
-If a document containing math problem exists, we'd like to extract every problem from it and dump it in a database. LaTeX is something that can be understood by both, computers and humans. Hence, the problem boils down to converting a PDF into LaTeX, removing the irrelevant parts, and storing the remaining parts.
+### background
 
-When I started this project, I used [Meta's model](https://facebookresearch.github.io/nougat/) to parse academic PDF documents and find the LaTeX math in it. This approach was promising but the model is computationally expensive to run. Thankfully, LLMs have gotten much better at finding the contents of an image. If I could first convert the PDF into an image, LaTeX extraction would then be easier. And this is exactly what I am doing right now.
+Back in 2023, I was studying math from several textbooks. The process felt disorganized. In software, a site like LeetCode gives you one place to find problems. I wished something similar existed for math: a simple site with a large collection of problems.
 
-For a longer and less technical rant about this project - read [this](https://vivekn.dev/blog/teachyourselfmath).
+The idea was to take a document, extract its math problems, and store them in a database. LaTeX can be read by both people and computers, so the main challenge was turning PDFs into LaTeX and removing everything that was not a problem.
 
-### Setup
+At first, I used [Meta's Nougat model](https://facebookresearch.github.io/nougat/) to read academic PDFs and extract the math. It worked, but it was expensive to run. As language models became better at understanding images, I changed the process: turn each PDF page into an image, ask a model to find the problems, and convert them to LaTeX.
 
-1. You will need PostgreSQL and Redis to run this.
-2. `yarn`
-3. `yarn build`
-4. Setup the `.env` file using the `.env.example` file.
-5. `yarn start`!
+The site received more attention than I expected when it launched. People solved problems, left comments, and sent me lovely emails from around the world. You can read the two Hacker News launch posts [here](https://news.ycombinator.com/item?id=39113879) and [here](https://news.ycombinator.com/item?id=40363517). It was a good time.
 
-### [OPTIONAL DEPENDENCY] now experimenting with online issues for the math club:
+Over time, the site became quieter. One day, while sitting in a cafe with my friends Advait and Sid, I said, “maybe I should start a math club.” They encouraged me to do it, and that became [teachyourselfmath.app/club](https://teachyourselfmath.app/club). We met in Bangalore, solved problems together, and had a lot of fun.
 
-Trying to figure out a pipeline driven by AI that generates raw markdown files like [this one](./src/web/md/ISSUE_001.md) and we run pandoc over it to get a file like [this one](./src/web/pdfs/ISSUE_001.pdf).
+Later, maintaining the site started to feel heavier than the site itself. Its JavaScript backend had many dependencies and generated constant security alerts. That no longer made sense for a mostly read-only project.
 
-Prompts available at: [prompts.txt](./scripts/prompts.txt)
+So I simplified it. I removed accounts, comments, bookmarks, and the rest of the user-generated content. I moved the problem collection from PostgreSQL to a small SQLite database committed to this repository, and rewrote the server in Rust. Around the same time, I became curious about the Riemann hypothesis, so the site now also has a beginner-friendly series about it.
 
-Sample also available at: [teachyourselfmath.app/issues/001](https://teachyourselfmath.app/issues/001)
+### setup
 
-Get pandoc from: https://pandoc.org/
+You only need [Rust](https://www.rust-lang.org/tools/install) 1.95 or newer. The SQLite database is already included in the repository.
 
-On MacOS, we also need `pdflatex`:
+Start the site with:
+
 ```bash
-brew install basictex
-eval "$(/usr/libexec/path_helper)"
+cargo run -p teachyourselfmath
 ```
 
-Generate stuff by:
-```
-pandoc src/web/md/ISSUE_001.md -o src/web/pdf/ISSUE_001.pdf
+Then open [localhost:8080](http://localhost:8080).
+
+To use Docker instead:
+
+```bash
+docker build -t teachyourselfmath .
+docker run --rm -p 8080:8080 teachyourselfmath
 ```
 
-### Contributing
+The `exportdb` program is only needed if you want to rebuild the SQLite database from the old PostgreSQL database:
+
+```bash
+DATABASE_URL='postgresql://...' cargo run -p exportdb
+```
+
+For a database with an untrusted certificate:
+
+```bash
+DATABASE_TLS_INSECURE=true DATABASE_URL='postgresql://...' cargo run -p exportdb
+```
+
+### contributing
 
 I am happy to accept pull requests. No hard rules.
 
-### Acknowledgements
+### acknowledgements
 
 created by Vivek Nathani ([@viveknathani_](https://twitter.com/viveknathani_)), licensed under the [MIT License](./LICENSE).
