@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A quiet archive of mathematical problems and ongoing mathematical study.">
+    <title>{% block title %}teachyourselfmath{% endblock %}</title>
+    <link rel="stylesheet" href="/static/style.css">
+    {% block head %}{% endblock %}
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="wordmark" href="/">teachyourselfmath</a>
+      <nav aria-label="Primary navigation">
+        <a href="/club">club</a>
+        <a href="/riemann-hypothesis">riemann hypothesis</a>
+        <a href="{{ github_readme_url }}">about</a>
+      </nav>
+    </header>
+    <main class="page-shell">
+      {% block content %}{% endblock %}
+    </main>
+    <footer>
+      <a href="https://github.com/viveknathani/teachyourselfmath">github</a>
+    </footer>
+  </body>
+</html>

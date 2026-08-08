@@ -2,10 +2,6 @@
 
 ![build](https://github.com/viveknathani/teachyourselfmath/actions/workflows/build.yaml/badge.svg) ![stars](https://img.shields.io/github/stars/viveknathani/teachyourselfmath?style=social)
 
-I wished for a free website with a large list of math problems, teachyourselfmath is that website.
-
-<img title="flow" alt="screenshot of website" src="./SCREENSHOT.png" width="330px" height="480px">
-
 ### Description
 
 If a document containing math problem exists, we'd like to extract every problem from it and dump it in a database. LaTeX is something that can be understood by both, computers and humans. Hence, the problem boils down to converting a PDF into LaTeX, removing the irrelevant parts, and storing the remaining parts.

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block head %}
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+      options: { enableMenu: false }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+{% endblock %}
+
+{% block content %}
+  <section class="archive-heading">
+    <p class="eyebrow">problem archive</p>
+  </section>
+
+  <form class="search" action="/" method="get" role="search">
+    <label class="visually-hidden" for="search-query">Search problems</label>
+    <input id="search-query" name="q" value="{{ query }}" placeholder="Search the archive…" autocomplete="off">
+    <button type="submit">search</button>
+  </form>
+
+  <div class="archive-meta">
+    <p>{{ result_summary }}</p>
+    {% if query.len() > 0 %}<a href="/">clear search</a>{% endif %}
+  </div>
+
+  {% if problems.len() == 0 %}
+    <div class="empty-state">
+      <p>No problems matched this search.</p>
+      <a href="/">Return to the full archive</a>
+    </div>
+  {% else %}
+    <ol class="problem-list" start="{{ ((page - 1) * 20) + 1 }}">
+      {% for problem in problems %}
+        <li>
+          <article class="problem-row">
+            <a class="problem-title" href="/problems/{{ problem.id }}">{{ problem.title }}</a>
+            <p class="problem-meta">
+              <span>{{ problem.difficulty }}</span>
+              {% if problem.tags.len() > 0 %}<span>{{ problem.tags }}</span>{% endif %}
+            </p>
+          </article>
+        </li>
+      {% endfor %}
+    </ol>
+  {% endif %}
+
+  <nav class="pagination" aria-label="Problem pages">
+    {% if has_previous %}<a rel="prev" href="{{ previous_url }}">← previous</a>{% else %}<span></span>{% endif %}
+    <span>page {{ page }} of {{ total_pages }}</span>
+    {% if has_next %}<a rel="next" href="{{ next_url }}">next →</a>{% else %}<span></span>{% endif %}
+  </nav>
+{% endblock %}

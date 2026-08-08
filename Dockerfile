@@ -1,21 +1,20 @@
-FROM node:22-bookworm-slim
+FROM rust:1.85-bookworm
 
 WORKDIR /app
 
-RUN apt-get update \
-  && apt-get install -y --no-install-recommends python3 make g++ \
-  && rm -rf /var/lib/apt/lists/*
+COPY Cargo.lock ./
+COPY server/Cargo.toml ./Cargo.toml
+COPY server/src ./src
+COPY server/templates ./templates
+COPY server/static ./static
+COPY data/problems.sqlite ./data/problems.sqlite
 
-RUN corepack enable \
-  && corepack prepare yarn@1.22.22 --activate
+RUN cargo build --release --locked
 
-COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
-
-COPY . .
-
-RUN yarn build
+ENV BIND_ADDRESS=0.0.0.0:8080 \
+    DATABASE_PATH=/app/data/problems.sqlite \
+    STATIC_DIRECTORY=/app/static
 
 EXPOSE 8080
 
-CMD ["yarn", "start"]
+CMD ["./target/release/teachyourselfmath"]

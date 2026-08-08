@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Riemann hypothesis · teachyourselfmath{% endblock %}
+
+{% block head %}
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+      options: { enableMenu: false }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+{% endblock %}
+
+{% block content %}
+  <article class="prose-page riemann-page">
+    <p class="eyebrow">notes in progress</p>
+    <h1>The Riemann hypothesis.</h1>
+    <p class="lede">An unfinished corner for an unfinished study of $\zeta(s)$, prime numbers, and one unusually persistent conjecture.</p>
+    <div class="work-in-progress">
+      <span>∑</span>
+      <div>
+        <h2>This page is still being worked out.</h2>
+        <p>The notebooks are exploratory for now. Notes, plots, and explanations will appear here when they are ready to become something more coherent.</p>
+      </div>
+    </div>
+    <p><a class="back-link" href="/">← return to the problem archive</a></p>
+  </article>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Problem {{ problem.id }} · teachyourselfmath{% endblock %}
+
+{% block head %}
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+      options: { enableMenu: false }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+{% endblock %}
+
+{% block content %}
+  <article class="problem-page">
+    <a class="back-link" href="/">← problem archive</a>
+    <p class="eyebrow">problem {{ problem.id }}</p>
+    <p class="problem-meta problem-page-meta">
+      <span>{{ problem.difficulty }}</span>
+      {% if problem.tags.len() > 0 %}<span>{{ problem.tags }}</span>{% endif %}
+    </p>
+    <div class="problem-statement">{{ problem.description }}</div>
+  </article>
+{% endblock %}
