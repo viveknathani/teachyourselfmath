@@ -1,15 +1,14 @@
-FROM rust:1.85-bookworm
+FROM rust:1.95-bookworm
 
 WORKDIR /app
 
-COPY Cargo.lock ./
 COPY server/Cargo.toml ./Cargo.toml
 COPY server/src ./src
 COPY server/templates ./templates
 COPY server/static ./static
 COPY data/problems.sqlite ./data/problems.sqlite
 
-RUN cargo build --release --locked
+RUN cargo build --release
 
 ENV BIND_ADDRESS=0.0.0.0:8080 \
     DATABASE_PATH=/app/data/problems.sqlite \
