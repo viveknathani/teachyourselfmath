@@ -1,0 +1,30 @@
+<section>
+  <h2>Turn the exponent into an input</h2>
+  <p>For real numbers $s>1$, define the Riemann zeta function by</p>
+  <div class="equation-card hero-equation">$$\zeta(s)=\sum_{n=1}^{\infty}\frac1{n^s}=1+\frac1{2^s}+\frac1{3^s}+\cdots.$$</div>
+  <p>A function is simply a rule: supply $s$, receive a value. For example, $\zeta(2)=\pi^2/6\approx1.645$. Increasing $s$ crushes every term after the initial 1, so $\zeta(s)$ approaches 1.</p>
+
+  <figure class="math-figure">
+    <figcaption>Some values on the safe side of $s=1$.</figcaption>
+    <div class="value-table">
+      <span>$s$</span><span>$\zeta(s)$</span>
+      <b>2</b><b>1.644934…</b>
+      <b>3</b><b>1.202056…</b>
+      <b>4</b><b>1.082323…</b>
+      <b>10</b><b>1.000994…</b>
+    </div>
+  </figure>
+</section>
+
+<section>
+  <h2>A warning at $s=1$</h2>
+  <p>At $s=1$, zeta becomes the divergent harmonic series. As $s$ approaches 1 from the right, $\zeta(s)$ shoots upward. We say zeta has a <strong>pole</strong> at 1.</p>
+  <p>The series definition also stops converging when the real part of $s$ is at most 1. But this does not mean the function itself must stop there—just as the expression $(x^2-1)/(x-1)$ can simplify to $x+1$ away from its apparent problem at $x=1$.</p>
+</section>
+
+<section>
+  <h2>A formula can outgrow its first definition</h2>
+  <p>Through <strong>analytic continuation</strong>, mathematicians extend zeta to nearly the entire complex plane while preserving the values already defined for $s>1$. The only unavoidable exception is the pole at $s=1$.</p>
+  <p>This extension is not arbitrary. Complex differentiability is so rigid that, once an extension exists, it is unique.</p>
+  <aside class="idea"><strong>Idea earned</strong><span>Zeta begins as a convergent sum but extends to a much larger domain.</span></aside>
+</section>

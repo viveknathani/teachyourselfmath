@@ -1,0 +1,31 @@
+<section>
+  <h2>A staircase called $\pi(x)$</h2>
+  <p>Primes do not arrive at a steady rhythm. Sometimes they are close—like 11 and 13—and sometimes long gaps contain none. To study the overall pattern, mathematicians count rather than predict the next prime.</p>
+  <p>The <strong>prime-counting function</strong> $\pi(x)$ is the number of primes at most $x$. Thus $\pi(10)=4$ and $\pi(100)=25$.</p>
+
+  <figure class="math-figure">
+    <figcaption>Prime counts compared with the approximation $x/\log x$.</figcaption>
+    <div class="comparison-chart" aria-label="Comparison of pi of x and x divided by logarithm of x">
+      <div class="chart-key"><span class="actual-key">$\pi(x)$</span><span class="estimate-key">$x/\log x$</span></div>
+      <div class="bar-row"><label>$x=10$</label><div><i style="width:8%"></i><em style="width:9%"></em></div><small>4 vs 4.3</small></div>
+      <div class="bar-row"><label>$x=100$</label><div><i style="width:50%"></i><em style="width:43%"></em></div><small>25 vs 21.7</small></div>
+      <div class="bar-row"><label>$x=1{,}000$</label><div><i style="width:67%"></i><em style="width:58%"></em></div><small>168 vs 144.8</small></div>
+      <div class="bar-row"><label>$x=10{,}000$</label><div><i style="width:98%"></i><em style="width:87%"></em></div><small>1,229 vs 1,085.7</small></div>
+    </div>
+  </figure>
+</section>
+
+<section>
+  <h2>The density thins out</h2>
+  <p>Among the first ten numbers, four are prime. Farther out, primes are rarer. Near a large number $x$, the rough chance of encountering a prime is about $1/\log x$. Accumulating that density suggests that</p>
+  <div class="equation-card">$$\pi(x)\sim\frac{x}{\log x}.$$</div>
+  <p>The symbol $\sim$ does not mean the two sides become equal. It means their ratio approaches 1 as $x$ grows. This is the <strong>prime number theorem</strong>: locally unpredictable primes obey a smooth global law.</p>
+</section>
+
+<section>
+  <h2>The interesting part is the error</h2>
+  <p>A smooth curve cannot land perfectly on a jagged staircase. Define the discrepancy</p>
+  <div class="equation-card">$$E(x)=\pi(x)-\operatorname{Li}(x),$$</div>
+  <p>where $\operatorname{Li}(x)$ is a refined smooth estimate. How wildly can $E(x)$ fluctuate? That question is much closer to the Riemann hypothesis than simply knowing the average number of primes.</p>
+  <aside class="idea"><strong>Idea earned</strong><span>Prime distribution has a smooth main trend plus a subtle oscillating error.</span></aside>
+</section>

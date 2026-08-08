@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}{{ lesson.title }} · Riemann hypothesis{% endblock %}
+
+{% block head %}
+  <script>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['$$','$$']]},options:{enableMenu:false}};</script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+{% endblock %}
+
+{% block content %}
+  <article class="lesson">
+    <a class="back-link" href="/riemann-hypothesis">← series contents</a>
+    <header class="lesson-header">
+      <p class="eyebrow">chapter {{ lesson.number }}</p>
+      <h1>{{ lesson.title }}</h1>
+      <p class="lede">{{ lesson.subtitle }}</p>
+    </header>
+    <div class="lesson-body">{{ lesson.content|safe }}</div>
+    <nav class="lesson-navigation" aria-label="Series chapters">
+      <a href="{{ lesson.previous_url }}"><small>previous</small><span>← {{ lesson.previous_title }}</span></a>
+      <a href="{{ lesson.next_url }}"><small>next</small><span>{{ lesson.next_title }} →</span></a>
+    </nav>
+  </article>
+{% endblock %}

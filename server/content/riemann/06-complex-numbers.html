@@ -1,0 +1,28 @@
+<section>
+  <h2>Numbers with two coordinates</h2>
+  <p>A complex number has the form $s=\sigma+it$, where $i^2=-1$. The real part $\sigma$ is a horizontal coordinate; the imaginary part $t$ is a vertical coordinate.</p>
+  <figure class="math-figure">
+    <figcaption>The number $s=2+3i$ is a point—and an arrow—in the complex plane.</figcaption>
+    <svg class="complex-plane" viewBox="0 0 640 330" role="img" aria-label="Complex plane showing the point two plus three i">
+      <line x1="45" y1="275" x2="605" y2="275"/><line x1="155" y1="305" x2="155" y2="25"/>
+      <path d="M595 269 L607 275 L595 281 M149 35 L155 23 L161 35"/>
+      <line class="guide" x1="155" y1="95" x2="395" y2="95"/><line class="guide" x1="395" y1="275" x2="395" y2="95"/>
+      <line class="vector" x1="155" y1="275" x2="395" y2="95"/><circle cx="395" cy="95" r="7"/>
+      <text x="585" y="300">real</text><text x="166" y="40">imaginary</text><text x="408" y="88">$2+3i$</text><text x="386" y="298">2</text><text x="130" y="101">3i</text>
+    </svg>
+  </figure>
+</section>
+
+<section>
+  <h2>Complex powers rotate</h2>
+  <p>Euler’s formula says $e^{it}=\cos t+i\sin t$. So imaginary exponents produce rotation. For a positive integer $n$,</p>
+  <div class="equation-card">$$n^{-s}=n^{-\sigma-it}=n^{-\sigma}\,e^{-it\log n}.$$</div>
+  <p>The factor $n^{-\sigma}$ controls the length of the term; $e^{-it\log n}$ controls its direction. Zeta now adds infinitely many tiny rotating arrows. A zero occurs when those arrows cancel exactly.</p>
+  <div class="arrow-sum" aria-label="Several arrows combining to nearly cancel"><i></i><i></i><i></i><i></i><span>sum $=0$</span></div>
+</section>
+
+<section>
+  <h2>Think of a landscape, not a curve</h2>
+  <p>A real function can be drawn above a line. A complex function accepts a point in a plane and returns another point in a plane, so no single ordinary graph captures everything. We instead study magnitude, phase, contour lines, and especially zeros.</p>
+  <aside class="idea"><strong>Idea earned</strong><span>The input $s=\sigma+it$ lives in a plane, and imaginary exponents introduce oscillation and cancellation.</span></aside>
+</section>

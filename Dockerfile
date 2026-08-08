@@ -5,6 +5,7 @@ WORKDIR /app
 COPY server/Cargo.toml ./Cargo.toml
 COPY server/src ./src
 COPY server/templates ./templates
+COPY server/content ./content
 COPY server/static ./static
 COPY data/problems.sqlite ./data/problems.sqlite
 

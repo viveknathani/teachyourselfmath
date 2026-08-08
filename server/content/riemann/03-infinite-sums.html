@@ -1,0 +1,26 @@
+<section>
+  <h2>What does it mean to add forever?</h2>
+  <p>An infinite sum is understood through its <strong>partial sums</strong>. Add the first term, then the first two, then the first three, and watch what those finite totals do.</p>
+  <p>Consider a geometric series:</p>
+  <div class="equation-card">$$\frac12+\frac14+\frac18+\frac1{16}+\cdots=1.$$</div>
+  <div class="unit-bar" aria-label="Successive fractions one half, one quarter, one eighth and one sixteenth filling a whole">
+    <span style="flex:8">$1/2$</span><span style="flex:4">$1/4$</span><span style="flex:2">$1/8$</span><span style="flex:1">$1/16$</span><span class="ellipsis">…</span>
+  </div>
+  <p>The total never reaches 1 after finitely many steps, but it can get arbitrarily close. We say the series <strong>converges</strong> to 1.</p>
+</section>
+
+<section>
+  <h2>Small terms are not enough</h2>
+  <p>The terms of the harmonic series shrink to zero, yet its partial sums grow without bound:</p>
+  <div class="equation-card">$$1+\frac12+\frac13+\frac14+\cdots=\infty.$$</div>
+  <p>Group the terms after 1 into blocks of lengths $1,2,4,8,\ldots$. Every block contributes at least $1/2$. Infinitely many half-units force the total upward forever.</p>
+  <div class="grouped-sum"><span>$1$</span><span>$\frac12$</span><span>$\frac13+\frac14$</span><span>$\frac15+\cdots+\frac18$</span><span>next block</span></div>
+</section>
+
+<section>
+  <h2>Powers change everything</h2>
+  <p>Replace $1/n$ with $1/n^s$. For real $s>1$, the terms shrink quickly enough for the series to converge. At $s=2$, Euler famously found</p>
+  <div class="equation-card">$$1+\frac1{2^2}+\frac1{3^2}+\frac1{4^2}+\cdots=\frac{\pi^2}{6}.$$</div>
+  <p>The exponent $s$ acts like a dial controlling how strongly large integers are suppressed. That dial becomes our function’s input.</p>
+  <aside class="idea"><strong>Idea earned</strong><span>An infinite sum is a limit, and the exponent determines whether the sum settles down.</span></aside>
+</section>

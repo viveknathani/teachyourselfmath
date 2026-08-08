@@ -1,0 +1,27 @@
+<section>
+  <h2>The primes were inside all along</h2>
+  <p>Euler discovered that for $s>1$, the zeta sum can also be written as a product with one factor for every prime:</p>
+  <div class="equation-card hero-equation">$$\zeta(s)=\prod_{p\ \mathrm{prime}}\frac1{1-p^{-s}}=\frac1{1-2^{-s}}\frac1{1-3^{-s}}\frac1{1-5^{-s}}\cdots.$$</div>
+  <p>This is the hinge on which the entire story turns. The left side mentions every positive integer. The right side mentions only primes.</p>
+</section>
+
+<section>
+  <h2>Why the product works</h2>
+  <p>Each prime factor expands as a geometric series:</p>
+  <div class="equation-card">$$\frac1{1-p^{-s}}=1+\frac1{p^s}+\frac1{p^{2s}}+\frac1{p^{3s}}+\cdots.$$</div>
+  <p>Multiply one such series for every prime. Choosing $1/2^{as}$ from the 2-series, $1/3^{bs}$ from the 3-series, and so on produces</p>
+  <div class="equation-card">$$\frac1{(2^a3^b5^c\cdots)^s}.$$</div>
+  <p>Unique prime factorization guarantees that every positive integer appears exactly once. The multiplication therefore reconstructs $1+2^{-s}+3^{-s}+\cdots$.</p>
+  <div class="factor-map">
+    <span>$2^2\cdot3$</span><span aria-hidden="true">→</span><strong>$12$</strong>
+    <span>$2\cdot5^2$</span><span aria-hidden="true">→</span><strong>$50$</strong>
+    <span>$3\cdot7$</span><span aria-hidden="true">→</span><strong>$21$</strong>
+  </div>
+</section>
+
+<section>
+  <h2>A first fact about zeros</h2>
+  <p>When the real part of $s$ is greater than 1, every Euler factor is finite and nonzero, and the product converges. Consequently, $\zeta(s)$ cannot be zero there.</p>
+  <p>To find zeros—the inputs where zeta vanishes—we must leave this safe half-plane and use the extended function.</p>
+  <aside class="idea"><strong>Idea earned</strong><span>Zeta encodes all primes because unique factorization converts its sum into Euler’s product.</span></aside>
+</section>

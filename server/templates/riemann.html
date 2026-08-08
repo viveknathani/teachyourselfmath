@@ -3,27 +3,26 @@
 {% block title %}Riemann hypothesis · teachyourselfmath{% endblock %}
 
 {% block head %}
-  <script>
-    window.MathJax = {
-      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
-      options: { enableMenu: false }
-    };
-  </script>
+  <script>window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},options:{enableMenu:false}};</script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 {% endblock %}
 
 {% block content %}
-  <article class="prose-page riemann-page">
-    <p class="eyebrow">notes in progress</p>
+  <article class="series-index">
+    <p class="eyebrow">an illustrated introduction</p>
     <h1>The Riemann hypothesis.</h1>
-    <p class="lede">An unfinished corner for an unfinished study of $\zeta(s)$, prime numbers, and one unusually persistent conjecture.</p>
-    <div class="work-in-progress">
-      <span>∑</span>
-      <div>
-        <h2>This page is still being worked out.</h2>
-        <p>The notebooks are exploratory for now. Notes, plots, and explanations will appear here when they are ready to become something more coherent.</p>
-      </div>
-    </div>
-    <p><a class="back-link" href="/">← return to the problem archive</a></p>
+    <p class="lede">A path from ordinary prime numbers to one of mathematics’ most famous unsolved problems. No complex analysis assumed.</p>
+
+    <ol class="chapter-list">
+      {% for chapter in chapters %}
+        <li>
+          <a href="/riemann-hypothesis/{{ chapter.slug }}">
+            <span class="chapter-number">{{ chapter.number }}</span>
+            <span class="chapter-copy"><strong>{{ chapter.title }}</strong><small>{{ chapter.description }}</small></span>
+            <span aria-hidden="true">→</span>
+          </a>
+        </li>
+      {% endfor %}
+    </ol>
   </article>
 {% endblock %}
